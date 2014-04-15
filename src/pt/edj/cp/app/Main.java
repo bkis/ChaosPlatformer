@@ -1,4 +1,4 @@
-package pt.edj.platformer.app;
+package pt.edj.cp.app;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
