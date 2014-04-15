@@ -23,18 +23,9 @@ public class Main extends SimpleApplication {
     
     @Override
     public void simpleInitApp() {
-        //sample init code...
-        Box b = new Box(1, 1, 1);
-        Geometry geom = new Geometry("Box", b);
-
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setTexture("ColorMap", assetManager.loadTexture("Interface/splash.png"));
-        geom.setMaterial(mat);
-
-        rootNode.attachChild(geom);
-        
-        cam.setLocation(new Vector3f(4.1243386f, 3.9462457f, 9.040403f));
-        cam.setRotation(new Quaternion(-0.0459402f, 0.95401675f, -0.20476358f, -0.21404065f));
+        //attach ingame state
+        IngameState ingameState = new IngameState();
+        stateManager.attach(ingameState);
     }
 
     
