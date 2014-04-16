@@ -1,7 +1,7 @@
-package pt.edj.cp.world.platforms;
+package pt.edj.cp.world.platforms.sfx;
 
 
-class RhythmPattern {
+public class RhythmPattern {
     
     private boolean[] pattern;
     private int nextIndex;

@@ -8,6 +8,7 @@ import pt.edj.cp.timing.events.IEvent;
 import pt.edj.cp.timing.events.IEventListener;
 import pt.edj.cp.timing.events.MetronomeBeatEvent;
 import pt.edj.cp.world.platforms.gfx.AbstractPlatformGFX;
+import pt.edj.cp.world.platforms.sfx.RhythmPattern;
 
 
 public class Platform implements IEventListener{
