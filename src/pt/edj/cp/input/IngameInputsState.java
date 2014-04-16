@@ -10,7 +10,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 
 
-public class IngameInputState extends AbstractAppState{
+public class IngameInputsState extends AbstractAppState{
     
     //key triggers
     private static final KeyTrigger TRIGGER_W     = new KeyTrigger(KeyInput.KEY_W);
