@@ -1,0 +1,34 @@
+Sound Asset Formatting & Directory Structure (Vorschlag)
+
+Melodic scale: D minor melodic: D  E  F  G  A  B  C#    (international weil H = B)
+
+
+Format:     .ogg (96kbps)
+            >> jme3 kann wav und ogg, glaube
+               komprimiert is gut und 96kbps
+               reichen, oder?
+
+
+Structure:      Ambient                     !! Ambient sounds
+                Feedback                    !! Player sounds (wenn überhaupt), etc.
+                Instruments                 !! Alles, was Teil der Musik wird
+                >   Background                  !! Padas/Strings/... für Hintergrund
+                    >   0.ogg                       !! Bsp.
+                    >   1.ogg                       !! Bsp.
+                >   Melodic                 !! Alles was ne Tonhöhe hat
+                    >   0                       !! Bsp. (Ordner!)
+                    >   1                       !! Bsp. (Ordner!)
+                        >   D.ogg                   !! Bsp. sound
+                        >   E.ogg                   !! Bsp. sound
+                        >   F.ogg                   !! Bsp. sound
+                        >   G.ogg                   !! Bsp. sound
+                        >   A.ogg                   !! Bsp. sound
+                        >   H.ogg                   !! Bsp. sound
+                        >   C#.ogg                  !! Bsp. sound
+                >   Other                   !!  Alles, was perkussiv funktioniert (auch SFX)
+                    >   Long                    !! lange sounds ( > 1 sec. )
+                    >   Medium                  !! "mittellange" sounds ( 0.1-1 sec. )
+                    >   Short                   !! kurze sounds ( < 0.1 sec. )
+                        > 0.ogg                     !! Bsp. sound
+                        > 1.ogg                     !! Bsp. sound
+                    
