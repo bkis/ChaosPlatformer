@@ -1,7 +1,7 @@
 package pt.edj.cp.timing.events;
 
 
-public interface Event {
+public interface IEvent {
     
     //...
     

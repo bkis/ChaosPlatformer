@@ -7,5 +7,5 @@ package pt.edj.cp.timing.events;
 public interface IEventSender {
     public void register(IEventListener l);
     public void unregister(IEventListener l);
-    public void broadcast(Event e);
+    public void broadcast(IEvent e);
 }
