@@ -35,8 +35,8 @@ public class BackgroundNode extends Node implements IEventListener {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         
-        addLayer(new SolidColorLayer(app, ColorRGBA.DarkGray, sizeX, sizeY), 1.0f, -1.0f);
-        addLayer(new LinesLayer(app, 1, sizeX, sizeY), 1.0f, -0.5f);
+        addLayer(new SolidColorLayer(app, ColorRGBA.DarkGray, sizeX, sizeY), 1.0f, -8.0f);
+        addLayer(new LinesLayer(app, 1, sizeX, sizeY), 1.0f, -6.0f);
     }
     
     
