@@ -8,6 +8,7 @@ import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import pt.edj.cp.app.IngameState;
 
 
 public class IngameInputsState extends AbstractAppState{

@@ -7,6 +7,7 @@ import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 
 public class WorldPhysicsManager {
@@ -18,36 +19,35 @@ public class WorldPhysicsManager {
     private static final Vector3f CHARACTER_GRAVITY = new Vector3f(0, -9.81f, 0);
     private static final Vector3f JUMP_STOP_GRAVITY = new Vector3f(0, -80.0f, 0);
     private static final Vector3f JUMP_FORCE        = new Vector3f(0, 20, 0);
-    private static final float    CHARACTER_RADIUS  = 1.5f;
-    private static final float    CHARACTER_HEIGHT  = 4.8f;
+    private static final float    CHARACTER_RADIUS  = 0.3f;
+    private static final float    CHARACTER_HEIGHT  = 1.1f;
     private static final float    CHARACTER_MASS    = 10f;
     private static final float    PHYSICS_ACCURACY  = 0.016f; //def=0.016, low=0.005, hi=0.032
     private static final float    PHYSICS_DAMPING   = 0.1f;
-    private static final boolean  DEBUG_MODE        = false;
+    private static final boolean  DEBUG_MODE        = true;
     
     
     private SimpleApplication app;
     private BulletAppState bulletAppState;
     private RigidBodyControl scenePhysics;
-    private PlatformerCharacterControl physicsCharacter;
+    private PlatformerCharacterControl playerControl;
     private Node sceneNode;
-    private Node character;
+    private Node characterNode;
     
     
     public WorldPhysicsManager(Application app,
                               Node sceneNode,
-                              Node character){
+                              Node characterNode){
         this.app = (SimpleApplication) app;
         this.sceneNode = sceneNode;
-        this.character = character;
-        this.bulletAppState = new BulletAppState();
-        
+        this.characterNode = characterNode;
         initialize();
     }
     
     
     public final void initialize() {
-        //attach physics engine state
+        //load physics engine
+        this.bulletAppState = new BulletAppState();
         app.getStateManager().attach(bulletAppState);
         
         //activate physics
@@ -60,16 +60,16 @@ public class WorldPhysicsManager {
         getPhysicsSpace().add(sceneNode);
         
         //add character physics control to character node
-        physicsCharacter = new PlatformerCharacterControl(CHARACTER_RADIUS,
+        playerControl = new PlatformerCharacterControl(CHARACTER_RADIUS,
                                                           CHARACTER_HEIGHT,
                                                           CHARACTER_MASS);
-        physicsCharacter.setJumpForce(JUMP_FORCE);
-        physicsCharacter.setGravity(CHARACTER_GRAVITY);
-        physicsCharacter.setPhysicsDamping(PHYSICS_DAMPING);
+        playerControl.setJumpForce(JUMP_FORCE);
+        playerControl.setGravity(CHARACTER_GRAVITY);
+        playerControl.setPhysicsDamping(PHYSICS_DAMPING);
         
         //add character control to character model
-        character.addControl(physicsCharacter);
-        getPhysicsSpace().add(physicsCharacter);
+        characterNode.addControl(playerControl);
+        getPhysicsSpace().add(playerControl);
         
         //set debug mode
         bulletAppState.setDebugEnabled(DEBUG_MODE);
@@ -78,6 +78,23 @@ public class WorldPhysicsManager {
     
     public PhysicsSpace getPhysicsSpace() {
         return bulletAppState.getPhysicsSpace();
+    }
+    
+    
+    public void addChildrenToPhysicsScene(Node sceneNode){
+        for (Spatial s : sceneNode.getChildren())
+            addToPhysicsScene(s);
+    }
+    
+    
+    public void addToPhysicsScene(Spatial spatial){
+        RigidBodyControl platformPhysics = new RigidBodyControl(0);
+        spatial.addControl(platformPhysics);
+        platformPhysics.setMass(10f);
+        platformPhysics.setKinematic(true);
+        platformPhysics.setKinematicSpatial(true);
+        platformPhysics.setFriction(1f);
+        getPhysicsSpace().add(platformPhysics);
     }
     
     

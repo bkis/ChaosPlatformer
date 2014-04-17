@@ -1,12 +1,7 @@
 package pt.edj.cp.app;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.material.Material;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 
 
@@ -23,6 +18,8 @@ public class Main extends SimpleApplication {
     
     @Override
     public void simpleInitApp() {
+        flyCam.setEnabled(false);
+        
         //attach ingame state
         IngameState ingameState = new IngameState();
         stateManager.attach(ingameState);
