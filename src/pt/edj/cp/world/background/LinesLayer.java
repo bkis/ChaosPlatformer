@@ -13,7 +13,7 @@ import com.jme3.terrain.noise.basis.ImprovedNoise;
 import java.nio.FloatBuffer;
 import java.util.LinkedList;
 import java.util.Random;
-import pt.edj.cp.timing.events.Event;
+import pt.edj.cp.timing.events.IEvent;
 
 /**
  *
@@ -224,7 +224,7 @@ public class LinesLayer extends BackgroundLayer {
     }
 
     
-    public void receiveEvent(Event e) {
+    public void receiveEvent(IEvent e) {
     }
     
 }

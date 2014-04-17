@@ -6,7 +6,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.HashMap;
-import pt.edj.cp.timing.events.Event;
+import pt.edj.cp.timing.events.IEvent;
 import pt.edj.cp.timing.events.IEventListener;
 
 
@@ -49,7 +49,7 @@ public class BackgroundNode extends Node implements IEventListener {
                 BG_Z_OFFSET + (float)Math.random() - 0.5f);
     }
 
-    public void receiveEvent(Event e) {
+    public void receiveEvent(IEvent e) {
         
     }
     
