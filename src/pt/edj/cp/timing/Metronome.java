@@ -44,6 +44,8 @@ public class Metronome extends AbstractEventSender {
         @Override
         public void run() {
             broadcast(new MetronomeBeatEvent());
+            
+            //debug output
             System.out.println("[METRONOME] beat event no."
                     + tempCounter++
                     + " (" + getBpm() + " bpm)");

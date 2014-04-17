@@ -47,6 +47,9 @@ public class IngameState extends AbstractAppState {
         this.characterNode = new Node("characterNode");
         this.sceneNode = new Node("sceneNode");
         
+        //initialize metronome
+        this.metronome = new Metronome(120); //metronome at 120 bpm
+        
         //initialize character
         loadCharacterModel();
         
@@ -66,8 +69,7 @@ public class IngameState extends AbstractAppState {
         //setup camera
         setupCamera();
         
-        //initialize metronome
-        this.metronome = new Metronome(120);
+        
     }
     
     
