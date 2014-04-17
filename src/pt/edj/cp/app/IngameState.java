@@ -8,13 +8,15 @@ import com.jme3.scene.Node;
 import pt.edj.cp.input.IngameInputsState;
 import pt.edj.cp.physics.WorldPhysicsManager;
 import pt.edj.cp.world.PlatformLifecycleManager;
+import pt.edj.cp.world.background.BackgroundNode;
 
 
-public class IngameState extends AbstractAppState{
+public class IngameState extends AbstractAppState {
+    
+    private SimpleApplication app;
     
     private static final String CHAR_MODEL = "Models/Oto/Oto.j3m";
     
-    private SimpleApplication app;
     private PlatformLifecycleManager lifecycleManager;
     
     private IngameInputsState ingameInputState;
@@ -61,7 +63,11 @@ public class IngameState extends AbstractAppState{
         sceneNode = new Node();
         app.getRootNode().attachChild(sceneNode);
         
-        //TODO
+        // einfach mal hier rein den background node
+        BackgroundNode bgNode = new BackgroundNode(app.getAssetManager(), 10, 7);
+        bgNode.setLocalTranslation(-0.5f, -0.5f, 0.0f);
+        sceneNode.attachChild(bgNode);
+        
     }
     
     
