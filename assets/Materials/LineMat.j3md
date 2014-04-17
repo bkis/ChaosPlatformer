@@ -1,0 +1,20 @@
+MaterialDef BackgroundLineMaterial {
+
+    // Uniforms
+    MaterialParameters {
+        Vector3     Color
+        Float       TotalLength
+        Float       SegmentCount
+        Float       CurrentSegment
+    }
+
+    Technique {
+        WorldParameters {
+            Time
+            WorldViewProjectionMatrix
+        }
+
+        VertexShader GLSL100:   Materials/LineMat.vert
+        FragmentShader GLSL100: Materials/LineMat.frag
+    }
+}
