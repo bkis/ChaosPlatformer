@@ -15,7 +15,7 @@ public class IngameState extends AbstractAppState {
     
     private SimpleApplication app;
     
-    private static final String CHAR_MODEL = "Models/Oto/Oto.j3m";
+    private static final String CHAR_MODEL = "Models/Oto/Oto.mesh.xml";
     
     private PlatformLifecycleManager lifecycleManager;
     
@@ -64,7 +64,7 @@ public class IngameState extends AbstractAppState {
         app.getRootNode().attachChild(sceneNode);
         
         // einfach mal hier rein den background node
-        BackgroundNode bgNode = new BackgroundNode(app.getAssetManager(), 10, 7);
+        BackgroundNode bgNode = new BackgroundNode(app, 10, 7);
         bgNode.setLocalTranslation(-0.5f, -0.5f, 0.0f);
         sceneNode.attachChild(bgNode);
         
