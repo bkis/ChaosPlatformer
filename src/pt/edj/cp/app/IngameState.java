@@ -16,6 +16,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import pt.edj.cp.input.IngameInputsState;
 import pt.edj.cp.physics.WorldPhysicsManager;
+import pt.edj.cp.timing.Metronome;
 import pt.edj.cp.world.PlatformLifecycleManager;
 import pt.edj.cp.world.background.BackgroundNode;
 
@@ -34,6 +35,8 @@ public class IngameState extends AbstractAppState {
     
     private Node sceneNode;
     private Node characterNode;
+    
+    private Metronome metronome;
     
     
     
@@ -62,6 +65,9 @@ public class IngameState extends AbstractAppState {
         
         //setup camera
         setupCamera();
+        
+        //initialize metronome
+        this.metronome = new Metronome(120);
     }
     
     
@@ -73,7 +79,7 @@ public class IngameState extends AbstractAppState {
     
     @Override
     public void cleanup() {
-    
+        metronome.destroy();
     }
     
     
