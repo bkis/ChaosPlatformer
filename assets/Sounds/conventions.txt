@@ -10,6 +10,10 @@ Format:     .ogg (96kbps)
 
 
 Structure:      Ambient                     !! Ambient sounds
+                >   lvl1                        !! ambient stress lvl 1
+                    >   0.ogg                       !! Bsp. sound
+                >   lvl2                        !! ambient stress lvl 2
+                >   lvl3                        !! ambient stress lvl 3
                 Feedback                    !! Player sounds (wenn überhaupt), etc.
                 Instruments                 !! Alles, was Teil der Musik wird
                 >   Background                  !! Padas/Strings/... für Hintergrund
