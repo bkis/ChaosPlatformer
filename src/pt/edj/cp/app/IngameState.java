@@ -47,12 +47,10 @@ public class IngameState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = (SimpleApplication) app;
-        this.lifecycleManager = new PlatformLifecycleManager();
+        this.metronome = new Metronome(120);
+        this.lifecycleManager = new PlatformLifecycleManager(this.app, metronome);
         this.characterNode = new Node("characterNode");
         this.sceneNode = new Node("sceneNode");
-        
-        //initialize metronome
-        this.metronome = new Metronome(120); //metronome at 120 bpm
         
         //initialize character
         loadCharacterModel();

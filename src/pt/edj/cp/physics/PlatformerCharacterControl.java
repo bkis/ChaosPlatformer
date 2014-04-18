@@ -3,26 +3,26 @@ package pt.edj.cp.physics;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.math.Vector3f;
 import java.util.HashSet;
+import java.util.Set;
 import pt.edj.cp.input.IMovementListener;
 
 
 public class PlatformerCharacterControl extends BetterCharacterControl{
     
     // for movement listeners:
-    private HashSet<IMovementListener> movementListeners = new HashSet<IMovementListener>();
+    private Set<IMovementListener> movementListeners;
     private Vector3f lastPosition = null;
     
     
     public PlatformerCharacterControl(float radius, float height, float mass){
         super(radius, height, mass);
+        movementListeners = new HashSet<IMovementListener>();
     }
     
     
     @Override
     public void jump(){
-        super.jump(); //TEMP
-        
-        //TODO
+        super.jump(); //kann erstmal so bleiben
     }
     
     
@@ -33,8 +33,7 @@ public class PlatformerCharacterControl extends BetterCharacterControl{
         
         if (lastPosition == null) {
             lastPosition = spatial.getLocalTranslation().clone();
-        } 
-        else {
+        } else {
             Vector3f newPos = spatial.getLocalTranslation();
             Vector3f delta = newPos.subtract(lastPosition);
             
@@ -51,7 +50,7 @@ public class PlatformerCharacterControl extends BetterCharacterControl{
     public boolean isOnGround(){
         return super.isOnGround(); //TEMP
         
-        //TODO
+        //braucht bessere implementierung für gefälle / kugeln
     }
     
     
