@@ -9,13 +9,14 @@ import pt.edj.cp.timing.events.IEventListener;
 import pt.edj.cp.timing.events.MetronomeBeatEvent;
 import pt.edj.cp.world.platforms.gfx.AbstractPlatformGFX;
 import pt.edj.cp.world.platforms.sfx.RhythmPattern;
+import pt.edj.cp.world.platforms.sfx.SoundContainer;
 
 
 public class Platform implements IEventListener{
     
     private Spatial spatial;
     private AbstractPlatformGFX gfx;
-    private AudioNode sfx;
+    private SoundContainer sfx;
     private SimpleApplication app;
     private RhythmPattern pattern;
     
@@ -23,7 +24,7 @@ public class Platform implements IEventListener{
     public Platform(Application app,
                     Spatial spatial,
                     AbstractPlatformGFX gfx,
-                    AudioNode sfx,
+                    SoundContainer sfx,
                     RhythmPattern pattern){
         this.app = (SimpleApplication) app;
         this.spatial = spatial;
@@ -50,7 +51,7 @@ public class Platform implements IEventListener{
     
     private void heartbeat(){
         //play sound
-        sfx.playInstance();
+        sfx.playNextSound();
         
         //play visual platform feedback effect
         //TODO

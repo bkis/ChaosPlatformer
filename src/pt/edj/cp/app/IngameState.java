@@ -79,7 +79,6 @@ public class IngameState extends AbstractAppState {
         //setup camera
         setupCamera();
         
-        
     }
     
     
