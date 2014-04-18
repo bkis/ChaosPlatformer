@@ -1,10 +1,7 @@
 package pt.edj.cp.world.platforms;
 
-import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import pt.edj.cp.timing.events.IEvent;
 import pt.edj.cp.timing.events.IEventListener;
