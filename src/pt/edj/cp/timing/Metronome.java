@@ -46,9 +46,11 @@ public class Metronome extends AbstractEventSender {
             broadcast(new MetronomeBeatEvent());
             
             //debug output
+            /*
             System.out.println("[METRONOME] beat event no."
                     + tempCounter++
                     + " (" + getBpm() + " bpm)");
+            */
         }
     }
 

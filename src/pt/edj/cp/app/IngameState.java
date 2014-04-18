@@ -8,6 +8,7 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
@@ -47,7 +48,7 @@ public class IngameState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = (SimpleApplication) app;
-        this.lifecycleManager = new PlatformLifecycleManager();
+        this.lifecycleManager = new PlatformLifecycleManager(4.0f, new Vector2f(20, 16));
         this.characterNode = new Node("characterNode");
         this.sceneNode = new Node("sceneNode");
         
@@ -64,6 +65,9 @@ public class IngameState extends AbstractAppState {
         physicsMgr = new WorldPhysicsManager(app, sceneNode, characterNode);
         physicsMgr.addChildrenToPhysicsScene(sceneNode);
         characterControl = (PlatformerCharacterControl) physicsMgr.getCharacterControl();
+        
+        // Connect platform creation engine with character movement
+        characterControl.addMovementListener(lifecycleManager);
         
         //(temp) add bg and light
         addLightTEMP();

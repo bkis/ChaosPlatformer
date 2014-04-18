@@ -37,8 +37,9 @@ public class PlatformerCharacterControl extends BetterCharacterControl{
         else {
             Vector3f newPos = spatial.getLocalTranslation();
             Vector3f delta = newPos.subtract(lastPosition);
+            delta.z = 0.0f; // ignore Z-axis
             
-            if (delta.lengthSquared() > 0.0f) {
+            if (delta.lengthSquared() > 0.0001f) {
                 lastPosition.set(newPos);
                 for (IMovementListener listener : movementListeners)
                     listener.movement(newPos, delta);
