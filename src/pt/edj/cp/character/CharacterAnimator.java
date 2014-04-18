@@ -19,21 +19,13 @@ public class CharacterAnimator {
     private static final String ANI_WALK = "Walk";
     private static final String ANI_JUMP = "push";
     
-    private AniState aniState;
-    public static enum AniState {IDLE,
-                                 MOVE_LEFT,
-                                 MOVE_RIGHT,
-                                 JUMP};
-    
     private AnimChannel animChannel;
     private AnimControl animControl;
     private Node character;
-    private SimpleApplication app;
     
     
-    public CharacterAnimator(Application app, Node character){
+    public CharacterAnimator(Node character){
         super();
-        this.app = (SimpleApplication) app;
         this.character = character;
         initialize();
     }

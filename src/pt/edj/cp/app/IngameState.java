@@ -66,8 +66,8 @@ public class IngameState extends AbstractAppState {
         addBackgroundAndLightTEMP();
         
         //create animation manager
-        CharacterAnimator charAnim = new CharacterAnimator(app,
-                (Node)characterNode.getChild("character"));
+        CharacterAnimator charAnim = new CharacterAnimator(
+                (Node) characterNode.getChild("character"));
         
         //attach input state
         stateManager.attach(ingameInputState = new IngameInputsState(
