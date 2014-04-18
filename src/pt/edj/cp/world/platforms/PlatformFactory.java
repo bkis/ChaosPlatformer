@@ -7,6 +7,8 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
+import pt.edj.cp.world.platforms.sfx.RhythmPattern;
+import pt.edj.cp.world.platforms.sfx.SoundContainer;
 
 
 public class PlatformFactory {
@@ -19,7 +21,7 @@ public class PlatformFactory {
     }
     
     
-    public Spatial debugAddDummyPlatform(Vector3f pos) {
+    public Platform createPlatform(Vector3f pos) {
         //test-scene
         Box boxMesh = new Box(0.4f,0.4f,1f); 
         Geometry boxGeo = new Geometry("Colored Box", boxMesh); 
@@ -29,7 +31,9 @@ public class PlatformFactory {
         boxGeo.setMaterial(boxMat); 
         boxGeo.setLocalTranslation(pos);
         
-        return boxGeo;
+        Platform platf = new Platform((Spatial)boxGeo, null, new SoundContainer(), new RhythmPattern(16,0.5f));
+        
+        return platf;
     }
     
 }

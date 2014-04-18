@@ -164,7 +164,7 @@ public class IngameState extends AbstractAppState {
     
     public Spatial debugAddDummyPlatform(Vector3f pos) {
         //test-scene
-        Spatial s  = platformFactory.debugAddDummyPlatform(pos);
+        Spatial s  = platformFactory.createPlatform(pos).getSpatial();
         
         sceneNode.attachChild(s);
         physicsMgr.addToPhysicsScene(s);
