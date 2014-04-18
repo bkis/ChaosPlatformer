@@ -8,7 +8,7 @@ import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
-import pt.edj.cp.app.IngameState;
+import pt.edj.cp.physics.PlatformerCharacterControl;
 
 
 public class IngameInputsState extends AbstractAppState{
@@ -36,7 +36,12 @@ public class IngameInputsState extends AbstractAppState{
     
     private SimpleApplication app;
     private InputManager inputManager;
+    PlatformerCharacterControl playerControl;
     
+    
+    public IngameInputsState(PlatformerCharacterControl pc) {
+        playerControl = pc;
+    }
     
       
     @Override
@@ -52,14 +57,17 @@ public class IngameInputsState extends AbstractAppState{
     
     @Override
     public void update(float tpf){
+        float dx = 0.0f;
+        
         if (left){
-            //TODO
+            dx -= 4.0f;
         } if (right){
-            //TODO
-        } if (jump){
-            //TODO
-        } else {
-            //TODO
+            dx += 4.0f;
+        } 
+        playerControl.setDx(dx);
+        
+        if (jump){
+            playerControl.jump();
         }
     }
     

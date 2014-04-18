@@ -1,9 +1,14 @@
 package pt.edj.cp.physics;
 
 import com.jme3.bullet.control.BetterCharacterControl;
+import com.jme3.math.Vector3f;
+import java.util.HashSet;
+import pt.edj.cp.input.IMovementListener;
 
 
 public class PlatformerCharacterControl extends BetterCharacterControl{
+    private HashSet<IMovementListener> movementListeners = new HashSet<IMovementListener>();
+    private float dX = 0.0f;
     
     
     public PlatformerCharacterControl(float radius, float height, float mass){
@@ -21,8 +26,18 @@ public class PlatformerCharacterControl extends BetterCharacterControl{
     
     @Override
     public void update(float tpf){
+        Vector3f oldPos = spatial.getLocalTranslation();
+        
         super.update(tpf);
         correctZPos();
+        
+        Vector3f newPos = spatial.getLocalTranslation();
+        Vector3f delta = newPos.subtract(oldPos);
+        if (delta.length() > 0) {
+            for (IMovementListener l : movementListeners) {
+                l.movement(newPos, delta);
+            }
+        }
     }
     
     
@@ -31,6 +46,12 @@ public class PlatformerCharacterControl extends BetterCharacterControl{
         return super.isOnGround(); //TEMP
         
         //TODO
+    }
+    
+    
+    public void setDx(float dx) {
+        dX = dx;
+        setWalkDirection(new Vector3f(dx, 0.0f, 0.0f));
     }
     
     
@@ -43,4 +64,13 @@ public class PlatformerCharacterControl extends BetterCharacterControl{
         }
     }
     
+    
+    public void addMovementListener(IMovementListener l) {
+        movementListeners.add(l);
+    }
+    
+    
+    public void removeMovementListener(IMovementListener l) {
+        movementListeners.remove(l);
+    }
 }

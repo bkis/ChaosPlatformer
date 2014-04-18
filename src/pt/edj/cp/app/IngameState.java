@@ -64,7 +64,8 @@ public class IngameState extends AbstractAppState {
         addBackgroundAndLightTEMP();
         
         //attach input state
-        stateManager.attach(ingameInputState = new IngameInputsState());
+        ingameInputState = new IngameInputsState(worldPhysicsManager.getCharacterControl());
+        stateManager.attach(ingameInputState);
         
         //setup camera
         setupCamera();

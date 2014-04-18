@@ -81,6 +81,11 @@ public class WorldPhysicsManager {
     }
     
     
+    public PlatformerCharacterControl getCharacterControl() {
+        return playerControl;
+    }
+    
+    
     public void addChildrenToPhysicsScene(Node sceneNode){
         for (Spatial s : sceneNode.getChildren())
             addToPhysicsScene(s);
