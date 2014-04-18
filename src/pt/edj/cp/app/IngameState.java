@@ -23,6 +23,7 @@ import pt.edj.cp.physics.WorldPhysicsManager;
 import pt.edj.cp.timing.Metronome;
 import pt.edj.cp.world.PlatformLifecycleManager;
 import pt.edj.cp.world.background.BackgroundNode;
+import pt.edj.cp.world.platforms.Platform;
 import pt.edj.cp.world.platforms.PlatformFactory;
 
 
@@ -164,12 +165,14 @@ public class IngameState extends AbstractAppState {
     
     public Spatial debugAddDummyPlatform(Vector3f pos) {
         //test-scene
-        Spatial s  = platformFactory.createPlatform(pos).getSpatial();
+        Platform p = platformFactory.createPlatform(pos);
+        metronome.register(p);
+        physicsMgr.getPhysicsSpace().addCollisionListener(p);
         
-        sceneNode.attachChild(s);
-        physicsMgr.addToPhysicsScene(s);
+        sceneNode.attachChild(p.getSpatial());
+        physicsMgr.addToPhysicsScene(p.getSpatial());
         
-        return s;
+        return p.getSpatial();
     }
     
     public void debugRemoveDummyPlatform(Spatial s) {

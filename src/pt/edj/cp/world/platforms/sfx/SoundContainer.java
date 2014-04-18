@@ -1,9 +1,12 @@
 package pt.edj.cp.world.platforms.sfx;
 
+import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 
 /*
@@ -13,11 +16,18 @@ public class SoundContainer {
     
     private List<AudioNode> sounds;
     private int nextIndex;
+    private SimpleApplication app;
     
     
-    public SoundContainer(AssetManager assetManager){
+    public SoundContainer(Application app){
+        this.app = (SimpleApplication) app;
         this.sounds = new ArrayList<AudioNode>();
-        this.sounds.add(new AudioNode(assetManager, "Sounds/Instruments/Other/Short/0.ogg"));
+        
+        //dummy 
+        AudioNode testAudio = new AudioNode(app.getAssetManager(),
+                "Sounds/Instruments/Other/Short/0.ogg");
+        testAudio.setPitch((float)Math.random()+0.5f);
+        this.sounds.add(testAudio);
     }
     
     
@@ -27,7 +37,15 @@ public class SoundContainer {
     
     
     public void playNextSound(){
-        if (sounds.size() > 0)
-            sounds.get(nextIndex++ % sounds.size()).playInstance();
+        app.enqueue(playSound);
     }
+    
+    
+    Callable<Boolean> playSound = new Callable<Boolean>() {
+        public Boolean call() throws Exception{
+            sounds.get(nextIndex++ % sounds.size()).playInstance();
+            return true;
+        }
+    };
+
 }
