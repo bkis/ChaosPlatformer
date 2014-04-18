@@ -4,8 +4,6 @@ import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
-import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
@@ -49,10 +47,7 @@ public class CharacterAnimator {
     }
     
     
-    public void animWalk(boolean walkLeft){
-        if (walkLeft) turnCharacterLeft();
-        else          turnCharacterRight();
-        
+    public void animWalk(){
         if (!animChannel.getAnimationName().equals(ANI_WALK)) {
             animChannel.setAnim(ANI_WALK, 0);
             animChannel.setLoopMode(LoopMode.Loop);
@@ -68,7 +63,7 @@ public class CharacterAnimator {
     }
     
     
-    private void turnCharacterLeft(){
+    public void turnCharacterLeft(){
         character.lookAt(new Vector3f(
                 -99999999,
                 character.getLocalTranslation().y,
@@ -77,7 +72,7 @@ public class CharacterAnimator {
     }
     
     
-    private void turnCharacterRight(){
+    public void turnCharacterRight(){
         character.lookAt(new Vector3f(
                 99999999,
                 character.getLocalTranslation().y,

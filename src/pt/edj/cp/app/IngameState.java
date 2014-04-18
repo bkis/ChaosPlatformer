@@ -49,11 +49,9 @@ public class IngameState extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = (SimpleApplication) app;
         this.lifecycleManager = new PlatformLifecycleManager(4.0f, new Vector2f(20, 16));
+        this.metronome = new Metronome(120);
         this.characterNode = new Node("characterNode");
         this.sceneNode = new Node("sceneNode");
-        
-        //initialize metronome
-        this.metronome = new Metronome(120); //metronome at 120 bpm
         
         //initialize character
         loadCharacterModel();
@@ -84,7 +82,6 @@ public class IngameState extends AbstractAppState {
         
         //setup camera
         setupCamera();
-        
         
     }
     
@@ -145,7 +142,7 @@ public class IngameState extends AbstractAppState {
         character.scale(0.1f);
         characterNode.attachChild(character);
         characterNode.setLocalTranslation(0, 4, 0);
-        character.setLocalTranslation(0, character.getLocalScale().y+0.45f, 0);
+        character.setLocalTranslation(0, character.getLocalScale().y+0.40f, 0);
         app.getRootNode().attachChild(characterNode);
     }
     

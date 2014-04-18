@@ -22,11 +22,11 @@ public class WorldPhysicsManager {
     private static final Vector3f JUMP_STOP_GRAVITY = new Vector3f(0, -80.0f, 0);
     private static final Vector3f JUMP_FORCE        = new Vector3f(0, 20, 0);
     private static final float    CHARACTER_RADIUS  = 0.3f;
-    private static final float    CHARACTER_HEIGHT  = 1.1f;
+    private static final float    CHARACTER_HEIGHT  = 1.0f;
     private static final float    CHARACTER_MASS    = 10f;
     private static final float    PHYSICS_ACCURACY  = 0.016f; //def=0.016, low=0.005, hi=0.032
     private static final float    PHYSICS_DAMPING   = 0.1f;
-    private static final boolean  DEBUG_MODE        = true;
+    private static final boolean  DEBUG_MODE        = false;
     
     
     private SimpleApplication app;
