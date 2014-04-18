@@ -2,20 +2,26 @@ package pt.edj.cp.world;
 
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
+import com.jme3.terrain.noise.basis.ImprovedNoise;
 import java.util.Collection;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import pt.edj.cp.app.IngameState;
 import pt.edj.cp.input.IMovementListener;
+import pt.edj.cp.world.platforms.Platform;
 
 
 public class PlatformLifecycleManager implements IMovementListener {
     
+    private Random random = new Random();
+        
     private float zoneSize;
     private Vector2f activeAreaSize;
     private Vector2f halfArea;
+    
+    private float platformSpawnThreshold = 0.5f;
+    private IPlatformSpawner platformSpawner;
     
     /**
      * Used for zone management
@@ -85,22 +91,21 @@ public class PlatformLifecycleManager implements IMovementListener {
      * destruction
      */
     private class Zone extends Position {
-        private boolean hasPlatform;
-        public Spatial spatial;
+        public Platform platform;
         
         public Zone(Position p) {
             super(p.x, p.y);
             
-            if ((hasPlatform = shouldPlacePlatform(p)) == true) {
-                spatial = ingameState.debugAddDummyPlatform(generatePlatformPosition(p));
+            if (platformSpawner.shouldPlacePlatform(p)) {
+                platform = ingameState.debugAddDummyPlatform(generatePlatformPosition(p));
             } else {
-                spatial = null;
+                platform = null;
             }
         }
         
         public void delete() {
-            if (hasPlatform)
-                ingameState.debugRemoveDummyPlatform(spatial);
+            if (platform != null)
+                ingameState.debugRemoveDummyPlatform(platform);
         }
     }
 
@@ -128,6 +133,10 @@ public class PlatformLifecycleManager implements IMovementListener {
         this.halfArea = activeArea.mult(0.5f);
         
         this.ingameState = ingame;
+        
+        this.platformSpawner = new NoisePlatformSpawner(0.8525342f);
+        this.platformSpawner = new HorizontalPlatformSpawner();
+        this.platformSpawnThreshold = 0.6f;
         
         // add initial zones around player
         activeZones = getActiveZonesForPosition(new Vector2f(0.0f, 0.0f));
@@ -164,16 +173,64 @@ public class PlatformLifecycleManager implements IMovementListener {
     }
     
     
-    boolean shouldPlacePlatform(Position zonePosition) {
-        return true;
+    /**
+     * Decide whether or not to place a new platform at the given spot
+     */
+    private interface IPlatformSpawner {
+        public boolean shouldPlacePlatform(Position zonePosition);
+    }
+    
+    /**
+     * Use random choice to make choice for each zone
+     */
+    private class RandomPlatformSpawner implements IPlatformSpawner {
+        public boolean shouldPlacePlatform(Position zonePosition) {
+            return random.nextFloat() < platformSpawnThreshold;
+        }
+    }
+    
+    /**
+     * Use noise to create more cluster-like platform density
+     */
+    private class NoisePlatformSpawner implements IPlatformSpawner {
+        float stretch;
+        
+        public NoisePlatformSpawner(float stretch) {
+            this.stretch = stretch;
+        }
+        
+        public boolean shouldPlacePlatform(Position zonePosition) {
+            float v = ImprovedNoise.noise(zonePosition.x / stretch, zonePosition.y / stretch, 0.0f);
+            return (v + 0.5f) < platformSpawnThreshold;
+        }
+    }
+    
+    /**
+     * Generate horizontal platform lines
+     */
+    private class HorizontalPlatformSpawner implements IPlatformSpawner {
+        public boolean shouldPlacePlatform(Position zonePosition) {
+            // get y-dependent spacing
+            Random yRand = new Random(zonePosition.y);
+            int period = 30 + yRand.nextInt(10);
+            int offset = yRand.nextInt(period);
+            
+            // get x-dependent length
+            int number = (zonePosition.x - offset) / period;
+            Random xRand = new Random(zonePosition.y + number);
+            int length = 10 + xRand.nextInt(6);
+            
+            int within = (zonePosition.x - offset) % period;
+            within = (within + period) % period;
+            return within < length;
+        }
     }
     
     
-    Random random = new Random();
-    
     Vector3f generatePlatformPosition(Position zonePosition) {
-        float x = (zonePosition.x + 0.2f + 0.6f * random.nextFloat()) * zoneSize;
-        float y = (zonePosition.y + 0.2f + 0.6f * random.nextFloat()) * zoneSize;
+        float maxDiff = 0.1f;
+        float x = (zonePosition.x + 0.5f - maxDiff + maxDiff * 2 * random.nextFloat()) * zoneSize;
+        float y = (zonePosition.y + 0.5f - maxDiff + maxDiff * 2 * random.nextFloat()) * zoneSize;
         return new Vector3f(x, y, 0.0f);
     }
 }

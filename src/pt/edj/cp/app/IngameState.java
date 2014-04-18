@@ -23,6 +23,7 @@ import pt.edj.cp.physics.WorldPhysicsManager;
 import pt.edj.cp.timing.Metronome;
 import pt.edj.cp.world.PlatformLifecycleManager;
 import pt.edj.cp.world.background.BackgroundNode;
+import pt.edj.cp.world.platforms.Platform;
 import pt.edj.cp.world.platforms.PlatformFactory;
 
 
@@ -84,7 +85,7 @@ public class IngameState extends AbstractAppState {
         
         // Connect platform creation engine with character movement
         this.platformFactory = new PlatformFactory(this.app);
-        this.lifecycleManager = new PlatformLifecycleManager(this, 4.0f, new Vector2f(20, 16));
+        this.lifecycleManager = new PlatformLifecycleManager(this, 3.0f, new Vector2f(20, 16));
         characterControl.addMovementListener(lifecycleManager);
     }
     
@@ -162,18 +163,20 @@ public class IngameState extends AbstractAppState {
     }
     
     
-    public Spatial debugAddDummyPlatform(Vector3f pos) {
+    public Platform debugAddDummyPlatform(Vector3f pos) {
         //test-scene
-        Spatial s  = platformFactory.createPlatform(pos).getSpatial();
+        Platform platform = platformFactory.createPlatform(pos);
         
-        sceneNode.attachChild(s);
-        physicsMgr.addToPhysicsScene(s);
+        Spatial spat = platform.getSpatial();
+        sceneNode.attachChild(spat);
+        physicsMgr.addToPhysicsScene(spat);
         
-        return s;
+        return platform;
     }
     
-    public void debugRemoveDummyPlatform(Spatial s) {
-        sceneNode.detachChild(s);
-        physicsMgr.removeFromPhysicsScene(s);
+    public void debugRemoveDummyPlatform(Platform platform) {
+        Spatial spat = platform.getSpatial();
+        sceneNode.detachChild(spat);
+        physicsMgr.removeFromPhysicsScene(spat);
     }
 }
