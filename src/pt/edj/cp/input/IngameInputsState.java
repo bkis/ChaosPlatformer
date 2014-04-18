@@ -138,12 +138,12 @@ public class IngameInputsState extends AbstractAppState{
             return;
         }
         
-        if (currMov == Movement.LEFT){
+        if (currMov == Movement.LEFT && !jump){
             playerControl.setWalkDirection(WorldPhysicsManager.DIR_LEFT);
             ani.animWalk(true);
         }
         
-        if (currMov == Movement.RIGHT){
+        if (currMov == Movement.RIGHT && !jump){
             playerControl.setWalkDirection(WorldPhysicsManager.DIR_RIGHT);
             ani.animWalk(false);
         }
