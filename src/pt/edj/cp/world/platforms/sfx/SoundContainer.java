@@ -2,7 +2,6 @@ package pt.edj.cp.world.platforms.sfx;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
-import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import java.util.ArrayList;
 import java.util.List;

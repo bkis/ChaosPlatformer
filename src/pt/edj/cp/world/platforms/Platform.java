@@ -65,10 +65,18 @@ public class Platform implements IEventListener, PhysicsCollisionListener{
     public void collision(PhysicsCollisionEvent event) {
         if (event.getNodeA().getName().contains("aracter")
                 && event.getNodeB() == spatial){
-            active = true;
+            activate();
         } else if (event.getNodeB().getName().contains("aracter")
                 && event.getNodeA() == spatial){
+            activate();
+        }
+    }
+    
+    
+    private void activate(){
+        if (!active){
             active = true;
+            heartbeat();
         }
     }
 
