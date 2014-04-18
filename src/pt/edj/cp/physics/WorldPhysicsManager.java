@@ -4,6 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -13,8 +14,9 @@ import com.jme3.scene.Spatial;
 public class WorldPhysicsManager {
     
     //physics parameters
-    private static final Vector3f DIR_LEFT          = new Vector3f(-20f, 0, 0);
-    private static final Vector3f DIR_RIGHT         = new Vector3f(20f, 0, 0);
+    private static final float    PLAYER_SPEED      = 5.0f;
+    public  static final Vector3f DIR_LEFT          = new Vector3f(-PLAYER_SPEED, 0, 0);
+    public  static final Vector3f DIR_RIGHT         = new Vector3f(PLAYER_SPEED, 0, 0);
     private static final Vector3f WORLD_GRAVITY     = new Vector3f(0, -9.81f, 0);
     private static final Vector3f CHARACTER_GRAVITY = new Vector3f(0, -9.81f, 0);
     private static final Vector3f JUMP_STOP_GRAVITY = new Vector3f(0, -80.0f, 0);
@@ -78,6 +80,11 @@ public class WorldPhysicsManager {
     
     public PhysicsSpace getPhysicsSpace() {
         return bulletAppState.getPhysicsSpace();
+    }
+    
+    
+    public BetterCharacterControl getCharacterControl(){
+        return playerControl;
     }
     
     

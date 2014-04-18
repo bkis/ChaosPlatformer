@@ -8,7 +8,10 @@ import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
-import pt.edj.cp.app.IngameState;
+import com.jme3.math.Vector3f;
+import pt.edj.cp.character.CharacterAnimator;
+import pt.edj.cp.physics.PlatformerCharacterControl;
+import pt.edj.cp.physics.WorldPhysicsManager;
 
 
 public class IngameInputsState extends AbstractAppState{
@@ -36,9 +39,22 @@ public class IngameInputsState extends AbstractAppState{
     
     private SimpleApplication app;
     private InputManager inputManager;
+
+    private enum Movement {LEFT, RIGHT, NONE};
+    private Movement currMov;
+    
+    private PlatformerCharacterControl playerControl;
+    private CharacterAnimator ani;
     
     
+    
+    public IngameInputsState(PlatformerCharacterControl playerControl,
+                             CharacterAnimator ani){
+        this.playerControl = playerControl;
+        this.ani = ani;
+    }
       
+    
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = (SimpleApplication) app;
@@ -52,15 +68,7 @@ public class IngameInputsState extends AbstractAppState{
     
     @Override
     public void update(float tpf){
-        if (left){
-            //TODO
-        } if (right){
-            //TODO
-        } if (jump){
-            //TODO
-        } else {
-            //TODO
-        }
+        checkMovement();
     }
     
     
@@ -86,24 +94,33 @@ public class IngameInputsState extends AbstractAppState{
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean isPressed, float tpf) {
             if (name.equals(MAPPING_LEFT)) {
-                if (isPressed)
+                if (isPressed){
+                    if (!left) currMov = Movement.LEFT;
                     left = true;
-                else
+                } else {
+                    if (right) currMov = Movement.RIGHT;
+                    else currMov = Movement.NONE;
                     left = false;
+                }
             }
             
             if (name.equals(MAPPING_RIGHT)) {
-                if (isPressed)
+                if (isPressed){
+                    if (!right) currMov = Movement.RIGHT;
                     right = true;
-                else
+                } else {
+                    if (left) currMov = Movement.LEFT;
+                    else currMov = Movement.NONE;
                     right = false;
+                }
             }
             
             if (name.equals(MAPPING_JUMP)) {
-                if (isPressed)
+               if (isPressed){
                     jump = true;
-                else
+                } else {
                     jump = false;
+                }
             }
             
             if (name.equals(MAPPING_QUIT)) {
@@ -112,6 +129,30 @@ public class IngameInputsState extends AbstractAppState{
             }
         }
     };
+    
+    
+    private void checkMovement() {
+        if (currMov == Movement.NONE && !jump){
+            playerControl.setWalkDirection(Vector3f.ZERO);
+            ani.animIdle();
+            return;
+        }
+        
+        if (currMov == Movement.LEFT){
+            playerControl.setWalkDirection(WorldPhysicsManager.DIR_LEFT);
+            ani.animWalk(true);
+        }
+        
+        if (currMov == Movement.RIGHT){
+            playerControl.setWalkDirection(WorldPhysicsManager.DIR_RIGHT);
+            ani.animWalk(false);
+        }
+        
+        if (jump){
+            playerControl.jump();
+            ani.animJump();
+        }
+    }
     
     
 }

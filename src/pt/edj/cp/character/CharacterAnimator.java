@@ -3,6 +3,7 @@ package pt.edj.cp.character;
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
+import com.jme3.animation.LoopMode;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.math.Vector3f;
@@ -42,23 +43,32 @@ public class CharacterAnimator {
         animControl = character.getControl(AnimControl.class);
         animControl.addListener(animationListener);
         animChannel = animControl.createChannel();
-        animChannel.setAnim(ANI_IDLE);
-        animChannel.setSpeed(1f);
+        animChannel.setSpeed(4f);
+        animChannel.setAnim(ANI_IDLE, 0);
+        animChannel.setLoopMode(LoopMode.DontLoop);
     }
     
     
-    public void animStand(){
-        //TODO
+    public void animIdle(){
+        if (!animChannel.getAnimationName().equals(ANI_IDLE)) {
+            animChannel.setAnim(ANI_IDLE, 0);
+            animChannel.setLoopMode(LoopMode.DontLoop);
+        }
     }
     
     
     public void animWalk(boolean walkLeft){
-        //TODO
+        if (walkLeft) turnCharacterLeft();
+        else          turnCharacterRight();
+        
+        animChannel.setAnim(ANI_WALK, 0);
+        animChannel.setLoopMode(LoopMode.Loop);
     }
     
     
     public void animJump(){
-        //TODO
+        animChannel.setAnim(ANI_JUMP, 0);
+        animChannel.setLoopMode(LoopMode.Loop);
     }
     
     
@@ -80,22 +90,22 @@ public class CharacterAnimator {
     }
     
     
-    private void turnCharacterFront(){
-        character.lookAt(new Vector3f(
-                0,
-                character.getLocalTranslation().y,
-                99999999              
-                ), Vector3f.UNIT_Y);
-    }
+//    private void turnCharacterFront(){
+//        character.lookAt(new Vector3f(
+//                0,
+//                character.getLocalTranslation().y,
+//                99999999              
+//                ), Vector3f.UNIT_Y);
+//    }
     
     
     private void animCycleDone(AnimControl control, AnimChannel channel, String animName) {
-        //TODO
+        //...
     }
     
     
     private void animChange(AnimControl control, AnimChannel channel, String animName) {
-        //TODO
+        //...
     }
     
 

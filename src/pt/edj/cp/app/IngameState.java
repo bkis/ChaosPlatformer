@@ -14,7 +14,9 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
+import pt.edj.cp.character.CharacterAnimator;
 import pt.edj.cp.input.IngameInputsState;
+import pt.edj.cp.physics.PlatformerCharacterControl;
 import pt.edj.cp.physics.WorldPhysicsManager;
 import pt.edj.cp.timing.Metronome;
 import pt.edj.cp.world.PlatformLifecycleManager;
@@ -23,7 +25,7 @@ import pt.edj.cp.world.background.BackgroundNode;
 
 public class IngameState extends AbstractAppState {
     
-    private static final String CHAR_MODEL = "Models/Oto/Oto.mesh.xml";
+    private static final String CHAR_MODEL = "Models/Oto/Oto.mesh.j3o";
     private static final float CAM_Y_OFFSET = 1f;
     private static final float CAM_Z_OFFSET = 10f;
     
@@ -31,7 +33,7 @@ public class IngameState extends AbstractAppState {
     private PlatformLifecycleManager lifecycleManager;
     
     private IngameInputsState ingameInputState;
-    private WorldPhysicsManager worldPhysicsManager;
+    private WorldPhysicsManager physicsMgr;
     
     private Node sceneNode;
     private Node characterNode;
@@ -57,14 +59,20 @@ public class IngameState extends AbstractAppState {
         constructScene();
         
         //load and apply physics
-        worldPhysicsManager = new WorldPhysicsManager(app, sceneNode, characterNode);
-        worldPhysicsManager.addChildrenToPhysicsScene(sceneNode);
+        physicsMgr = new WorldPhysicsManager(app, sceneNode, characterNode);
+        physicsMgr.addChildrenToPhysicsScene(sceneNode);
         
         //(temp) add bg and light
         addBackgroundAndLightTEMP();
         
+        //create animation manager
+        CharacterAnimator charAnim = new CharacterAnimator(app,
+                (Node)characterNode.getChild("character"));
+        
         //attach input state
-        stateManager.attach(ingameInputState = new IngameInputsState());
+        stateManager.attach(ingameInputState = new IngameInputsState(
+                (PlatformerCharacterControl) physicsMgr.getCharacterControl(),
+                charAnim));
         
         //setup camera
         setupCamera();
