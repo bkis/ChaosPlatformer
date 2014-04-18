@@ -2,6 +2,7 @@ package pt.edj.cp.world.background;
 
 import com.jme3.app.Application;
 import com.jme3.material.Material;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -20,6 +21,17 @@ import pt.edj.cp.timing.events.IEvent;
  * @author rechtslang
  */
 public class LinesLayer extends BackgroundLayer {
+
+    private int numLines;
+    private LinkedList<Line> lines;
+    private Random random;
+
+    private float maxX;
+    private float maxY;
+    private Vector3f currOffset;
+
+    private float currSegment;
+    private float segmentsPerSecond;
     
     
     public LinesLayer(Application app, float z, int numLines, float sx, float sy) {
@@ -27,6 +39,8 @@ public class LinesLayer extends BackgroundLayer {
 
         maxX = sx;
         maxY = sy;
+        currOffset = new Vector3f(0.f, 0.f, 0.f);
+        
         currSegment = 0;
         segmentsPerSecond = 25.0f;
 
@@ -44,8 +58,12 @@ public class LinesLayer extends BackgroundLayer {
     private void addLine() {
         Line line = new Line(150 + random.nextInt(100), random);
         line.createControlPoints(10, 0.5f, 0.2f);
-        lines.add(line);
+        line.updateOffset(currOffset);
+        
         attachChild(line);
+        line.setCullHint(CullHint.Never);
+        
+        lines.add(line);
     }
 
 
@@ -55,7 +73,9 @@ public class LinesLayer extends BackgroundLayer {
 
 
     protected void doShift(Vector3f vec) {
-        this.move(vec);
+        currOffset.addLocal(vec);
+        for (Line line : lines)
+            line.updateOffset(currOffset);
     }
     
     
@@ -97,6 +117,7 @@ public class LinesLayer extends BackgroundLayer {
             mat.setFloat("SegmentCount", (float) segs);
             mat.setFloat("TotalLength", currLength);
             mat.setFloat("CurrentSegment", currSegment);
+            mat.setVector3("Offset", new Vector3f(0.0f, 0.0f, 0.0f));
             this.setMaterial(mat);
         }
 
@@ -148,18 +169,23 @@ public class LinesLayer extends BackgroundLayer {
 
             // start creating new control points
             for (int i = 0; i < newSegments; i++) {
-                double outsidenessX = Math.max(Math.abs(currPos.getX() / (0.5*maxX)) - 1, 0);
-                double outsidenessY = Math.max(Math.abs(currPos.getY() / (0.5*maxY)) - 1, 0);
+                float realX = currPos.x + currOffset.x;
+                float realY = currPos.y + currOffset.y;
+                
+                double outsidenessX = Math.max(Math.abs(realX / (0.5*maxX)) - 1, 0);
+                double outsidenessY = Math.max(Math.abs(realY / (0.5*maxY)) - 1, 0);
                 double outsideness = outsidenessX + outsidenessY;
 
                 // if we are outside boundaries, steer back to center
-                if (outsideness > 0.3) {
-                    currAngle = (float) (1.5*Math.PI - Math.atan2(currPos.getY(), currPos.getX()));
+                if (outsideness > 0.2) {
+                    currAngle = (float) (1.5*Math.PI - Math.atan2(realY, realX));
                     //System.out.println("Outside: " + outsideness);
                 }
                 // change angle using noise - make sure to slightly head for center always
-                else if (outsideness < 0.05) {
+                else {
                     float dAngle = noise.value(alternating * currLength, noiseY, noiseZ);
+                    dAngle *= (1.0f - outsideness*5.0f);
+                    
                     currAngle += maxAngleChange * dAngle;
                     currAngle = (currAngle + 2.0f * (float)Math.PI) % (2.0f * (float)Math.PI);
                 }
@@ -173,9 +199,9 @@ public class LinesLayer extends BackgroundLayer {
                 currLength++;
 
                 // add control point
-                verts[3*i  ] = currPos.getX();
-                verts[3*i+1] = currPos.getY();
-                verts[3*i+2] = currPos.getZ();
+                verts[3*i  ] = currPos.x;
+                verts[3*i+1] = currPos.y;
+                verts[3*i+2] = currPos.z;
 
                 texCoords[2*i  ] = currLength;
                 texCoords[2*i+1] = 1.0f;
@@ -199,19 +225,12 @@ public class LinesLayer extends BackgroundLayer {
         public void updateCurrSegment() {
             getMaterial().setFloat("CurrentSegment", currSegment);
         }
+        
+        public void updateOffset(Vector3f ofs) {
+            getMaterial().setVector3("Offset", ofs);
+        }
 
     }
-
-
-    private int numLines;
-    private LinkedList<Line> lines;
-    private Random random;
-
-    private float maxX;
-    private float maxY;
-
-    private float currSegment;
-    private float segmentsPerSecond;
 
 
     private class UpdateControl extends AbstractControl {

@@ -6,6 +6,7 @@ MaterialDef BackgroundLineMaterial {
         Float       TotalLength
         Float       SegmentCount
         Float       CurrentSegment
+        Vector3     Offset
     }
 
     Technique {
