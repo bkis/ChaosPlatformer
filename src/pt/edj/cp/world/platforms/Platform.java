@@ -17,6 +17,7 @@ public class Platform implements IEventListener, PhysicsCollisionListener{
     private AbstractPlatformGFX gfx;
     private SoundContainer sfx;
     private RhythmPattern pattern;
+    private boolean active;
     
     
     public Platform(Spatial spatial,
@@ -27,6 +28,8 @@ public class Platform implements IEventListener, PhysicsCollisionListener{
         this.gfx = gfx;
         this.sfx = sfx;
         this.pattern = pattern;
+        
+        spatial.addControl(gfx);
     }
     
     
@@ -46,24 +49,34 @@ public class Platform implements IEventListener, PhysicsCollisionListener{
     
     
     private void heartbeat(){
-        //play sound
-        sfx.playNextSound();
-        
-        //play visual platform feedback effect
-        //TODO
-        
-        //play platform GFX
-        //TODO
+        if (active){
+            //play sound
+            sfx.playNextSound();
+            
+            //play visual platform feedback effect
+            gfx.fire();
+
+            //play platform GFX
+            //TODO
+        }
     }
 
     
     public void collision(PhysicsCollisionEvent event) {
-        if (event.getNodeA().getName().contains("character")
-                && event.getNodeB().getName().equals(spatial.getName())){
-            //TODO
-        } else if (event.getNodeB().getName().contains("character")
-                && event.getNodeA().getName().equals(spatial.getName())){
-            //TODO
+        if (event.getNodeA().getName().contains("aracter")
+                && event.getNodeB() == spatial){
+            activate();
+        } else if (event.getNodeB().getName().contains("aracter")
+                && event.getNodeA() == spatial){
+            activate();
+        }
+    }
+    
+    
+    private void activate(){
+        if (!active){
+            active = true;
+            heartbeat();
         }
     }
 

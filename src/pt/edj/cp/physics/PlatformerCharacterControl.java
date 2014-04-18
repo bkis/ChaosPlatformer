@@ -78,7 +78,7 @@ public class PlatformerCharacterControl extends BetterCharacterControl implement
 
     
     public void collision(PhysicsCollisionEvent event) {
-        //evtl. for Überschreiben von OnGround() nützlich
+        //evtl. für Überschreiben von OnGround() nützlich
     }
     
 }

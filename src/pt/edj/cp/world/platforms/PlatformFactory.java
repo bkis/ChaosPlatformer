@@ -7,6 +7,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
+import pt.edj.cp.world.platforms.gfx.ExampleGFX;
 import pt.edj.cp.world.platforms.sfx.RhythmPattern;
 import pt.edj.cp.world.platforms.sfx.SoundContainer;
 
@@ -31,7 +32,10 @@ public class PlatformFactory {
         boxGeo.setMaterial(boxMat); 
         boxGeo.setLocalTranslation(pos);
         
-        Platform platf = new Platform((Spatial)boxGeo, null, new SoundContainer(), new RhythmPattern(16,0.5f));
+        Platform platf = new Platform((Spatial)boxGeo,
+                new ExampleGFX(app),
+                new SoundContainer(app),
+                new RhythmPattern(16, (float)Math.random()+0.1f));
         
         return platf;
     }
