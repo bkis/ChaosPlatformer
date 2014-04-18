@@ -41,7 +41,7 @@ public class SoundContainer {
     
     
     Callable<Boolean> playSound = new Callable<Boolean>() {
-        public Boolean call() throws Exception{
+        public Boolean call(){
             sounds.get(nextIndex++ % sounds.size()).playInstance();
             return true;
         }

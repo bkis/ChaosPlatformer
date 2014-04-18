@@ -7,10 +7,7 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 
-/**
- *
- * @author boss
- */
+
 public class ExampleGFX extends AbstractPlatformGFX {
 
     ParticleEmitter fireEffect;
