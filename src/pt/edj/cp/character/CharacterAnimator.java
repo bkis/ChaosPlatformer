@@ -61,14 +61,18 @@ public class CharacterAnimator {
         if (walkLeft) turnCharacterLeft();
         else          turnCharacterRight();
         
-        animChannel.setAnim(ANI_WALK, 0);
-        animChannel.setLoopMode(LoopMode.Loop);
+        if (!animChannel.getAnimationName().equals(ANI_WALK)) {
+            animChannel.setAnim(ANI_WALK, 0);
+            animChannel.setLoopMode(LoopMode.Loop);
+        }
     }
     
     
     public void animJump(){
-        animChannel.setAnim(ANI_JUMP, 0);
-        animChannel.setLoopMode(LoopMode.Loop);
+        if (!animChannel.getAnimationName().equals(ANI_JUMP)) {
+            animChannel.setAnim(ANI_JUMP, 0);
+            animChannel.setLoopMode(LoopMode.Loop);
+        }
     }
     
     
