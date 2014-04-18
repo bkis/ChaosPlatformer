@@ -172,7 +172,7 @@ public class IngameState extends AbstractAppState {
         sceneNode.attachChild(p.getSpatial());
         physicsMgr.addToPhysicsScene(p.getSpatial());
         
-        return p.getSpatial();
+        return p;
     }
     
     public void debugRemoveDummyPlatform(Platform platform) {
