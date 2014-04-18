@@ -23,6 +23,7 @@ import pt.edj.cp.physics.WorldPhysicsManager;
 import pt.edj.cp.timing.Metronome;
 import pt.edj.cp.world.PlatformLifecycleManager;
 import pt.edj.cp.world.background.BackgroundNode;
+import pt.edj.cp.world.platforms.PlatformFactory;
 
 
 public class IngameState extends AbstractAppState {
@@ -33,6 +34,7 @@ public class IngameState extends AbstractAppState {
     
     private SimpleApplication app;
     private PlatformLifecycleManager lifecycleManager;
+    private PlatformFactory platformFactory;
     
     private IngameInputsState ingameInputState;
     private WorldPhysicsManager physicsMgr;
@@ -81,6 +83,7 @@ public class IngameState extends AbstractAppState {
         setupCamera();
         
         // Connect platform creation engine with character movement
+        this.platformFactory = new PlatformFactory(this.app);
         this.lifecycleManager = new PlatformLifecycleManager(this, 4.0f, new Vector2f(20, 16));
         characterControl.addMovementListener(lifecycleManager);
     }
@@ -109,7 +112,6 @@ public class IngameState extends AbstractAppState {
         boxGeo.setMaterial(boxMat); 
         boxGeo.setLocalTranslation(0, 0, 0);
         sceneNode.attachChild(boxGeo);
-        
     }
     
     
@@ -162,18 +164,12 @@ public class IngameState extends AbstractAppState {
     
     public Spatial debugAddDummyPlatform(Vector3f pos) {
         //test-scene
-        Box boxMesh = new Box(0.4f,0.4f,1f); 
-        Geometry boxGeo = new Geometry("Colored Box", boxMesh); 
-        Material boxMat = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-        Texture tex = app.getAssetManager().loadTexture("Interface/splash.png"); 
-        boxMat.setTexture("DiffuseMap", tex); 
-        boxGeo.setMaterial(boxMat); 
-        boxGeo.setLocalTranslation(pos);
+        Spatial s  = platformFactory.debugAddDummyPlatform(pos);
         
-        sceneNode.attachChild(boxGeo);
-        physicsMgr.addToPhysicsScene(boxGeo);
+        sceneNode.attachChild(s);
+        physicsMgr.addToPhysicsScene(s);
         
-        return boxGeo;
+        return s;
     }
     
     public void debugRemoveDummyPlatform(Spatial s) {

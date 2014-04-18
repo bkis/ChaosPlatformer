@@ -25,7 +25,7 @@ public class WorldPhysicsManager {
     private static final float    CHARACTER_HEIGHT  = 1.0f;
     private static final float    CHARACTER_MASS    = 10f;
     private static final float    PHYSICS_ACCURACY  = 0.016f; //def=0.016, low=0.005, hi=0.032
-    private static final float    PHYSICS_DAMPING   = 0.1f;
+    private static final float    PHYSICS_DAMPING   = 0.5f;
     private static final boolean  DEBUG_MODE        = false;
     
     
