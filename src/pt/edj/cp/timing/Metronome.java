@@ -26,7 +26,7 @@ public class Metronome extends AbstractEventSender {
     
     public final void setBpm(float bpm){
         this.bpm = bpm;
-        beatDelay = (int) ((60 / bpm) * 1000);
+        beatDelay = Math.round((60 / bpm) * 1000);
     }
     
     
