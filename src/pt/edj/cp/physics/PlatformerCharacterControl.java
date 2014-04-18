@@ -62,7 +62,7 @@ public class PlatformerCharacterControl extends BetterCharacterControl implement
                 || spatial.getLocalTranslation().z > 0.01f){
             spatial.move(0, 0, -getSpatialTranslation().z);
             setPhysicsLocation(spatial.getLocalTranslation());
-            System.out.println(spatial.getLocalTranslation().z);
+            //System.out.println(spatial.getLocalTranslation().z);
         }
     }
     

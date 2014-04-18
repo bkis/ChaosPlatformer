@@ -4,6 +4,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import java.util.Collection;
+import java.util.Random;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import pt.edj.cp.app.IngameState;
@@ -16,7 +17,9 @@ public class PlatformLifecycleManager implements IMovementListener {
     private Vector2f activeAreaSize;
     private Vector2f halfArea;
     
-    
+    /**
+     * Used for zone management
+     */
     private static class Position implements Comparable<Position> {
         public int x;
         public int y;
@@ -32,18 +35,11 @@ public class PlatformLifecycleManager implements IMovementListener {
             return y - o.y;
         }
     }
-        
     
-    private class Zone extends Position {
-        public Spatial spatial;
-        
-        public Zone(Position p, Spatial spatial) {
-            super(p.x, p.y);
-            this.spatial = spatial;
-        }
-    }
-
     
+    /**
+     * Used for zonemanagement
+     */
     private static class IntRect implements Comparable<IntRect> {
         public Position p1;
         public Position p2;
@@ -84,6 +80,31 @@ public class PlatformLifecycleManager implements IMovementListener {
     }
     
     
+    /**
+     * Basic spatial units to decide on platform creation, placement and
+     * destruction
+     */
+    private class Zone extends Position {
+        private boolean hasPlatform;
+        public Spatial spatial;
+        
+        public Zone(Position p) {
+            super(p.x, p.y);
+            
+            if ((hasPlatform = shouldPlacePlatform(p)) == true) {
+                spatial = ingameState.debugAddDummyPlatform(generatePlatformPosition(p));
+            } else {
+                spatial = null;
+            }
+        }
+        
+        public void delete() {
+            if (hasPlatform)
+                ingameState.debugRemoveDummyPlatform(spatial);
+        }
+    }
+
+    
     private IntRect getActiveZonesForPosition(Vector2f playerPos) {
         Vector2f p1 = playerPos.subtract(halfArea).divide(zoneSize);
         Vector2f p2 = playerPos.add(halfArea).divide(zoneSize);
@@ -111,30 +132,11 @@ public class PlatformLifecycleManager implements IMovementListener {
         // add initial zones around player
         activeZones = getActiveZonesForPosition(new Vector2f(0.0f, 0.0f));
         for (Position pos : activeZones.allPositions()) {
-            addZone(pos);
+            zones.put(pos, new Zone(pos));
         }
     }
     
     
-    private void addZone(Position pos) {
-        Vector3f position = new Vector3f(zoneSize * pos.x, zoneSize * pos.y, 0.0f);
-        Spatial spatial = ingameState.debugAddDummyPlatform(position.add(2, 2, 0));
-        
-        Zone zone = new Zone(pos, spatial);
-        //System.out.printf("Add (%2d:%2d)\n", pos.x, pos.y);
-        
-        zones.put(pos, zone);
-    }
-    
-    
-    private void deleteZone(Position pos) {
-        Zone oldZone = zones.remove(pos);
-        
-        //System.out.printf("Del (%2d:%2d)\n", pos.x, pos.y);
-        ingameState.debugRemoveDummyPlatform(oldZone.spatial);
-    }
-    
-
     public void movement(Vector3f newPosition, Vector3f delta) {
         Vector2f playerPos = new Vector2f(newPosition.x, newPosition.y);
         IntRect newActiveZones = getActiveZonesForPosition(playerPos);
@@ -149,15 +151,29 @@ public class PlatformLifecycleManager implements IMovementListener {
 
             // see if we have to delete old zones
             for (Position pos : activeZones.diff(newActiveZones)) {
-                deleteZone(pos);
+                zones.remove(pos).delete();
             }
 
             // add new zones?
             for (Position pos : newActiveZones.diff(activeZones)) {
-                addZone(pos);
+                zones.put(pos, new Zone(pos));
             }
 
             activeZones = newActiveZones;
         }
+    }
+    
+    
+    boolean shouldPlacePlatform(Position zonePosition) {
+        return true;
+    }
+    
+    
+    Random random = new Random();
+    
+    Vector3f generatePlatformPosition(Position zonePosition) {
+        float x = (zonePosition.x + 0.2f + 0.6f * random.nextFloat()) * zoneSize;
+        float y = (zonePosition.y + 0.2f + 0.6f * random.nextFloat()) * zoneSize;
+        return new Vector3f(x, y, 0.0f);
     }
 }

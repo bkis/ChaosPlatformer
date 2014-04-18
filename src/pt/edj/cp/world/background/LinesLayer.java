@@ -155,7 +155,7 @@ public class LinesLayer extends BackgroundLayer {
                 // if we are outside boundaries, steer back to center
                 if (outsideness > 0.3) {
                     currAngle = (float) (1.5*Math.PI - Math.atan2(currPos.getY(), currPos.getX()));
-                    System.out.println(outsideness);
+                    //System.out.println("Outside: " + outsideness);
                 }
                 // change angle using noise - make sure to slightly head for center always
                 else if (outsideness < 0.05) {
