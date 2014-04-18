@@ -138,7 +138,7 @@ public class IngameState extends AbstractAppState {
         character.scale(0.1f);
         characterNode.attachChild(character);
         characterNode.setLocalTranslation(0, 4, 0);
-        character.setLocalTranslation(0, character.getLocalScale().y+0.45f, 0);
+        character.setLocalTranslation(0, character.getLocalScale().y+0.40f, 0);
         app.getRootNode().attachChild(characterNode);
     }
     
