@@ -31,7 +31,9 @@ public class PlatformFactory {
         boxGeo.setMaterial(boxMat); 
         boxGeo.setLocalTranslation(pos);
         
-        Platform platf = new Platform((Spatial)boxGeo, null, new SoundContainer(), new RhythmPattern(16,0.5f));
+        Platform platf = new Platform((Spatial)boxGeo, null,
+                new SoundContainer(app.getAssetManager()),
+                new RhythmPattern(16,0.5f));
         
         return platf;
     }

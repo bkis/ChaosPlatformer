@@ -1,9 +1,9 @@
 package pt.edj.cp.world.platforms.sfx;
 
+import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 /*
@@ -15,8 +15,9 @@ public class SoundContainer {
     private int nextIndex;
     
     
-    public SoundContainer(){
+    public SoundContainer(AssetManager assetManager){
         this.sounds = new ArrayList<AudioNode>();
+        this.sounds.add(new AudioNode(assetManager, "Sounds/Instruments/Other/Short/0.ogg"));
     }
     
     
