@@ -22,8 +22,8 @@ import pt.edj.cp.timing.events.IEvent;
 public class LinesLayer extends BackgroundLayer {
     
     
-    public LinesLayer(Application app, int numLines, float sx, float sy) {
-        super(app);
+    public LinesLayer(Application app, float z, int numLines, float sx, float sy) {
+        super(app, z, 0.1f);
 
         maxX = sx;
         maxY = sy;
@@ -51,6 +51,11 @@ public class LinesLayer extends BackgroundLayer {
 
     public void receiveEvent(IEvent e) {
         
+    }
+
+
+    protected void doShift(Vector3f vec) {
+        this.move(vec);
     }
     
     

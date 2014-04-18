@@ -34,9 +34,11 @@ public class IngameState extends AbstractAppState {
     
     private IngameInputsState ingameInputState;
     private WorldPhysicsManager physicsMgr;
+    private PlatformerCharacterControl characterControl;
     
     private Node sceneNode;
     private Node characterNode;
+    private BackgroundNode backgroundNode;
     
     private Metronome metronome;
     
@@ -61,9 +63,11 @@ public class IngameState extends AbstractAppState {
         //load and apply physics
         physicsMgr = new WorldPhysicsManager(app, sceneNode, characterNode);
         physicsMgr.addChildrenToPhysicsScene(sceneNode);
+        characterControl = (PlatformerCharacterControl) physicsMgr.getCharacterControl();
         
         //(temp) add bg and light
-        addBackgroundAndLightTEMP();
+        addLightTEMP();
+        addBackgroundNode();
         
         //create animation manager
         CharacterAnimator charAnim = new CharacterAnimator(
@@ -71,7 +75,7 @@ public class IngameState extends AbstractAppState {
         
         //attach input state
         stateManager.attach(ingameInputState = new IngameInputsState(
-                (PlatformerCharacterControl) physicsMgr.getCharacterControl(),
+                characterControl,
                 charAnim));
         
         //setup camera
@@ -108,7 +112,7 @@ public class IngameState extends AbstractAppState {
     }
     
     
-    private void addBackgroundAndLightTEMP(){
+    private void addLightTEMP(){
         //test-light1
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
@@ -119,11 +123,15 @@ public class IngameState extends AbstractAppState {
         AmbientLight ambient = new AmbientLight();
         ambient.setColor(ColorRGBA.White);
         app.getRootNode().addLight(ambient); 
+    }
+    
+    
+    private void addBackgroundNode() {
+        backgroundNode = new BackgroundNode(app, 16, 12);
+        backgroundNode.setLocalTranslation(0, 0, -5f);
+        app.getRootNode().attachChild(backgroundNode);
         
-        // einfach mal hier rein den background node
-        BackgroundNode bgNode = new BackgroundNode(app, 30, 30);
-        bgNode.setLocalTranslation(0, 0, -5f);
-        app.getRootNode().attachChild(bgNode);
+        characterControl.addMovementListener(backgroundNode);
     }
     
     

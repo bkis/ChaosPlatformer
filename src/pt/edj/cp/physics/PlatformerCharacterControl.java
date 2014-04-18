@@ -8,7 +8,9 @@ import pt.edj.cp.input.IMovementListener;
 
 public class PlatformerCharacterControl extends BetterCharacterControl{
     
+    // for movement listeners:
     private HashSet<IMovementListener> movementListeners = new HashSet<IMovementListener>();
+    private Vector3f lastPosition = null;
     
     
     public PlatformerCharacterControl(float radius, float height, float mass){
@@ -26,16 +28,21 @@ public class PlatformerCharacterControl extends BetterCharacterControl{
     
     @Override
     public void update(float tpf){
-        Vector3f oldPos = spatial.getLocalTranslation();
-        
         super.update(tpf);
         correctZPos();
         
-        Vector3f newPos = spatial.getLocalTranslation();
-        Vector3f delta = newPos.subtract(oldPos);
-        if (delta.lengthSquared() > 0.0f) {
-            for (IMovementListener listener : movementListeners)
-                listener.movement(newPos, delta);
+        if (lastPosition == null) {
+            lastPosition = spatial.getLocalTranslation().clone();
+        } 
+        else {
+            Vector3f newPos = spatial.getLocalTranslation();
+            Vector3f delta = newPos.subtract(lastPosition);
+            
+            if (delta.lengthSquared() > 0.0f) {
+                lastPosition.set(newPos);
+                for (IMovementListener listener : movementListeners)
+                    listener.movement(newPos, delta);
+            } 
         }
     }
     
@@ -58,12 +65,12 @@ public class PlatformerCharacterControl extends BetterCharacterControl{
     }
     
     
-    void addMovementListener(IMovementListener l) {
+    public void addMovementListener(IMovementListener l) {
         movementListeners.add(l);
     }
     
     
-    void removeMovementListener(IMovementListener l) {
+    public void removeMovementListener(IMovementListener l) {
         movementListeners.remove(l);
     }
     

@@ -1,9 +1,9 @@
 package pt.edj.cp.world.background;
 
 import com.jme3.app.Application;
-import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 import pt.edj.cp.timing.events.IEvent;
@@ -14,8 +14,8 @@ import pt.edj.cp.timing.events.IEvent;
  */
 public class SolidColorLayer extends BackgroundLayer {
 
-    public SolidColorLayer(Application app, ColorRGBA color, float sx, float sy) {
-        super(app);
+    public SolidColorLayer(Application app, float z, ColorRGBA color, float sx, float sy) {
+        super(app, z, 0.0f);
         
         Geometry geom = new Geometry("SolidLayerQuad", new Quad(sx, sy));
         Material mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
@@ -25,8 +25,14 @@ public class SolidColorLayer extends BackgroundLayer {
         attachChild(geom);
     }
     
+    
     public void receiveEvent(IEvent e) {
         
+    }
+
+
+    protected void doShift(Vector3f vec) {
+        // do nothing
     }
     
 }
