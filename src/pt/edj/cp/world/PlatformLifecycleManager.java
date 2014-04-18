@@ -2,9 +2,11 @@ package pt.edj.cp.world;
 
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 import java.util.Collection;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import pt.edj.cp.app.IngameState;
 import pt.edj.cp.input.IMovementListener;
 
 
@@ -33,8 +35,11 @@ public class PlatformLifecycleManager implements IMovementListener {
         
     
     private class Zone extends Position {
-        public Zone(int x, int y) {
-            super(x, y);
+        public Spatial spatial;
+        
+        public Zone(Position p, Spatial spatial) {
+            super(p.x, p.y);
+            this.spatial = spatial;
         }
     }
 
@@ -93,11 +98,15 @@ public class PlatformLifecycleManager implements IMovementListener {
     private TreeMap<Position,Zone> zones = new TreeMap<Position,Zone>();
     private IntRect activeZones;
     
+    IngameState ingameState; 
     
-    public PlatformLifecycleManager(float zoneSize, Vector2f activeArea) {
+    
+    public PlatformLifecycleManager(IngameState ingame, float zoneSize, Vector2f activeArea) {
         this.zoneSize = zoneSize;
         this.activeAreaSize = activeArea.clone();
         this.halfArea = activeArea.mult(0.5f);
+        
+        this.ingameState = ingame;
         
         // add initial zones around player
         activeZones = getActiveZonesForPosition(new Vector2f(0.0f, 0.0f));
@@ -108,15 +117,21 @@ public class PlatformLifecycleManager implements IMovementListener {
     
     
     private void addZone(Position pos) {
-        Zone zone = new Zone(pos.x, pos.y);
+        Vector3f position = new Vector3f(zoneSize * pos.x, zoneSize * pos.y, 0.0f);
+        Spatial spatial = ingameState.debugAddDummyPlatform(position.add(2, 2, 0));
+        
+        Zone zone = new Zone(pos, spatial);
         //System.out.printf("Add (%2d:%2d)\n", pos.x, pos.y);
+        
         zones.put(pos, zone);
     }
     
     
     private void deleteZone(Position pos) {
+        Zone oldZone = zones.remove(pos);
+        
         //System.out.printf("Del (%2d:%2d)\n", pos.x, pos.y);
-        zones.remove(pos);
+        ingameState.debugRemoveDummyPlatform(oldZone.spatial);
     }
     
 

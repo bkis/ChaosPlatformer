@@ -102,7 +102,13 @@ public class WorldPhysicsManager {
         platformPhysics.setKinematicSpatial(true);
         platformPhysics.setFriction(1f);
         getPhysicsSpace().add(platformPhysics);
+        
     }
     
     
+    public void removeFromPhysicsScene(Spatial spatial) {
+        RigidBodyControl ctrl = spatial.getControl(RigidBodyControl.class);
+        getPhysicsSpace().remove(ctrl);
+        spatial.removeControl(ctrl);
+    }
 }

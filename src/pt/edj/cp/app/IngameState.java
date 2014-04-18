@@ -13,6 +13,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import pt.edj.cp.character.CharacterAnimator;
@@ -48,7 +49,6 @@ public class IngameState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = (SimpleApplication) app;
-        this.lifecycleManager = new PlatformLifecycleManager(4.0f, new Vector2f(20, 16));
         this.metronome = new Metronome(120);
         this.characterNode = new Node("characterNode");
         this.sceneNode = new Node("sceneNode");
@@ -63,9 +63,6 @@ public class IngameState extends AbstractAppState {
         physicsMgr = new WorldPhysicsManager(app, sceneNode, characterNode);
         physicsMgr.addChildrenToPhysicsScene(sceneNode);
         characterControl = (PlatformerCharacterControl) physicsMgr.getCharacterControl();
-        
-        // Connect platform creation engine with character movement
-        characterControl.addMovementListener(lifecycleManager);
         
         //(temp) add bg and light
         addLightTEMP();
@@ -83,6 +80,9 @@ public class IngameState extends AbstractAppState {
         //setup camera
         setupCamera();
         
+        // Connect platform creation engine with character movement
+        this.lifecycleManager = new PlatformLifecycleManager(this, 4.0f, new Vector2f(20, 16));
+        characterControl.addMovementListener(lifecycleManager);
     }
     
     
@@ -159,4 +159,25 @@ public class IngameState extends AbstractAppState {
         camNode.lookAt(characterNode.getLocalTranslation(), Vector3f.UNIT_Y);
     }
     
+    
+    public Spatial debugAddDummyPlatform(Vector3f pos) {
+        //test-scene
+        Box boxMesh = new Box(0.4f,0.4f,1f); 
+        Geometry boxGeo = new Geometry("Colored Box", boxMesh); 
+        Material boxMat = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+        Texture tex = app.getAssetManager().loadTexture("Interface/splash.png"); 
+        boxMat.setTexture("DiffuseMap", tex); 
+        boxGeo.setMaterial(boxMat); 
+        boxGeo.setLocalTranslation(pos);
+        
+        sceneNode.attachChild(boxGeo);
+        physicsMgr.addToPhysicsScene(boxGeo);
+        
+        return boxGeo;
+    }
+    
+    public void debugRemoveDummyPlatform(Spatial s) {
+        sceneNode.detachChild(s);
+        physicsMgr.removeFromPhysicsScene(s);
+    }
 }
