@@ -105,7 +105,7 @@ public class PlatformLifecycleManager implements IMovementListener {
         
         public void delete() {
             if (platform != null)
-                ingameState.debugRemoveDummyPlatform(platform);
+                ingameState.killPlatform(platform);
         }
     }
 

@@ -175,9 +175,7 @@ public class IngameState extends AbstractAppState {
         return p;
     }
     
-    public void debugRemoveDummyPlatform(Platform platform) {
-        Spatial spat = platform.getSpatial();
-        sceneNode.detachChild(spat);
-        physicsMgr.removeFromPhysicsScene(spat);
+    public void killPlatform(Platform platform) {
+        platform.destroy(physicsMgr, metronome);
     }
 }

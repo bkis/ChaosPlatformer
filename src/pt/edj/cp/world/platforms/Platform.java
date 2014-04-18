@@ -3,6 +3,8 @@ package pt.edj.cp.world.platforms;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.scene.Spatial;
+import pt.edj.cp.physics.WorldPhysicsManager;
+import pt.edj.cp.timing.Metronome;
 import pt.edj.cp.timing.events.IEvent;
 import pt.edj.cp.timing.events.IEventListener;
 import pt.edj.cp.timing.events.MetronomeBeatEvent;
@@ -59,6 +61,20 @@ public class Platform implements IEventListener, PhysicsCollisionListener{
             //play platform GFX
             //TODO
         }
+    }
+    
+    
+    public void destroy(WorldPhysicsManager phys, Metronome metro){
+        active = false;
+        spatial.removeFromParent();
+        phys.removeFromPhysicsScene(spatial);
+        metro.unregister(this);
+        
+        //alles totnullen!!!
+        spatial = null;
+        gfx = null;
+        sfx = null;
+        pattern = null;
     }
 
     
