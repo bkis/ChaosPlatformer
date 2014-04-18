@@ -35,7 +35,7 @@ public class PlatformFactory {
         Platform platf = new Platform((Spatial)boxGeo,
                 new ExampleGFX(app),
                 new SoundContainer(app),
-                new RhythmPattern(16,0.5f));
+                new RhythmPattern(16, (float)Math.random()+0.1f));
         
         return platf;
     }
