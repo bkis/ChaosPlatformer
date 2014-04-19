@@ -69,12 +69,6 @@ public class Platform implements IEventListener, PhysicsCollisionListener{
         spatial.removeFromParent();
         phys.removeFromPhysicsScene(spatial);
         metro.unregister(this);
-        
-        //alles totnullen!!!
-        spatial = null;
-        gfx = null;
-        sfx = null;
-        pattern = null;
     }
 
     
