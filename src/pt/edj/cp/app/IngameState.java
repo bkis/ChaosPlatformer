@@ -13,7 +13,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import pt.edj.cp.character.CharacterAnimator;
@@ -52,7 +51,7 @@ public class IngameState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = (SimpleApplication) app;
-        this.metronome = new Metronome(120);
+        this.metronome = Metronome.getInstance();
         this.characterNode = new Node("characterNode");
         this.sceneNode = new Node("sceneNode");
         
@@ -163,19 +162,37 @@ public class IngameState extends AbstractAppState {
     }
     
     
-    public Platform debugAddDummyPlatform(Vector3f pos) {
-        //test-scene
+    public Platform addPlatform(Vector3f pos) {
+        // create new platform
         Platform p = platformFactory.createPlatform(pos);
+        
+        // register with everything
         metronome.register(p);
-        physicsMgr.getPhysicsSpace().addCollisionListener(p);
         
         sceneNode.attachChild(p.getSpatial());
+        
+        physicsMgr.getPhysicsSpace().addCollisionListener(p);
         physicsMgr.addToPhysicsScene(p.getSpatial());
+        
+        System.out.printf("ADD: scene: %d objects, physics: %d objects\n", 
+                sceneNode.getChildren().size(), 
+                physicsMgr.getPhysicsSpace().getRigidBodyList().size());
         
         return p;
     }
     
-    public void killPlatform(Platform platform) {
+    public void removePlatform(Platform platform) {
+        metronome.unregister(platform);
+        
+        sceneNode.detachChild(platform.getSpatial());
+        
+        physicsMgr.getPhysicsSpace().removeCollisionListener(platform);
+        physicsMgr.removeFromPhysicsScene(platform.getSpatial());
+        
+        System.out.printf("DEL: scene: %d objects, physics: %d objects\n", 
+                sceneNode.getChildren().size(), 
+                physicsMgr.getPhysicsSpace().getRigidBodyList().size());
+        
         platform.destroy(physicsMgr, metronome);
     }
 }

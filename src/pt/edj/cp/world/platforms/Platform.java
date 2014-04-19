@@ -65,10 +65,7 @@ public class Platform implements IEventListener, PhysicsCollisionListener{
     
     
     public void destroy(WorldPhysicsManager phys, Metronome metro){
-        active = false;
-        spatial.removeFromParent();
-        phys.removeFromPhysicsScene(spatial);
-        metro.unregister(this);
+        spatial.removeControl(gfx);
         
         //alles totnullen!!!
         spatial = null;

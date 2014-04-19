@@ -97,7 +97,7 @@ public class PlatformLifecycleManager implements IMovementListener {
             super(p.x, p.y);
             
             if (platformSpawner.shouldPlacePlatform(p)) {
-                platform = ingameState.debugAddDummyPlatform(generatePlatformPosition(p));
+                platform = ingameState.addPlatform(generatePlatformPosition(p));
             } else {
                 platform = null;
             }
@@ -105,7 +105,7 @@ public class PlatformLifecycleManager implements IMovementListener {
         
         public void delete() {
             if (platform != null)
-                ingameState.killPlatform(platform);
+                ingameState.removePlatform(platform);
         }
     }
 

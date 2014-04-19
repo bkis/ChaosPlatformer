@@ -9,24 +9,49 @@ import pt.edj.cp.timing.events.MetronomeBeatEvent;
 public class Metronome extends AbstractEventSender {
     
     private float bpm;
+    private int msPerBeat;
+    
     private Timer timer;
-    private int beatDelay;
     
-    private long tempCounter = 0; //kommt wech, nur für debug
+    private long lastBeatTimestamp;
+    private int lastBeatNr;
     
     
-    public Metronome(float bpm) {
+    private static Metronome instance = new Metronome(120.0f);
+    
+    
+    private Metronome(float bpm) {
         super();
         setBpm(bpm);
         
         this.timer = new Timer();
-        timer.scheduleAtFixedRate(new MetronomeTask(), 0, beatDelay);
+        timer.schedule(new MetronomeTask(), msPerBeat);
     }
     
     
-    public final void setBpm(float bpm){
+    public static Metronome getInstance() {
+        return instance;
+    }
+    
+    
+    public synchronized final void setBpm(float bpm){
         this.bpm = bpm;
-        beatDelay = Math.round((60 / bpm) * 1000);
+        this.msPerBeat = Math.round((60 / bpm) * 1000);
+    }
+    
+    
+    private synchronized final void doBeat() {
+        lastBeatNr++;
+        lastBeatTimestamp = System.currentTimeMillis();
+    }
+    
+    
+    public synchronized final float getCurrentBeat() {
+        long currTime = System.currentTimeMillis();
+        int elapsed = (int) (currTime - lastBeatTimestamp);
+        
+        float relElapsed = Math.min(elapsed / msPerBeat, 1.0f);
+        return lastBeatNr + relElapsed;
     }
     
     
@@ -43,16 +68,14 @@ public class Metronome extends AbstractEventSender {
     private class MetronomeTask extends TimerTask {
         @Override
         public void run() {
+            doBeat();
+            
             broadcast(new MetronomeBeatEvent());
             
-            //debug output
-            /*
-            System.out.println("[METRONOME] beat event no."
-                    + tempCounter++
-                    + " (" + getBpm() + " bpm)");
-            */
+            System.out.println("Beat nr " + lastBeatNr);
+       
+            timer.schedule(new MetronomeTask(), msPerBeat);
         }
     }
 
-    
 }
