@@ -49,6 +49,7 @@ public class Main extends SimpleApplication {
         set.setMinResolution(800, 600);
         set.setResolution(800, 600);
         set.setTitle("Chaos Platformer (working title)");
+        //set.setFrameRate(2); //debug
         return set;
     }
 }
