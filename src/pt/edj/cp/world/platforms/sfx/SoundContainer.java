@@ -21,12 +21,6 @@ public class SoundContainer {
     public SoundContainer(Application app){
         this.app = (SimpleApplication) app;
         this.sounds = new ArrayList<AudioNode>();
-        
-        //dummy 
-        AudioNode testAudio = new AudioNode(app.getAssetManager(),
-                "Sounds/Instruments/Other/Short/0.ogg");
-        testAudio.setPitch((float)Math.random()+0.5f);
-        this.sounds.add(testAudio);
     }
     
     

@@ -52,7 +52,7 @@ public class IngameState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = (SimpleApplication) app;
-        this.metronome = new Metronome(120);
+        this.metronome = new Metronome(200);
         this.characterNode = new Node("characterNode");
         this.sceneNode = new Node("sceneNode");
         
