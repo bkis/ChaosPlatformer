@@ -10,7 +10,6 @@ import com.jme3.scene.control.AbstractControl;
 public abstract class AbstractPlatformGFX extends AbstractControl {
     
     protected SimpleApplication app;
-    private boolean active;
     private boolean init;
     
     private float tpfCount;

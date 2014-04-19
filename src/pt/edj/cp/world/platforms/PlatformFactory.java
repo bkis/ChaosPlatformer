@@ -34,9 +34,9 @@ public class PlatformFactory {
         
         Platform platf = new Platform(
                 boxGeo,
-                new ExampleGFX(app),
                 debugGetDummyMelodicSoundContainer(),
                 new RhythmPattern(16, (float)Math.random()+0.02f));
+        platf.addGFX(new ExampleGFX(app));
         
         return platf;
     }
