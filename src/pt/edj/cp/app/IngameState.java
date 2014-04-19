@@ -15,6 +15,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
+import java.util.HashSet;
 import pt.edj.cp.character.CharacterAnimator;
 import pt.edj.cp.input.IngameInputsState;
 import pt.edj.cp.physics.PlatformerCharacterControl;
@@ -23,6 +24,7 @@ import pt.edj.cp.timing.Metronome;
 import pt.edj.cp.world.PlatformLifecycleManager;
 import pt.edj.cp.world.background.BackgroundNode;
 import pt.edj.cp.world.platforms.Platform;
+import pt.edj.cp.world.platforms.PlatformCollisionListener;
 import pt.edj.cp.world.platforms.PlatformFactory;
 
 
@@ -35,6 +37,7 @@ public class IngameState extends AbstractAppState {
     private SimpleApplication app;
     private PlatformLifecycleManager lifecycleManager;
     private PlatformFactory platformFactory;
+    private HashSet<Platform> allPlatforms;
     
     private IngameInputsState ingameInputState;
     private WorldPhysicsManager physicsMgr;
@@ -65,6 +68,7 @@ public class IngameState extends AbstractAppState {
         physicsMgr = new WorldPhysicsManager(app, sceneNode, characterNode);
         physicsMgr.addChildrenToPhysicsScene(sceneNode);
         characterControl = (PlatformerCharacterControl) physicsMgr.getCharacterControl();
+        physicsMgr.getPhysicsSpace().addCollisionListener(new PlatformCollisionListener());
         
         //(temp) add bg and light
         addLightTEMP();
@@ -83,15 +87,19 @@ public class IngameState extends AbstractAppState {
         setupCamera();
         
         // Connect platform creation engine with character movement
-        this.platformFactory = new PlatformFactory(this.app);
-        this.lifecycleManager = new PlatformLifecycleManager(this, 3.0f, new Vector2f(20, 16));
+        allPlatforms = new HashSet<Platform>();
+        platformFactory = new PlatformFactory(this.app);
+        lifecycleManager = new PlatformLifecycleManager(this, 3.0f, new Vector2f(20, 16));
         characterControl.addMovementListener(lifecycleManager);
     }
     
     
     @Override
     public void update(float tpf){
+        float beat = metronome.getCurrentBeat();
         
+        for (Platform plat : allPlatforms)
+            plat.update(tpf, beat);
     }
     
     
@@ -168,31 +176,31 @@ public class IngameState extends AbstractAppState {
         
         // register with everything
         metronome.register(p);
+        sceneNode.attachChild(p.getTopNode());
+        physicsMgr.addToPhysicsScene(p.getPlatformSpatial());
         
-        sceneNode.attachChild(p.getSpatial());
+        allPlatforms.add(p);
         
-        physicsMgr.getPhysicsSpace().addCollisionListener(p);
-        physicsMgr.addToPhysicsScene(p.getSpatial());
         
+        /*
         System.out.printf("ADD: scene: %d objects, physics: %d objects\n", 
                 sceneNode.getChildren().size(), 
                 physicsMgr.getPhysicsSpace().getRigidBodyList().size());
+        */
         
         return p;
     }
     
     public void removePlatform(Platform platform) {
         metronome.unregister(platform);
+        sceneNode.detachChild(platform.getTopNode());
+        physicsMgr.removeFromPhysicsScene(platform.getPlatformSpatial());
         
-        sceneNode.detachChild(platform.getSpatial());
-        
-        physicsMgr.getPhysicsSpace().removeCollisionListener(platform);
-        physicsMgr.removeFromPhysicsScene(platform.getSpatial());
-        
+        allPlatforms.remove(platform);
+        /*
         System.out.printf("DEL: scene: %d objects, physics: %d objects\n", 
                 sceneNode.getChildren().size(), 
                 physicsMgr.getPhysicsSpace().getRigidBodyList().size());
-        
-        platform.destroy(physicsMgr, metronome);
+        */
     }
 }
