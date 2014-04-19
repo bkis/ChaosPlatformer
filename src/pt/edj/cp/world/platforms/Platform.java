@@ -3,6 +3,8 @@ package pt.edj.cp.world.platforms;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.scene.Spatial;
+import java.util.HashSet;
+import java.util.Set;
 import pt.edj.cp.physics.WorldPhysicsManager;
 import pt.edj.cp.timing.Metronome;
 import pt.edj.cp.timing.events.IEvent;
@@ -16,22 +18,19 @@ import pt.edj.cp.world.platforms.sfx.SoundContainer;
 public class Platform implements IEventListener, PhysicsCollisionListener{
     
     private Spatial spatial;
-    private AbstractPlatformGFX gfx;
+    private Set<AbstractPlatformGFX> gfx;
     private SoundContainer sfx;
     private RhythmPattern pattern;
     private boolean active;
     
     
     public Platform(Spatial spatial,
-                    AbstractPlatformGFX gfx,
                     SoundContainer sfx,
                     RhythmPattern pattern){
         this.spatial = spatial;
-        this.gfx = gfx;
+        this.gfx = new HashSet<AbstractPlatformGFX>();
         this.sfx = sfx;
         this.pattern = pattern;
-        
-        spatial.addControl(gfx);
     }
     
     
@@ -50,28 +49,29 @@ public class Platform implements IEventListener, PhysicsCollisionListener{
     }
     
     
+    public void addGFX(AbstractPlatformGFX gfx){
+        this.gfx.add(gfx);
+        spatial.addControl(gfx);
+    }
+    
+    
     private void heartbeat(){
         if (active){
             //play sound
             sfx.playNextSound();
             
             //play visual platform feedback effect
-            gfx.fire();
-
-            //play platform GFX
-            //TODO
+            for (AbstractPlatformGFX apg : gfx) apg.fire();
         }
     }
     
     
     public void destroy(WorldPhysicsManager phys, Metronome metro){
-        spatial.removeControl(gfx);
-        
-        //alles totnullen!!!
-        spatial = null;
-        gfx = null;
-        sfx = null;
-        pattern = null;
+        active = false;
+        spatial.removeFromParent();
+        for (AbstractPlatformGFX apg : gfx) spatial.removeControl(apg);
+        phys.removeFromPhysicsScene(spatial);
+        metro.unregister(this);
     }
 
     

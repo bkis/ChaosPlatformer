@@ -10,21 +10,28 @@ import com.jme3.scene.control.AbstractControl;
 public abstract class AbstractPlatformGFX extends AbstractControl {
     
     protected SimpleApplication app;
-    private boolean active;
     private boolean init;
     
+    private float tpfCount;
+    private float gfxDelay;
+    private boolean delayGfx;
     
-    public AbstractPlatformGFX(Application app){
+    
+    
+    public AbstractPlatformGFX(Application app, float gfxDurationInSecs){
         this.app = (SimpleApplication) app;
+        this.gfxDelay = gfxDurationInSecs;
     }
     
     
     public abstract void playGFX();
+    public abstract void stopGFX();
     public abstract void initializeGFX();
     
     
     public void fire(){
-        active = true;
+         playGFX();
+         delayGfx = true;
     }
     
     
@@ -35,9 +42,8 @@ public abstract class AbstractPlatformGFX extends AbstractControl {
             init = true;
         }
         
-        if (active){
-            playGFX();
-            active = false;
+        if (delayGfx){
+            delayGfx(tpf);
         }
     }
 
@@ -48,7 +54,15 @@ public abstract class AbstractPlatformGFX extends AbstractControl {
     }
     
     
-    
+    private void delayGfx(float tpf){
+        tpfCount += tpf;
+        
+        if (tpfCount >= gfxDelay){
+            stopGFX();
+            tpfCount = 0;
+            delayGfx = false;
+        }
+    }
     
     
 }
