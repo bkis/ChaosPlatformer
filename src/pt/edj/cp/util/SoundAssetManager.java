@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.Random;
 
 
-public class SoundManager {
+public class SoundAssetManager {
     
     //frequency pitch factors
     private static final float[] PITCH = {1.000000f,    //Unisono
@@ -57,8 +57,9 @@ public class SoundManager {
     
     
     
-    public SoundManager(AssetManager assetManager){
+    public SoundAssetManager(AssetManager assetManager){
         this.assetManager = assetManager;
+        this.rnd = new Random();
     }
     
     

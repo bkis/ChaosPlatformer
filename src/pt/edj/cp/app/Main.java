@@ -5,7 +5,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
 import java.io.File;
 import java.util.List;
-import pt.edj.cp.util.SoundManager;
+import pt.edj.cp.util.SoundAssetManager;
 
 
 
