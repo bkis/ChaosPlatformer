@@ -12,7 +12,7 @@ public class PlatformCollisionListener implements PhysicsCollisionListener{
         checkForCollision(event.getNodeB(), event.getNodeA());
     }
     
-    boolean checkForCollision(Spatial character, Spatial platform) {
+    private boolean checkForCollision(Spatial character, Spatial platform) {
         if (character.getName() == null
                 || !character.getName().startsWith("character"))
             return false;
