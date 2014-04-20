@@ -31,5 +31,4 @@ abstract public class BackgroundLayer extends Node implements IEventListener {
     public void shiftLayer(Vector3f vec) {
         doShift(vec.mult(shiftFactor));
     }
-
 }

@@ -50,9 +50,10 @@ public class IngameState extends AbstractAppState {
     private Metronome metronome;
     
     
-    
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
+        super.initialize(stateManager, app);
+        
         this.app = (SimpleApplication) app;
         this.metronome = Metronome.getInstance();
         this.characterNode = new Node("characterNode");
@@ -96,6 +97,8 @@ public class IngameState extends AbstractAppState {
     
     @Override
     public void update(float tpf){
+        super.update(tpf);
+        
         float beat = metronome.getCurrentBeat();
         
         for (Platform plat : allPlatforms)
@@ -105,6 +108,7 @@ public class IngameState extends AbstractAppState {
     
     @Override
     public void cleanup() {
+        super.cleanup();
         metronome.destroy();
     }
     

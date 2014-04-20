@@ -1,0 +1,17 @@
+MaterialDef MovingShapesFinalMaterial {
+
+    // Uniforms
+    MaterialParameters {
+        Texture2D   PreRenderedScene
+    }
+
+    Technique {
+        WorldParameters {
+            Time
+            WorldViewProjectionMatrix
+        }
+
+        VertexShader GLSL100:   Materials/MovShapes/FinalMat.vert
+        FragmentShader GLSL100: Materials/MovShapes/FinalMat.frag
+    }
+}

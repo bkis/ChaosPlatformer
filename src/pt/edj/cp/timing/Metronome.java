@@ -70,7 +70,7 @@ public class Metronome extends AbstractEventSender {
         public void run() {
             doBeat();
             
-            broadcast(new MetronomeBeatEvent());
+            //broadcast(new MetronomeBeatEvent());
             
             System.out.println("Beat nr " + lastBeatNr);
        

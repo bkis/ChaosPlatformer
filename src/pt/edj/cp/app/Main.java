@@ -16,7 +16,6 @@ public class Main extends SimpleApplication {
     }
 
     
-    @Override
     public void simpleInitApp() {
         flyCam.setEnabled(false);
         
@@ -28,12 +27,14 @@ public class Main extends SimpleApplication {
     
     @Override
     public void simpleUpdate(float tpf) {
+        super.simpleUpdate(tpf);
         //main update loop access
     }
 
     
     @Override
     public void simpleRender(RenderManager rm) {
+        super.simpleRender(rm);
         //main render loop access
     }
     

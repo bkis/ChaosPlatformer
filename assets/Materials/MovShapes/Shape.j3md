@@ -1,0 +1,20 @@
+MaterialDef MovingShape {
+
+    // Uniforms
+    MaterialParameters {
+        Float       Scale;
+        Vector4     Color;
+        Vector3     Position;
+    }
+
+    Technique {
+        WorldParameters {
+            Time
+            WorldViewProjectionMatrix
+            Resolution
+        }
+
+        VertexShader GLSL100:   Materials/MovShapes/Shape.vert
+        FragmentShader GLSL100: Materials/MovShapes/Shape.frag
+    }
+}
