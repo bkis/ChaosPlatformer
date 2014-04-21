@@ -17,7 +17,7 @@ public class Metronome extends AbstractEventSender {
     private int lastBeatNr;
     
     
-    private static Metronome instance = new Metronome(120.0f);
+    private static Metronome instance = new Metronome(480.0f); //120 bpm * 4 (weil 16 beats pro takt)
     
     
     private Metronome(float bpm) {
@@ -70,7 +70,7 @@ public class Metronome extends AbstractEventSender {
         public void run() {
             doBeat();
             
-            //broadcast(new MetronomeBeatEvent());
+            broadcast(new MetronomeBeatEvent());
             
             System.out.println("Beat nr " + lastBeatNr);
        
