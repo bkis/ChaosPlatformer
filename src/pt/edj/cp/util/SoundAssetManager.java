@@ -80,6 +80,20 @@ public class SoundAssetManager {
     }
     
     
+    public AudioNode[] getRndMelodicNotes(String instrumentID, int nrOfSounds){
+        AudioNode[] sounds = new AudioNode[nrOfSounds];
+        
+        for (int i = 0; i < sounds.length; i++) {
+            AudioNode audioNode = new AudioNode(assetManager, INSTR_MEL + instrumentID);
+            audioNode.setPitch(PITCH_MINOR[rnd.nextInt(PITCH_MINOR.length)]);
+            prepareAudioNode(audioNode);
+            sounds[i] = audioNode;
+        }
+        
+        return sounds;
+    }
+    
+    
     public String getRndMelodicInstrumentID(){
         return melodicSounds[rnd.nextInt(melodicSounds.length)];
     }

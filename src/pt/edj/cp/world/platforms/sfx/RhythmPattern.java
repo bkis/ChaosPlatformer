@@ -29,6 +29,21 @@ public class RhythmPattern {
     }
     
     
+    public int getNrOfEvents(){
+        return getNrOfEvents(pattern);
+    }
+    
+    
+    public int getNrOfEvents(boolean[] pattern){
+        int count = 0;
+        
+        for (int i = 0; i < pattern.length; i++)
+            if (pattern[i]) count++;
+        
+        return count;
+    }
+    
+    
     public boolean nextEvent(){
         return this.pattern[nextIndex++ % pattern.length];
     }
@@ -64,7 +79,11 @@ public class RhythmPattern {
         for (int i = 0; i < pat.length; i++)
             if (Math.random() < sat)
                 pat[i] = true;
-        return pat;
+        
+        if (getNrOfEvents(pat) == 0)
+            return createRandomPattern(pat, sat);
+        else
+            return pat;
     }
     
     

@@ -4,12 +4,13 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 
 /*
- * sound container for managing melodic instruments sounds
+ * sound container for managing and playing sounds
  */
 public class SoundContainer {
     
@@ -29,8 +30,19 @@ public class SoundContainer {
     }
     
     
+    public void addSounds(AudioNode[] audioNodes){
+        sounds.addAll(Arrays.asList(audioNodes));
+    }
+    
+    
     public void playNextSound(){
         app.enqueue(playSound);
+    }
+    
+    
+    public void limitNrOfSounds(int limit){
+        while (sounds.size() > limit)
+            sounds.remove(0);
     }
     
     
