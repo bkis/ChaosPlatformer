@@ -39,6 +39,7 @@ public class Platform implements IEventListener, Savable {
         this.sfx = sfx;
         this.pattern = pattern;
         this.active = false;
+        this.sfx.limitNrOfSounds(pattern.getNrOfEvents());
         
         topNode = new Node();
         topNode.setLocalTranslation(position);
@@ -72,9 +73,10 @@ public class Platform implements IEventListener, Savable {
     @Override
     public void receiveEvent(IEvent e) {
         if (e instanceof MetronomeBeatEvent){
-            if (pattern.nextEvent()){
+            if (active && pattern.nextEvent()){
                 for (PlatformItem item : allPlatformItems)
                     item.someEffectHappens();
+                sfx.playNextSound();
             }
         } //else if (e instanceof ...
     }

@@ -21,11 +21,15 @@ public class PlatformFactory {
     
     
     public Platform createPlatform(Vector3f pos) {
+        SoundContainer sc = (Math.random() < 0.5f ?
+                            debugGetDummyMelodicSoundContainer() :
+                            debugGetDummyPercussiveSoundContainer());
+        
         Platform plat = new Platform(
                 pos,
                 new BoxPlatform(app),
-                debugGetDummyMelodicSoundContainer(),
-                new RhythmPattern(16, (float)Math.random()+0.02f));
+                sc,
+                new RhythmPattern(16, ((float)Math.random()+0.02f)/2));
         
         plat.addGFX(new SimpleParticleGFX(app));
         
@@ -34,6 +38,14 @@ public class PlatformFactory {
     
     
     private SoundContainer debugGetDummyMelodicSoundContainer(){
+        SoundContainer sc = new SoundContainer(app);
+        String soundID = sam.getRndMelodicInstrumentID();
+        sc.addSounds(sam.getRndMelodicNotes(soundID, 16));
+        return sc;
+    }
+    
+    
+    private SoundContainer debugGetDummyPercussiveSoundContainer(){
         SoundContainer sc = new SoundContainer(app);
         sc.addSound(sam.getRndSound(SoundAssetManager.INSTR_PERC_S));
         return sc;
