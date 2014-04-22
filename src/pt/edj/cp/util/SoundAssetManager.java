@@ -36,7 +36,6 @@ public class SoundAssetManager {
     private static final String DIR_SND        = "Sounds/";
     private static final String DIR_AMB        = DIR_SND   + "Ambient/";
     private static final String DIR_INSTR      = DIR_SND   + "Instruments/";
-    private static final String DIR_INSTR_PERC = DIR_INSTR + "Percussive/";
     private static final String INSTR_MEL      = DIR_INSTR + "Melodic/";
     
     //sound keys
@@ -45,9 +44,7 @@ public class SoundAssetManager {
     public static final String AMB_LVL3     = DIR_AMB        + "lvl3/";
     public static final String FEEDBACK     = DIR_SND        + "Feedback/";
     public static final String INSTR_BG     = DIR_INSTR      + "Background/";
-    public static final String INSTR_PERC_S = DIR_INSTR_PERC + "Short/";
-    public static final String INSTR_PERC_M = DIR_INSTR_PERC + "Medium/";
-    public static final String INSTR_PERC_L = DIR_INSTR_PERC + "Long/";
+    public static final String INSTR_PERC   = DIR_INSTR      + "Percussive/";
     
     private static final String[] melodicSounds = new File(DIR_ASSETS + INSTR_MEL).list();
     

@@ -47,7 +47,7 @@ public class PlatformFactory {
     
     private SoundContainer debugGetDummyPercussiveSoundContainer(){
         SoundContainer sc = new SoundContainer(app);
-        sc.addSound(sam.getRndSound(SoundAssetManager.INSTR_PERC_S));
+        sc.addSound(sam.getRndSound(SoundAssetManager.INSTR_PERC));
         return sc;
     }
     
