@@ -35,6 +35,14 @@ public class SoundContainer {
     }
     
     
+    public float getSampleLength(){
+        if (sounds.get(0) != null)
+            return sounds.get(0).getAudioData().getDuration();
+        else
+            return 0.5f;
+    }
+    
+    
     public void playNextSound(){
         app.enqueue(playSound);
     }

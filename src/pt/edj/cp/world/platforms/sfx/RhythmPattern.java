@@ -7,15 +7,15 @@ public class RhythmPattern {
     private int nextIndex;
     
     
-    public RhythmPattern(int length, float saturation){
+    public RhythmPattern(int length, float soundDuration){
         this();
-        this.pattern = createRandomPattern(length, saturation);
+        this.pattern = createRandomPattern(length, calculateSaturation(soundDuration));
     }
     
     
-    public RhythmPattern(boolean[] pattern, float saturation){
+    public RhythmPattern(boolean[] pattern, float soundDuration){
         this();
-        this.pattern = createRandomPattern(pattern, saturation);
+        this.pattern = createRandomPattern(pattern, calculateSaturation(soundDuration));
     }
     
     
@@ -67,6 +67,18 @@ public class RhythmPattern {
 //    public void randomizePattern(){
 //        pattern = createRandomPattern(pattern.length, saturation);
 //    }
+    
+    
+    private float calculateSaturation(float soundDuration){
+        float sat;
+        
+        if (soundDuration > 1)
+            sat = 0.05f;
+        else
+            sat = soundDuration % 1;
+        
+        return sat;
+    }
     
     
     private boolean[] createRandomPattern(int length, float sat){

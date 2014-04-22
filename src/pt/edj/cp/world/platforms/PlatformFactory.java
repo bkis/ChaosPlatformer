@@ -29,7 +29,7 @@ public class PlatformFactory {
                 pos,
                 new BoxPlatform(app),
                 sc,
-                new RhythmPattern(16, ((float)Math.random()+0.02f)/2));
+                new RhythmPattern(16, sc.getSampleLength()));
         
         plat.addGFX(new SimpleParticleGFX(app));
         
