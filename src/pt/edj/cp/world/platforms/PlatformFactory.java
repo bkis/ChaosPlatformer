@@ -21,7 +21,7 @@ public class PlatformFactory {
     
     
     public Platform createPlatform(Vector3f pos) {
-        SoundContainer sc = (Math.random() < 0.5f ?
+        SoundContainer sc = (Math.random() < 0.4f ?
                             debugGetDummyMelodicSoundContainer() :
                             debugGetDummyPercussiveSoundContainer());
         

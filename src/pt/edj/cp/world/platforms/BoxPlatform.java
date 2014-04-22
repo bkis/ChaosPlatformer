@@ -26,9 +26,10 @@ public class BoxPlatform extends PlatformItem {
         normalMat.setTexture("DiffuseMap", tex); 
         
         // create blink material
+        ColorRGBA col = new ColorRGBA((float)Math.random(),(float)Math.random(),(float)Math.random(),1.0f);
         gfxMat = normalMat.clone();
-        gfxMat.setColor("Diffuse", ColorRGBA.White);
-        gfxMat.setColor("Ambient", ColorRGBA.Yellow);
+        gfxMat.setColor("Diffuse", col);
+        gfxMat.setColor("Ambient", col);
         gfxMat.setBoolean("UseMaterialColors", true);
         
         // test box

@@ -17,12 +17,13 @@ public class SimpleParticleGFX extends PlatformItem {
     
     public SimpleParticleGFX(SimpleApplication app) {
         //particles
+        ColorRGBA col = new ColorRGBA((float)Math.random(),(float)Math.random(),(float)Math.random(),1.0f);
         throwEffect = new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 20);
         Material fireMat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Particle.j3md");
         throwEffect.setMaterial(fireMat);
         throwEffect.setImagesX(2); throwEffect.setImagesY(2); // 2x2 texture animation
-        throwEffect.setEndColor( new ColorRGBA(1f, 0f, 0f, 0f) );   // red
-        throwEffect.setStartColor( new ColorRGBA(1f, 1f, 0f, 1f) ); // yellow
+        throwEffect.setEndColor(new ColorRGBA(0,0,0,0)); 
+        throwEffect.setStartColor(col); 
         throwEffect.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 8, 0));
         throwEffect.setStartSize(0.1f);
         throwEffect.setEndSize(0.4f);
@@ -36,6 +37,7 @@ public class SimpleParticleGFX extends PlatformItem {
     }
 
     
+    @Override
     public void someEffectHappens() {
         throwing = true;
         throwingTimeLeft = 0.2f;
@@ -43,6 +45,7 @@ public class SimpleParticleGFX extends PlatformItem {
     }
 
     
+    @Override
     public void update(float tpf, float globalBeat, float platformBeat) {
         if (throwing) {
             if ((throwingTimeLeft -= tpf) <= 0.0f) {
