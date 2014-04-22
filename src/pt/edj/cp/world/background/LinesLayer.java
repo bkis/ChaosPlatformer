@@ -20,7 +20,7 @@ import pt.edj.cp.timing.events.IEvent;
  *
  * @author rechtslang
  */
-public class LinesLayer extends BackgroundLayer {
+public class LinesLayer extends AbstractBackgroundLayer {
 
     private int numLines;
     private LinkedList<Line> lines;

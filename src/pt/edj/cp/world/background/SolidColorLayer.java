@@ -12,7 +12,7 @@ import pt.edj.cp.timing.events.IEvent;
  *
  * @author rechtslang
  */
-public class SolidColorLayer extends BackgroundLayer {
+public class SolidColorLayer extends AbstractBackgroundLayer {
 
     public SolidColorLayer(Application app, float z, ColorRGBA color, float sx, float sy) {
         super(app, z, 0.0f);

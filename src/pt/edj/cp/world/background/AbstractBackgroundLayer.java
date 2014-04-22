@@ -10,14 +10,14 @@ import pt.edj.cp.timing.events.IEventListener;
  *
  * @author rechtslang
  */
-abstract public class BackgroundLayer extends Node implements IEventListener {
+abstract public class AbstractBackgroundLayer extends Node implements IEventListener {
     
     
     protected SimpleApplication app;
     private float shiftFactor;
     
     
-    public BackgroundLayer(Application app, float z, float shiftFactor){
+    public AbstractBackgroundLayer(Application app, float z, float shiftFactor){
         this.app = (SimpleApplication) app;
         
         this.setLocalTranslation(new Vector3f(0.0f, 0.0f, z));

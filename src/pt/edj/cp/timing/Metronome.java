@@ -40,7 +40,7 @@ public class Metronome extends AbstractEventSender {
     }
     
     
-    private synchronized final void doBeat() {
+    private synchronized void doBeat() {
         lastBeatNr++;
         lastBeatTimestamp = System.currentTimeMillis();
     }
@@ -69,11 +69,8 @@ public class Metronome extends AbstractEventSender {
         @Override
         public void run() {
             doBeat();
-            
             broadcast(new MetronomeBeatEvent());
-            
-            System.out.println("Beat nr " + lastBeatNr);
-       
+            //System.out.println("Beat nr " + lastBeatNr);
             timer.schedule(new MetronomeTask(), msPerBeat);
         }
     }

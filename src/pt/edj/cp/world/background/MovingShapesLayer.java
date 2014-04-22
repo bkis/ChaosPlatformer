@@ -28,7 +28,7 @@ import pt.edj.cp.timing.events.IEvent;
 import pt.edj.cp.util.AngleF;
 
 
-public class MovingShapesLayer extends BackgroundLayer {
+public class MovingShapesLayer extends AbstractBackgroundLayer {
     
     private Vector2f layerSize;
     private float movingSpeed;

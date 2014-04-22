@@ -16,8 +16,8 @@ public class BackgroundNode extends Node implements IEventListener, IMovementLis
     
     private SimpleApplication app;
     
-    private HashMap<BackgroundLayer,Float> layers
-            = new HashMap<BackgroundLayer,Float>();
+    private HashMap<AbstractBackgroundLayer,Float> layers
+            = new HashMap<AbstractBackgroundLayer,Float>();
     
     private float sizeX;
     private float sizeY;
@@ -34,10 +34,11 @@ public class BackgroundNode extends Node implements IEventListener, IMovementLis
         addLayer(new SolidColorLayer(app, -0.3f, ColorRGBA.DarkGray, sizeX, sizeY), 1.0f);
         addLayer(new MovingShapesLayer(app, -0.2f, sizeX, sizeY), 1.0f);
         addLayer(new LinesLayer(app, -0.1f, 4, sizeX, sizeY), 1.0f);
+        addLayer(new DiscoLaserLayer(app, -0.9f, 3, sizeX, sizeY), 1.0f);
     }
     
     
-    public final void addLayer(BackgroundLayer l, float alpha) {
+    public final void addLayer(AbstractBackgroundLayer l, float alpha) {
         layers.put(l, alpha);
         attachChild(l);
         l.setCullHint(CullHint.Never);
@@ -51,7 +52,7 @@ public class BackgroundNode extends Node implements IEventListener, IMovementLis
     public void movement(Vector3f newPosition, Vector3f delta) {
         setLocalTranslation(newPosition);
         
-        for (BackgroundLayer layer : layers.keySet()) {
+        for (AbstractBackgroundLayer layer : layers.keySet()) {
             float z = layers.get(layer);
             layer.shiftLayer(delta.negate());
         }
