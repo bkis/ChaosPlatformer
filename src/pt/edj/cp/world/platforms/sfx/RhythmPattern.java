@@ -72,10 +72,10 @@ public class RhythmPattern {
     private float calculateSaturation(float soundDuration){
         float sat;
         
-        if (soundDuration > 1)
-            sat = 0.05f;
+        if (soundDuration > 0.6)
+            sat = 0.09f;
         else
-            sat = 1 - (soundDuration % 1);
+            sat = (1 - (soundDuration % 1))/3;
         
         return sat;
     }
