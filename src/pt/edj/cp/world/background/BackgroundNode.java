@@ -31,10 +31,10 @@ public class BackgroundNode extends Node implements IEventListener, IMovementLis
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         
-        addLayer(new SolidColorLayer(app, -0.3f, ColorRGBA.DarkGray, sizeX, sizeY), 1.0f);
-        addLayer(new MovingShapesLayer(app, -0.2f, sizeX, sizeY), 1.0f);
-        addLayer(new LinesLayer(app, -0.1f, 4, sizeX, sizeY), 1.0f);
-        addLayer(new DiscoLaserLayer(app, -0.9f, 3, sizeX, sizeY), 1.0f);
+        addLayer(new SolidColorLayer(app, -2.3f, ColorRGBA.DarkGray, sizeX, sizeY), 1.0f);
+        addLayer(new MovingShapesLayer(app, -2.2f, sizeX, sizeY), 1.0f);
+        addLayer(new LinesLayer(app, -2.1f, 4, sizeX, sizeY), 1.0f);
+        addLayer(new DiscoLaserLayer(app, -2.9f, 3, sizeX, sizeY), 1.0f);
     }
     
     
