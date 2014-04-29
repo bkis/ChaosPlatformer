@@ -2,17 +2,18 @@ package pt.edj.cp.world.platforms;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.math.Vector3f;
+import pt.edj.cp.app.IngameState;
 import pt.edj.cp.util.SoundAssetManager;
 import pt.edj.cp.world.platforms.gfx.SimpleParticleGFX;
-import pt.edj.cp.world.platforms.sfx.RhythmPattern;
-import pt.edj.cp.world.platforms.sfx.SoundContainer;
+import pt.edj.cp.world.platforms.sfx.SoundObject;
 
 
 public class PlatformFactory {
     
+    private static final float MELODIC_QUOTE = 0.4f;
+    
     private SimpleApplication app;
     private SoundAssetManager sam;
-    
     
     public PlatformFactory(SimpleApplication app){
         this.app = app;
@@ -21,35 +22,23 @@ public class PlatformFactory {
     
     
     public Platform createPlatform(Vector3f pos) {
-        SoundContainer sc = (Math.random() < 0.4f ?
-                            debugGetDummyMelodicSoundContainer() :
-                            debugGetDummyPercussiveSoundContainer());
+        SoundObject soundObject = new SoundObject(
+                app,
+                sam.getRndSoundPath((Math.random() <= MELODIC_QUOTE ? 
+                    SoundAssetManager.INSTR_MELODIC :
+                    SoundAssetManager.INSTR_PERCUSSIVE)),
+                app.getStateManager().getState(IngameState.class)
+                .getCordController().getCurrentChord());
         
         Platform plat = new Platform(
                 pos,
                 new BoxPlatform(app),
-                sc,
-                new RhythmPattern(16, sc.getSampleLength()));
+                soundObject);
         
         plat.addGFX(new SimpleParticleGFX(app));
         
         return plat;
     }
-    
-    
-    private SoundContainer debugGetDummyMelodicSoundContainer(){
-        SoundContainer sc = new SoundContainer(app);
-        String soundID = sam.getRndMelodicInstrumentID();
-        sc.addSounds(sam.getRndMelodicNotes(soundID, 16));
-        return sc;
-    }
-    
-    
-    private SoundContainer debugGetDummyPercussiveSoundContainer(){
-        SoundContainer sc = new SoundContainer(app);
-        sc.addSound(sam.getRndSound(SoundAssetManager.INSTR_PERC));
-        return sc;
-    }
-    
+
     
 }

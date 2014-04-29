@@ -73,9 +73,9 @@ public class RhythmPattern {
         float sat;
         
         if (soundDuration > 0.6)
-            sat = 0.09f;
+            sat = 0.1f;
         else
-            sat = (1 - (soundDuration % 1))/3;
+            sat = (1 - (soundDuration % 1))/2;
         
         return sat;
     }

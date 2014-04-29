@@ -20,6 +20,7 @@ import pt.edj.cp.character.CharacterAnimator;
 import pt.edj.cp.input.IngameInputsState;
 import pt.edj.cp.physics.PlatformerCharacterControl;
 import pt.edj.cp.physics.WorldPhysicsManager;
+import pt.edj.cp.timing.ChordController;
 import pt.edj.cp.timing.Metronome;
 import pt.edj.cp.world.PlatformLifecycleManager;
 import pt.edj.cp.world.background.BackgroundNode;
@@ -50,6 +51,7 @@ public class IngameState extends AbstractAppState {
     private BackgroundNode backgroundNode;
     
     private Metronome metronome;
+    private ChordController chordCtrl;
     
     
     @Override
@@ -58,6 +60,8 @@ public class IngameState extends AbstractAppState {
         
         this.app = (SimpleApplication) app;
         this.metronome = Metronome.getInstance();
+        this.chordCtrl = new ChordController();
+        metronome.register(chordCtrl);
         this.characterNode = new Node("characterNode");
         this.sceneNode = new Node("sceneNode");
         
@@ -92,7 +96,7 @@ public class IngameState extends AbstractAppState {
         // Connect platform creation engine with character movement
         allPlatforms = new HashSet<Platform>();
         platformFactory = new PlatformFactory(this.app);
-        lifecycleManager = new PlatformLifecycleManager(this, 5.0f, new Vector2f(20, 16));
+        lifecycleManager = new PlatformLifecycleManager(this, 6.0f, new Vector2f(25, 20));
         characterControl.addMovementListener(lifecycleManager);
     }
     
@@ -187,6 +191,7 @@ public class IngameState extends AbstractAppState {
         
         // register with everything
         metronome.register(p);
+        chordCtrl.register(p);
         sceneNode.attachChild(p.getTopNode());
         physicsMgr.addToPhysicsScene(p.getPlatformSpatial());
         
@@ -204,6 +209,7 @@ public class IngameState extends AbstractAppState {
     
     public void removePlatform(Platform platform) {
         metronome.unregister(platform);
+        chordCtrl.unregister(platform);
         sceneNode.detachChild(platform.getTopNode());
         physicsMgr.removeFromPhysicsScene(platform.getPlatformSpatial());
         
@@ -214,4 +220,10 @@ public class IngameState extends AbstractAppState {
                 physicsMgr.getPhysicsSpace().getRigidBodyList().size());
         */
     }
+    
+    
+    public ChordController getCordController(){
+        return chordCtrl;
+    }
+    
 }
