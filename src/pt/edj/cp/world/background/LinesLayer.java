@@ -2,7 +2,6 @@ package pt.edj.cp.world.background;
 
 import com.jme3.app.Application;
 import com.jme3.material.Material;
-import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -15,6 +14,7 @@ import java.nio.FloatBuffer;
 import java.util.LinkedList;
 import java.util.Random;
 import pt.edj.cp.timing.events.IEvent;
+import pt.edj.cp.timing.events.ThemeParameterUpdate;
 
 /**
  *
@@ -31,7 +31,9 @@ public class LinesLayer extends AbstractBackgroundLayer {
     private Vector3f currOffset;
 
     private float currSegment;
-    private float segmentsPerSecond;
+
+    private float paramSpeed;
+    private float paramHectic;
     
     
     public LinesLayer(Application app, float z, int numLines, float sx, float sy) {
@@ -41,8 +43,9 @@ public class LinesLayer extends AbstractBackgroundLayer {
         maxY = sy;
         currOffset = new Vector3f(0.f, 0.f, 0.f);
         
-        currSegment = 0;
-        segmentsPerSecond = 25.0f;
+        currSegment = 0.f;
+        paramSpeed = 0.5f;
+        paramHectic = 0.5f;
 
         this.numLines = numLines;
         this.lines = new LinkedList<Line>();
@@ -57,7 +60,7 @@ public class LinesLayer extends AbstractBackgroundLayer {
 
     private void addLine() {
         Line line = new Line(150 + random.nextInt(100), random);
-        line.createControlPoints(10, 0.5f, 0.2f);
+        line.createControlPoints(10);
         line.updateOffset(currOffset);
         
         attachChild(line);
@@ -68,7 +71,25 @@ public class LinesLayer extends AbstractBackgroundLayer {
 
 
     public void receiveEvent(IEvent e) {
-        
+        if (e instanceof ThemeParameterUpdate) {
+            ThemeParameterUpdate tpu = (ThemeParameterUpdate) e;
+            
+            paramSpeed = tpu.getSpeed().getValue();
+            paramHectic = tpu.getExcitement().getValue();
+        }
+    }
+    
+    
+    private float getSharpness() {
+        return 0.15f + 0.3f * paramHectic;
+    }
+    
+    private float getAlternating() {
+        return 0.01f + 0.4f * paramHectic;
+    }
+    
+    private float getSegmentsPerSecond() {
+        return 5.0f + 20.0f * (paramSpeed + 0.5f * paramHectic);
     }
 
 
@@ -145,8 +166,9 @@ public class LinesLayer extends AbstractBackgroundLayer {
         }
 
 
-        public void createControlPoints(int additionalSegments, float sharpness, float alternating) {
-            float maxAngleChange = (float) Math.PI * (sharpness / 2.0f);
+        public void createControlPoints(int additionalSegments) {
+            float maxAngleChange = (float) Math.PI * (getSharpness() / 2.0f);
+            float alternating = getAlternating();
 
             // get old data:
             FloatBuffer oldVerts = (FloatBuffer) mesh.getBuffer(VertexBuffer.Type.Position).getData();
@@ -235,12 +257,13 @@ public class LinesLayer extends AbstractBackgroundLayer {
 
     private class UpdateControl extends AbstractControl {
         protected void controlUpdate(float tpf) {
-            currSegment += segmentsPerSecond * tpf;
-            int minimumSegmentsAvailable = (int) (0.5*segmentsPerSecond + 1);
+            float sps = getSegmentsPerSecond();
+            currSegment += sps * tpf;
+            int minimumSegmentsAvailable = (int) (0.25*sps + 1);
 
             for (Line line : lines) {
                 if (line.segmentsLeft() < minimumSegmentsAvailable) {
-                    line.createControlPoints(minimumSegmentsAvailable, 0.5f, 0.2f);
+                    line.createControlPoints(minimumSegmentsAvailable);
                 }
                 line.updateCurrSegment();
             }

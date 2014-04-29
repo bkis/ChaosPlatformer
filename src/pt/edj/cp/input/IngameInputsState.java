@@ -12,6 +12,7 @@ import com.jme3.math.Vector3f;
 import pt.edj.cp.character.CharacterAnimator;
 import pt.edj.cp.physics.PlatformerCharacterControl;
 import pt.edj.cp.physics.WorldPhysicsManager;
+import pt.edj.cp.timing.GameThemeController;
 
 
 public class IngameInputsState extends AbstractAppState{
@@ -25,12 +26,14 @@ public class IngameInputsState extends AbstractAppState{
     private static final KeyTrigger TRIGGER_RIGHT = new KeyTrigger(KeyInput.KEY_RIGHT);
     private static final KeyTrigger TRIGGER_SPACE = new KeyTrigger(KeyInput.KEY_SPACE);
     private static final KeyTrigger TRIGGER_ESC   = new KeyTrigger(KeyInput.KEY_ESCAPE);
+    private static final KeyTrigger TRIGGER_RET   = new KeyTrigger(KeyInput.KEY_RETURN);
     
     //action mappings
     private static final String MAPPING_JUMP  = "Jump";
     private static final String MAPPING_LEFT  = "Left";
     private static final String MAPPING_RIGHT = "Right";
     private static final String MAPPING_QUIT  = "Quit";
+    private static final String MAPPING_DEBUG  = "Debug";
     
     //key states
     private boolean left = false,
@@ -83,11 +86,13 @@ public class IngameInputsState extends AbstractAppState{
         inputManager.addMapping(MAPPING_RIGHT, TRIGGER_RIGHT, TRIGGER_D);
         inputManager.addMapping(MAPPING_JUMP, TRIGGER_UP, TRIGGER_W, TRIGGER_SPACE);
         inputManager.addMapping(MAPPING_QUIT, TRIGGER_ESC);
+        inputManager.addMapping(MAPPING_DEBUG, TRIGGER_RET);
         
         inputManager.addListener(actionListener, MAPPING_LEFT);
         inputManager.addListener(actionListener, MAPPING_RIGHT);
         inputManager.addListener(actionListener, MAPPING_JUMP);
         inputManager.addListener(actionListener, MAPPING_QUIT);
+        inputManager.addListener(actionListener, MAPPING_DEBUG);
     }
     
     
@@ -126,6 +131,10 @@ public class IngameInputsState extends AbstractAppState{
             if (name.equals(MAPPING_QUIT)) {
                 //QUIT GAME (temporary)
                 app.stop();
+            }
+            
+            if (name.equals(MAPPING_DEBUG) && !isPressed) {
+                GameThemeController.instance().changeSomething();
             }
         }
     };

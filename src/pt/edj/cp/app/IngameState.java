@@ -20,6 +20,7 @@ import pt.edj.cp.character.CharacterAnimator;
 import pt.edj.cp.input.IngameInputsState;
 import pt.edj.cp.physics.PlatformerCharacterControl;
 import pt.edj.cp.physics.WorldPhysicsManager;
+import pt.edj.cp.timing.GameThemeController;
 import pt.edj.cp.timing.Metronome;
 import pt.edj.cp.world.PlatformLifecycleManager;
 import pt.edj.cp.world.background.BackgroundNode;
@@ -105,6 +106,8 @@ public class IngameState extends AbstractAppState {
         
         for (Platform plat : allPlatforms)
             plat.update(tpf, beat);
+        
+        GameThemeController.instance().frame(tpf);
     }
     
     
