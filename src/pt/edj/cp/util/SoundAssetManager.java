@@ -22,15 +22,30 @@ public class SoundAssetManager {
                                           1.781797f,    //kleine Septime
                                           1.887749f,    //große Septime
                                           2.000000f};   //Oktave
+    
     //scales pitch factors
-    private static final float[] PITCH_MINOR = {PITCH[0],
-                                                PITCH[2],
-                                                PITCH[3],
-                                                PITCH[5],
-                                                PITCH[7],
-                                                PITCH[8],
-                                                PITCH[10],
-                                                PITCH[12]};
+    public static final float[] PITCH_MINOR = {PITCH[0],
+                                               PITCH[2],
+                                               PITCH[3],
+                                               PITCH[5],
+                                               PITCH[7],
+                                               PITCH[8],
+                                               PITCH[10],
+                                               PITCH[12]};
+    
+    //chords c minor
+    public static final float[] CHORD_C_TONIC       = {PITCH_MINOR[0],
+                                                       PITCH_MINOR[2],
+                                                       PITCH_MINOR[4]};
+    
+    public static final float[] CHORD_C_DOMINANT    = {PITCH_MINOR[4],
+                                                       PITCH_MINOR[6],
+                                                       PITCH_MINOR[1]};
+    
+    public static final float[] CHORD_C_SUBDOMINANT = {PITCH_MINOR[3],
+                                                       PITCH_MINOR[5],
+                                                       PITCH_MINOR[7]};
+    
     //base paths
     private static final String DIR_ASSETS     = "assets/";
     private static final String DIR_SND        = "Sounds/";
