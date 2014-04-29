@@ -107,6 +107,8 @@ public class WorldPhysicsManager {
     
     
     public void removeFromPhysicsScene(Spatial spatial) {
+        if (spatial == null
+                || spatial.getControl(RigidBodyControl.class) == null) return;
         getPhysicsSpace().remove(spatial.getControl(RigidBodyControl.class));
         spatial.removeControl(spatial.getControl(RigidBodyControl.class));
     }

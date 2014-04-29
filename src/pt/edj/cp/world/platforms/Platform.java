@@ -9,37 +9,32 @@ import com.jme3.scene.Spatial;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import pt.edj.cp.timing.events.ChordChangeEvent;
 import pt.edj.cp.timing.events.IEvent;
 import pt.edj.cp.timing.events.IEventListener;
 import pt.edj.cp.timing.events.MetronomeBeatEvent;
-import pt.edj.cp.world.platforms.sfx.RhythmPattern;
-import pt.edj.cp.world.platforms.sfx.SoundContainer;
+import pt.edj.cp.world.platforms.sfx.SoundObject;
 
 
 public class Platform implements IEventListener, Savable {
-    
-    private RhythmPattern pattern;
     
     private Node topNode;
     private PlatformItem platformSpatial;
     private Set<PlatformItem> gfxNodes;
     private Set<PlatformItem> allPlatformItems;
     
-    private SoundContainer sfx;
+    private SoundObject sfx;
     private boolean active;
     
     
     public Platform(Vector3f position,
                     PlatformItem spatial,
-                    SoundContainer sfx,
-                    RhythmPattern pattern){
+                    SoundObject sfx){
         this.platformSpatial = spatial;
         this.gfxNodes = new HashSet<PlatformItem>();
         this.allPlatformItems = new HashSet<PlatformItem>();
         this.sfx = sfx;
-        this.pattern = pattern;
         this.active = false;
-        this.sfx.limitNrOfSounds(pattern.getNrOfEvents());
         
         topNode = new Node();
         topNode.setLocalTranslation(position);
@@ -54,7 +49,7 @@ public class Platform implements IEventListener, Savable {
     public void activate() {
         if (!active) {
             System.out.println("activate!");
-            sfx.playNextSound();
+            sfx.playBaseSound();
             active = true;
             
             for (PlatformItem item : allPlatformItems)
@@ -73,12 +68,15 @@ public class Platform implements IEventListener, Savable {
     @Override
     public void receiveEvent(IEvent e) {
         if (e instanceof MetronomeBeatEvent){
-            if (active && pattern.nextEvent()){
-                for (PlatformItem item : allPlatformItems)
-                    item.someEffectHappens();
-                sfx.playNextSound();
+            if (active){
+                sfx.playNextEvent();
+                if (sfx.getCurrentEvent())
+                    for (PlatformItem item : allPlatformItems)
+                        item.someEffectHappens();
             }
-        } //else if (e instanceof ...
+        } else if (e instanceof ChordChangeEvent){
+            sfx.changeChord(((ChordChangeEvent)e).getChordPitches());
+        }
     }
     
     
