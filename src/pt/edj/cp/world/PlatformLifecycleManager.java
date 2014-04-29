@@ -137,7 +137,7 @@ public class PlatformLifecycleManager implements IMovementListener {
 //        this.platformSpawner = new NoisePlatformSpawner(0.8525342f);
 //        this.platformSpawner = new HorizontalPlatformSpawner();
         this.platformSpawner = new RandomPlatformSpawner();
-        this.platformSpawnThreshold = 0.1f;
+        this.platformSpawnThreshold = 0.8f;
         
         // add initial zones around player
         activeZones = getActiveZonesForPosition(new Vector2f(0.0f, 0.0f));

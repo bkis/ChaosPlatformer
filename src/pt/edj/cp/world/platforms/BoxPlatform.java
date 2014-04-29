@@ -33,10 +33,7 @@ public class BoxPlatform extends PlatformItem {
         gfxMat.setBoolean("UseMaterialColors", true);
         
         // test box
-        Box boxMesh = new Box(
-                (float)(Math.random()*2)+0.5f,
-                (float)(Math.random()*2)+0.5f,
-                (float)(Math.random()*2)+0.5f); 
+        Box boxMesh = new Box(0.6f, 0.6f, 0.6f); 
         boxGeo = new Geometry("BoxPlatform " + this.hashCode(), boxMesh);
         boxGeo.setMaterial(normalMat); 
         this.attachChild(boxGeo);
