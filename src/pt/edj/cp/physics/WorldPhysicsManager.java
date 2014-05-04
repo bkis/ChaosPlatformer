@@ -97,12 +97,11 @@ public class WorldPhysicsManager {
     public void addToPhysicsScene(Spatial spatial){
         RigidBodyControl platformPhysics = new RigidBodyControl(0);
         spatial.addControl(platformPhysics);
-        platformPhysics.setMass(10f);
         platformPhysics.setKinematic(true);
         platformPhysics.setKinematicSpatial(true);
         platformPhysics.setFriction(1f);
+        platformPhysics.setCcdMotionThreshold(0.01f);
         getPhysicsSpace().add(platformPhysics);
-        
     }
     
     

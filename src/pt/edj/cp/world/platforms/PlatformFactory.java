@@ -10,7 +10,7 @@ import pt.edj.cp.world.platforms.sfx.SoundObject;
 
 public class PlatformFactory {
     
-    private static final float MELODIC_QUOTE = 0.4f;
+    private static final float MELODIC_QUOTE = 0.3f;
     
     private SimpleApplication app;
     private SoundAssetManager sam;

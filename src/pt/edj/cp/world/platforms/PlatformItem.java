@@ -9,6 +9,7 @@ import com.jme3.scene.Node;
 public abstract class PlatformItem extends Node {
     
     protected boolean active = false;
+    protected Platform parentPlatform;
     
     
     public final boolean isActive() {
@@ -31,6 +32,11 @@ public abstract class PlatformItem extends Node {
      * Gets called regularly
      */
     public void update(float tpf, float globalBeat, float platformBeat) {
+    }
+    
+    
+    public void setParentPlatform(Platform pf){
+        this.parentPlatform = pf;
     }
     
 }

@@ -6,6 +6,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
+import pt.edj.cp.util.Randoms;
 
 
 public class BoxPlatform extends PlatformItem {
@@ -22,18 +23,19 @@ public class BoxPlatform extends PlatformItem {
         
         // create normal material
         normalMat = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-        Texture tex = app.getAssetManager().loadTexture("Interface/splash.png"); 
-        normalMat.setTexture("DiffuseMap", tex); 
+        normalMat.setBoolean("UseMaterialColors", true);
+        normalMat.setColor("Diffuse", Randoms.rndColorRGBA().mult(0.85f));
+        normalMat.setColor("Ambient", Randoms.rndColorRGBA().mult(0.85f));
         
         // create blink material
-        ColorRGBA col = new ColorRGBA((float)Math.random(),(float)Math.random(),(float)Math.random(),1.0f);
         gfxMat = normalMat.clone();
-        gfxMat.setColor("Diffuse", col);
-        gfxMat.setColor("Ambient", col);
-        gfxMat.setBoolean("UseMaterialColors", true);
+        gfxMat.setColor("Diffuse", ColorRGBA.White);
+        gfxMat.setColor("Ambient", ColorRGBA.White);
         
         // test box
-        Box boxMesh = new Box(0.6f, 0.6f, 0.6f); 
+        Box boxMesh = new Box(Randoms.rndFloat(0.6f, 1.2f),
+                              Randoms.rndFloat(0.6f, 1.2f),
+                              Randoms.rndFloat(0.6f, 1.2f)); 
         boxGeo = new Geometry("BoxPlatform " + this.hashCode(), boxMesh);
         boxGeo.setMaterial(normalMat); 
         this.attachChild(boxGeo);
@@ -57,4 +59,6 @@ public class BoxPlatform extends PlatformItem {
             }
         }
     }
+
+    
 }
