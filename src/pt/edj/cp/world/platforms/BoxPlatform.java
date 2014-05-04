@@ -5,12 +5,13 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
-import com.jme3.texture.Texture;
 import pt.edj.cp.util.Randoms;
 import pt.edj.cp.util.TextureFactory;
 
 
 public class BoxPlatform extends PlatformItem {
+    
+    private static final float FLASH_TIME = 0.1f;
     
     Geometry boxGeo;
     Material normalMat;
@@ -25,14 +26,15 @@ public class BoxPlatform extends PlatformItem {
         // create normal material
         normalMat = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
         normalMat.setBoolean("UseMaterialColors", true);
-        normalMat.setColor("Diffuse", Randoms.rndColorRGBA(1));
-        //normalMat.setColor("Ambient", Randoms.rndColorRGBA());
+        normalMat.setColor("Diffuse", Randoms.rndColorRGBA(0.9f, 1.0f));
+        normalMat.setColor("Ambient", Randoms.rndColorRGBA(0.9f, 1.0f));
         normalMat.setTexture("DiffuseMap", TextureFactory.getRndTexture(app.getAssetManager()));
         
         // create blink material
         gfxMat = normalMat.clone();
         gfxMat.setColor("Diffuse", ColorRGBA.White);
         gfxMat.setColor("Ambient", ColorRGBA.White);
+        gfxMat.setTexture("DiffuseMap", null);
         
         // test box
         Box boxMesh = new Box(Randoms.rndFloat(0.6f, 1.2f),
@@ -47,7 +49,7 @@ public class BoxPlatform extends PlatformItem {
     @Override
     public void someEffectHappens() {
         flashing = true;
-        flashTimeLeft = 0.2f;
+        flashTimeLeft = FLASH_TIME;
         boxGeo.setMaterial(gfxMat);
     }
 

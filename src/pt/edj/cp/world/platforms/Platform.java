@@ -51,6 +51,7 @@ public class Platform implements IEventListener, Savable {
             //System.out.println("activate!");
             sfx.playBaseSound();
             for (PlatformItem pi : gfxNodes) pi.someEffectHappens();
+            platformSpatial.someEffectHappens();
             active = true;
             
             for (PlatformItem item : allPlatformItems)
