@@ -6,12 +6,12 @@ import com.jme3.math.ColorRGBA;
 public class Randoms {
     
     
-    public static ColorRGBA rndColorRGBA(){
+    public static ColorRGBA rndColorRGBA(float alpha){
         return new ColorRGBA(
-                (float)Math.random(),
-                (float)Math.random(),
-                (float)Math.random(),
-                1);
+                rndFloat(0.2f, 1.0f),
+                rndFloat(0.2f, 1.0f),
+                rndFloat(0.2f, 1.0f),
+                alpha);
     }
     
     
