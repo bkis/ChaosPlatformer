@@ -27,6 +27,7 @@ public class WorldPhysicsManager {
     private static final float    PHYSICS_ACCURACY  = 0.016f; //def=0.016, low=0.005, hi=0.032
     private static final float    PHYSICS_DAMPING   = 0.5f;
     private static final boolean  DEBUG_MODE        = false;
+    private static final float    CCD_MOTION_THRESH = 0.2f;
     
     
     private SimpleApplication app;
@@ -35,6 +36,7 @@ public class WorldPhysicsManager {
     private PlatformerCharacterControl playerControl;
     private Node sceneNode;
     private Node characterNode;
+    
     
     
     public WorldPhysicsManager(Application app,
@@ -100,7 +102,7 @@ public class WorldPhysicsManager {
         platformPhysics.setKinematic(true);
         platformPhysics.setKinematicSpatial(true);
         platformPhysics.setFriction(1f);
-        platformPhysics.setCcdMotionThreshold(0.01f);
+        platformPhysics.setCcdMotionThreshold(CCD_MOTION_THRESH);
         getPhysicsSpace().add(platformPhysics);
     }
     
