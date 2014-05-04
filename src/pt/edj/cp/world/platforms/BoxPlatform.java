@@ -26,8 +26,8 @@ public class BoxPlatform extends PlatformItem {
         // create normal material
         normalMat = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
         normalMat.setBoolean("UseMaterialColors", true);
-        normalMat.setColor("Diffuse", Randoms.rndColorRGBA(0.9f, 1.0f));
-        normalMat.setColor("Ambient", Randoms.rndColorRGBA(0.9f, 1.0f));
+        normalMat.setColor("Diffuse", Randoms.rndColorRGBA(0.7f, 1.0f));
+        normalMat.setColor("Ambient", Randoms.rndColorRGBA(0.7f, 1.0f));
         normalMat.setTexture("DiffuseMap", TextureFactory.getRndTexture(app.getAssetManager()));
         
         // create blink material
@@ -37,8 +37,8 @@ public class BoxPlatform extends PlatformItem {
         gfxMat.setTexture("DiffuseMap", null);
         
         // test box
-        Box boxMesh = new Box(Randoms.rndFloat(0.6f, 1.2f),
-                              Randoms.rndFloat(0.6f, 1.2f),
+        Box boxMesh = new Box(Randoms.rndFloat(0.6f, 1.5f),
+                              Randoms.rndFloat(0.6f, 1.5f),
                               Randoms.rndFloat(0.6f, 1.2f)); 
         boxGeo = new Geometry("BoxPlatform " + this.hashCode(), boxMesh);
         boxGeo.setMaterial(normalMat); 
