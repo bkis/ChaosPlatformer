@@ -1,7 +1,5 @@
 package pt.edj.cp.util;
 
-import com.jme3.asset.AssetManager;
-import com.jme3.audio.AudioNode;
 import java.io.File;
 import java.util.Random;
 
@@ -25,11 +23,9 @@ public class SoundAssetManager {
     
 
     private Random rnd;
-    private AssetManager assetManager;
     
     
-    public SoundAssetManager(AssetManager assetManager){
-        this.assetManager = assetManager;
+    public SoundAssetManager(){
         this.rnd = new Random();
     }
     
@@ -39,31 +35,5 @@ public class SoundAssetManager {
         return soundTypeKey + dir.list()[rnd.nextInt(dir.list().length)];
     }
     
-    
-//    //DEBUG
-//    public List<File> findFiles(File directory){
-//        List<File> fileList = new ArrayList<File>();
-//
-//        if (!directory.exists()) {
-//                System.out.println("\"" + directory.getName() + "\" does not exist!");
-//                return fileList;
-//        } else if (!directory.isDirectory()){
-//                System.out.println("\"" + directory.getName() + "\" is not a directory!");
-//                return fileList;
-//        }
-//
-//        findFiles(directory, fileList);
-//        return fileList;
-//    }
-//
-//
-//    private void findFiles(File directory, List<File> fileList){
-//        File[] fileArray = directory.listFiles();
-//
-//        for (File f : fileArray){
-//                if (!f.isDirectory()) fileList.add(f);
-//                if (f.isDirectory()) findFiles(f, fileList);
-//        }
-//    }
     
 }

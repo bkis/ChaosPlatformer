@@ -17,7 +17,7 @@ public class PlatformFactory {
     
     public PlatformFactory(SimpleApplication app){
         this.app = app;
-        this.sam = new SoundAssetManager(app.getAssetManager());
+        this.sam = new SoundAssetManager();
     }
     
     
