@@ -20,7 +20,7 @@ public class WorldPhysicsManager {
     private static final Vector3f WORLD_GRAVITY     = new Vector3f(0, -9.81f, 0);
     private static final Vector3f CHARACTER_GRAVITY = new Vector3f(0, -9.81f, 0);
     private static final Vector3f JUMP_STOP_GRAVITY = new Vector3f(0, -80.0f, 0);
-    private static final Vector3f JUMP_FORCE        = new Vector3f(0, 20, 0);
+    private static final Vector3f JUMP_FORCE        = new Vector3f(0, 30, 0);
     private static final float    CHARACTER_RADIUS  = 0.3f;
     private static final float    CHARACTER_HEIGHT  = 1.0f;
     private static final float    CHARACTER_MASS    = 10f;
