@@ -34,7 +34,7 @@ public class IngameState extends AbstractAppState {
     
     private static final String CHAR_MODEL = "Models/Oto/Oto.mesh.j3o";
     private static final float CAM_Y_OFFSET = 1f;
-    private static final float CAM_Z_OFFSET = 18f;
+    private static final float CAM_Z_OFFSET = 18f; //18
     private static final float BG_SIZE_X = 24;
     private static final float BG_SIZE_Y = 20;
     
