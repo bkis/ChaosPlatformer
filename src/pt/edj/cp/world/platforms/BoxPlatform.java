@@ -7,6 +7,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import pt.edj.cp.util.Randoms;
+import pt.edj.cp.util.TextureFactory;
 
 
 public class BoxPlatform extends PlatformItem {
@@ -24,8 +25,9 @@ public class BoxPlatform extends PlatformItem {
         // create normal material
         normalMat = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
         normalMat.setBoolean("UseMaterialColors", true);
-        normalMat.setColor("Diffuse", Randoms.rndColorRGBA().mult(0.85f));
-        normalMat.setColor("Ambient", Randoms.rndColorRGBA().mult(0.85f));
+        normalMat.setColor("Diffuse", Randoms.rndColorRGBA(1));
+        //normalMat.setColor("Ambient", Randoms.rndColorRGBA());
+        normalMat.setTexture("DiffuseMap", TextureFactory.getRndTexture(app.getAssetManager()));
         
         // create blink material
         gfxMat = normalMat.clone();
