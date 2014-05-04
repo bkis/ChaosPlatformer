@@ -3,9 +3,6 @@ package pt.edj.cp.app;
 import com.jme3.app.SimpleApplication;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
-import java.io.File;
-import java.util.List;
-import pt.edj.cp.util.SoundAssetManager;
 
 
 

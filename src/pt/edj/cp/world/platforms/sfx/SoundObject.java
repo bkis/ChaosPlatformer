@@ -5,7 +5,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
 import java.util.Random;
 import java.util.concurrent.Callable;
-import pt.edj.cp.util.SoundAssetManager;
+import pt.edj.cp.util.SoundPathManager;
 
 
 /*

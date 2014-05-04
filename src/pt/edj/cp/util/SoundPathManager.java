@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Random;
 
 
-public class SoundAssetManager {
+public class SoundPathManager {
     
     //base paths
     private static final String DIR_ASSETS     = "assets/";
@@ -25,7 +25,7 @@ public class SoundAssetManager {
     private Random rnd;
     
     
-    public SoundAssetManager(){
+    public SoundPathManager(){
         this.rnd = new Random();
     }
     

@@ -3,7 +3,7 @@ package pt.edj.cp.world.platforms;
 import com.jme3.app.SimpleApplication;
 import com.jme3.math.Vector3f;
 import pt.edj.cp.app.IngameState;
-import pt.edj.cp.util.SoundAssetManager;
+import pt.edj.cp.util.SoundPathManager;
 import pt.edj.cp.world.platforms.gfx.SimpleParticleGFX;
 import pt.edj.cp.world.platforms.sfx.SoundObject;
 
@@ -13,11 +13,11 @@ public class PlatformFactory {
     private static final float MELODIC_QUOTE = 0.3f;
     
     private SimpleApplication app;
-    private SoundAssetManager sam;
+    private SoundPathManager sam;
     
     public PlatformFactory(SimpleApplication app){
         this.app = app;
-        this.sam = new SoundAssetManager();
+        this.sam = new SoundPathManager();
     }
     
     
@@ -25,8 +25,8 @@ public class PlatformFactory {
         SoundObject soundObject = new SoundObject(
                 app,
                 sam.getRndSoundPath((Math.random() <= MELODIC_QUOTE ? 
-                    SoundAssetManager.INSTR_MELODIC :
-                    SoundAssetManager.INSTR_PERCUSSIVE)),
+                    SoundPathManager.INSTR_MELODIC :
+                    SoundPathManager.INSTR_PERCUSSIVE)),
                 app.getStateManager().getState(IngameState.class)
                 .getCordController().getCurrentChord());
         
