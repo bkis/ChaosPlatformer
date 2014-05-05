@@ -4,9 +4,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import pt.edj.cp.timing.events.AbstractEventSender;
 import pt.edj.cp.timing.events.MetronomeBeatEvent;
+import pt.edj.cp.timing.events.NewBarEvent;
 
 
 public class Metronome extends AbstractEventSender {
+    
+    private static final float INIT_BPM = 100;
     
     private float bpm;
     private int msPerBeat;
@@ -14,10 +17,10 @@ public class Metronome extends AbstractEventSender {
     private Timer timer;
     
     private long lastBeatTimestamp;
-    private int lastBeatNr;
+    private long lastBeatNr;
     
     
-    private static Metronome instance = new Metronome(480.0f); //120 bpm * 4 (weil 16 beats pro takt)
+    private static Metronome instance = new Metronome(INIT_BPM *4); // * 4 (weil 16 beats pro takt)
     
     
     private Metronome(float bpm) {
@@ -43,6 +46,8 @@ public class Metronome extends AbstractEventSender {
     private synchronized void doBeat() {
         lastBeatNr++;
         lastBeatTimestamp = System.currentTimeMillis();
+        
+        if (lastBeatNr % 16 == 0) broadcast(new NewBarEvent());
     }
     
     

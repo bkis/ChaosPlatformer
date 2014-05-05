@@ -2,14 +2,13 @@ package pt.edj.cp.audio;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
-import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.audio.AudioSource.Status;
 import java.util.concurrent.Callable;
 import pt.edj.cp.timing.events.ChordChangeEvent;
 import pt.edj.cp.timing.events.IEvent;
 import pt.edj.cp.timing.events.IEventListener;
-import pt.edj.cp.timing.events.MetronomeBeatEvent;
+import pt.edj.cp.timing.events.NewBarEvent;
 import pt.edj.cp.util.MusicScales;
 import pt.edj.cp.util.Randoms;
 import pt.edj.cp.util.SoundPathManager;
@@ -17,11 +16,12 @@ import pt.edj.cp.util.SoundPathManager;
 
 public class BackgroundSoundsPlayer implements IEventListener{
     
-    private static final int CHANGE_AMB_EVERY_X_BEATS = 16 * 16;
-    private static final int CHANGE_PAD_EVERY_X_BEATS = 16 * 8;
+    private static final int CHANGE_AMB_EVERY_X_BARS = 16;
+    private static final int CHANGE_PAD_EVERY_X_BARS = 8;
+    private static final int PLAY_PAD_EVERY_X_BARS = 4;
     
-    private static final float AMBIENT_VOLUME = 0.5f;
-    private static final float PAD_VOLUME     = 0.4f;
+    private static final float AMBIENT_VOLUME = 0.8f;
+    private static final float PAD_VOLUME     = 1f;
 
     
     private SoundPathManager sam;
@@ -31,7 +31,7 @@ public class BackgroundSoundsPlayer implements IEventListener{
     private AudioNode amb;
     private AudioNode pad;
     
-    private double beatCount;
+    private int barCount;
     
     
     
@@ -39,7 +39,7 @@ public class BackgroundSoundsPlayer implements IEventListener{
         this.app = (SimpleApplication) app;
         this.sam = new SoundPathManager();
         this.pitches = MusicScales.CHORD_MINOR_TONIC;
-        this.beatCount = 0;
+        this.barCount = 0;
         
         initAmbientNode();
         initPadNode();
@@ -53,12 +53,15 @@ public class BackgroundSoundsPlayer implements IEventListener{
     
     
     public void receiveEvent(IEvent e) {
-        if (e instanceof MetronomeBeatEvent){
-            if (++beatCount % CHANGE_AMB_EVERY_X_BEATS == 0){
+        if (e instanceof NewBarEvent){
+            if (++barCount % CHANGE_AMB_EVERY_X_BARS == 0){
                 changeAmbient();
             }
-            if (++beatCount % CHANGE_PAD_EVERY_X_BEATS == 0){
-                changePad();
+            if (++barCount % CHANGE_PAD_EVERY_X_BARS == 0){
+                initPadNode();
+            }
+            if (++barCount % PLAY_PAD_EVERY_X_BARS == 0){
+                playPad();
             }
             if (amb.getStatus() == Status.Stopped){
                 replayAmbient();
@@ -70,17 +73,15 @@ public class BackgroundSoundsPlayer implements IEventListener{
     }
     
     
+    private void playPad(){
+        app.enqueue(playPad);
+    }
+    
+    
     private void changeAmbient(){
         app.enqueue(stopAmbient);
         initAmbientNode();
         app.enqueue(playAmbient);
-    }
-    
-    
-    private void changePad(){
-        app.enqueue(stopPad);
-        initPadNode();
-        app.enqueue(playPad);
     }
     
     
@@ -109,36 +110,20 @@ public class BackgroundSoundsPlayer implements IEventListener{
         pad = new AudioNode(app.getAssetManager(),
                 sam.getRndSoundPath(SoundPathManager.INSTR_BG));
         pad.setPositional(false);
-        pad.setLooping(true);
+        pad.setLooping(false);
         pad.setVolume(PAD_VOLUME);
         updatePadPitch();
     }
     
     
     private void updatePadPitch(){
-        app.enqueue(pitchPad);
+        pad.setPitch(pitches[Randoms.rndInt(0, pitches.length)]);
     }
-    
-    
-    private Callable<Boolean> pitchPad = new Callable<Boolean>() {
-        public Boolean call(){
-            pad.setPitch(pitches[Randoms.rndInt(0, pitches.length)]);
-            return true;
-        }
-    };
     
     
     private Callable<Boolean> playAmbient = new Callable<Boolean>() {
         public Boolean call(){
             amb.play();
-            return true;
-        }
-    };
-    
-    
-    private Callable<Boolean> playPad = new Callable<Boolean>() {
-        public Boolean call(){
-            pad.play();
             return true;
         }
     };
@@ -152,9 +137,9 @@ public class BackgroundSoundsPlayer implements IEventListener{
     };
     
     
-    private Callable<Boolean> stopPad = new Callable<Boolean>() {
+    private Callable<Boolean> playPad = new Callable<Boolean>() {
         public Boolean call(){
-            pad.stop();
+            pad.playInstance();
             return true;
         }
     };
