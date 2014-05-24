@@ -29,10 +29,8 @@ public class Main extends SimpleApplication {
         fpp.addFilter(whiteNoise);
         
         //attach ingame state
-        IngameState ingameState = new IngameState();
+        IngameState ingameState = new IngameState(whiteNoise);
         stateManager.attach(ingameState);
-        
-        
     }
 
     

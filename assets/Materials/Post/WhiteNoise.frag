@@ -1,22 +1,12 @@
 uniform sampler2D m_Texture;
 varying vec2 texCoord;
 
-uniform float m_XScale;
-uniform float m_YScale;
+uniform float m_NoiseFactor;
 
 uniform float g_Time;
+uniform float g_Aspect;
 uniform vec2 g_Resolution;
 
-
-float rand(vec2 co)
-{
-    highp float a = 12.9898;
-    highp float b = 78.233;
-    highp float c = 43758.5453;
-    highp float dt= dot(co.xy ,vec2(a,b));
-    highp float sn= mod(dt,3.14);
-    return fract(sin(sn) * c);
-}
 
 vec3 mod289(vec3 x) {
   return x - floor(x * (1.0 / 289.0)) * 289.0;
@@ -111,15 +101,15 @@ float snoise(vec3 v)
 }
 
 
-float rand(vec3 co){
-    return fract(sin(dot(co.xyz ,vec2(12.9898,78.233))) * 43758.5453);
-}
-
 void main() {
-
     vec4 texVal = texture2D( m_Texture, texCoord );
 
-    float noise = snoise(vec3(80.0 * texCoord, g_Time * 10.0));
+    vec2 randCoord = texCoord;
+    randCoord.x *= g_Aspect;
+    randCoord *= 100.0;
 
-    gl_FragColor = vec4(vec3(1) * (0.5+0.5*noise), 1.0);
+    float noise = snoise(vec3(randCoord, g_Time * 10.0));
+    vec4 noiseVal = vec4(vec3(1,1,1) * (0.5 + 0.5*noise), 1.0);
+
+    gl_FragColor = mix(texVal, noiseVal, m_NoiseFactor);
 }
