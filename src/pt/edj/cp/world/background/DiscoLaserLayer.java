@@ -6,7 +6,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Line;
-import com.sun.org.apache.bcel.internal.generic.SIPUSH;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;

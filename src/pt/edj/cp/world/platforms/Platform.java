@@ -48,8 +48,10 @@ public class Platform implements IEventListener, Savable {
     
     public void activate() {
         if (!active) {
-            System.out.println("activate!");
+            //System.out.println("activate!");
             sfx.playBaseSound();
+            for (PlatformItem pi : gfxNodes) pi.someEffectHappens();
+            platformSpatial.someEffectHappens();
             active = true;
             
             for (PlatformItem item : allPlatformItems)
@@ -62,6 +64,7 @@ public class Platform implements IEventListener, Savable {
         topNode.attachChild(node);
         gfxNodes.add(node);
         allPlatformItems.add(node);
+        node.setParentPlatform(this);
     }
     
     

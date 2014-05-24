@@ -16,6 +16,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import java.util.HashSet;
+import pt.edj.cp.audio.BackgroundSoundsPlayer;
 import pt.edj.cp.character.CharacterAnimator;
 import pt.edj.cp.input.IngameInputsState;
 import pt.edj.cp.physics.PlatformerCharacterControl;
@@ -34,7 +35,7 @@ public class IngameState extends AbstractAppState {
     
     private static final String CHAR_MODEL = "Models/Oto/Oto.mesh.j3o";
     private static final float CAM_Y_OFFSET = 1f;
-    private static final float CAM_Z_OFFSET = 18f;
+    private static final float CAM_Z_OFFSET = 18f; //18
     private static final float BG_SIZE_X = 24;
     private static final float BG_SIZE_Y = 20;
     
@@ -53,6 +54,7 @@ public class IngameState extends AbstractAppState {
     
     private Metronome metronome;
     private ChordController chordCtrl;
+    private BackgroundSoundsPlayer bgSound;
     
     
     @Override
@@ -61,8 +63,15 @@ public class IngameState extends AbstractAppState {
         
         this.app = (SimpleApplication) app;
         this.metronome = Metronome.getInstance();
-        this.chordCtrl = new ChordController();
+        
+        chordCtrl = new ChordController();
         metronome.register(chordCtrl);
+        
+        bgSound = new BackgroundSoundsPlayer(app);
+        metronome.register(bgSound);
+        chordCtrl.register(bgSound);
+        bgSound.start();
+        
         this.characterNode = new Node("characterNode");
         this.sceneNode = new Node("sceneNode");
         

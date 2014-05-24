@@ -5,33 +5,38 @@ import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import java.util.concurrent.Callable;
 import pt.edj.cp.world.platforms.PlatformItem;
 
 
 public class SimpleParticleGFX extends PlatformItem {
     
     private ParticleEmitter throwEffect;
-    private boolean throwing = false;
-    private float throwingTimeLeft;
+    private SimpleApplication app;
+//    private boolean throwing = false;
+//    private float throwingTimeLeft;
     
     public SimpleParticleGFX(SimpleApplication app) {
+        this.app = app;
+        
         //particles
-        ColorRGBA col = new ColorRGBA((float)Math.random(),(float)Math.random(),(float)Math.random(),1.0f);
-        throwEffect = new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 20);
+        throwEffect = new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 1);
         Material fireMat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Particle.j3md");
         throwEffect.setMaterial(fireMat);
-        throwEffect.setImagesX(2); throwEffect.setImagesY(2); // 2x2 texture animation
+        throwEffect.setImagesX(2); throwEffect.setImagesY(2);
         throwEffect.setEndColor(new ColorRGBA(0,0,0,0)); 
-        throwEffect.setStartColor(col); 
-        throwEffect.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 8, 0));
-        throwEffect.setStartSize(0.1f);
-        throwEffect.setEndSize(0.4f);
-        throwEffect.setGravity(0f,30f,0f);
-        throwEffect.setLowLife(0.5f);
-        throwEffect.setHighLife(0.5f);
-        throwEffect.getParticleInfluencer().setVelocityVariation(0.3f);
+        throwEffect.setStartColor(ColorRGBA.White); 
+        throwEffect.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 0, 0));
+        throwEffect.setStartSize(0.4f);
+        throwEffect.setEndSize(3.5f);
+        throwEffect.setGravity(0f,0f,0f);
+        throwEffect.setLowLife(1f);
+        throwEffect.setHighLife(1f);
+        throwEffect.getParticleInfluencer().setVelocityVariation(0);
         throwEffect.setParticlesPerSec(0);
+        throwEffect.setRotateSpeed(FastMath.DEG_TO_RAD*60);
         
         this.attachChild(throwEffect);
     }
@@ -39,20 +44,33 @@ public class SimpleParticleGFX extends PlatformItem {
     
     @Override
     public void someEffectHappens() {
-        throwing = true;
-        throwingTimeLeft = 0.2f;
-        throwEffect.setParticlesPerSec(20);
+        app.enqueue(playGFX);
     }
 
     
     @Override
     public void update(float tpf, float globalBeat, float platformBeat) {
-        if (throwing) {
-            if ((throwingTimeLeft -= tpf) <= 0.0f) {
-                throwing = false;
-                throwEffect.setParticlesPerSec(0);
-            }
+//        if (throwing) {
+//            if ((throwingTimeLeft -= tpf) <= 0.0f) {
+//                throwing = false;
+//                throwEffect.setParticlesPerSec(0);
+//            }
+//        }
+    }
+    
+    
+    Callable<Boolean> playGFX = new Callable<Boolean>() {
+        public Boolean call(){
+            playGFX();
+            return true;
         }
+    };
+    
+    
+    public void playGFX(){
+        throwEffect.setParticlesPerSec(11);
+        throwEffect.emitAllParticles();
+        throwEffect.setParticlesPerSec(0);
     }
 
 }
