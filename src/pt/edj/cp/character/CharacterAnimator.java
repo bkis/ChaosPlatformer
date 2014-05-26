@@ -13,6 +13,11 @@ import com.jme3.scene.Node;
 public class CharacterAnimator {
     
     //animation IDs for model: "Oto"  (samples)
+//    private static final String ANI_IDLE = "IdleStanding";
+//    private static final String ANI_WALK = "Walk";
+//    private static final String ANI_JUMP = "Jump";
+    
+    //animation IDs for model: "Oto"  (samples)
     private static final String ANI_IDLE = "stand";
     private static final String ANI_WALK = "Walk";
     private static final String ANI_JUMP = "push";
@@ -64,20 +69,32 @@ public class CharacterAnimator {
     
     
     public void turnCharacterLeft(){
-        character.lookAt(new Vector3f(
-                -99999999,
+        character.lookAt(new Vector3f(0,
                 character.getLocalTranslation().y,
-                0              
+                -99999999f              
                 ), Vector3f.UNIT_Y);
+        
+//OTO
+//        character.lookAt(new Vector3f(
+//                -99999999,
+//                character.getLocalTranslation().y,
+//                0              
+//                ), Vector3f.UNIT_Y);
     }
     
     
     public void turnCharacterRight(){
-        character.lookAt(new Vector3f(
-                99999999,
+        character.lookAt(new Vector3f(0,
                 character.getLocalTranslation().y,
-                0              
+                9999999999f              
                 ), Vector3f.UNIT_Y);
+        
+//OTO
+//        character.lookAt(new Vector3f(
+//                99999999,
+//                character.getLocalTranslation().y,
+//                0              
+//                ), Vector3f.UNIT_Y);
     }
     
     
