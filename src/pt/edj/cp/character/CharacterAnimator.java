@@ -69,32 +69,34 @@ public class CharacterAnimator {
     
     
     public void turnCharacterLeft(){
-        character.lookAt(new Vector3f(0,
-                character.getLocalTranslation().y,
-                -99999999f              
-                ), Vector3f.UNIT_Y);
+        //CHAR
+//        character.lookAt(new Vector3f(0,
+//                character.getLocalTranslation().y,
+//                -99999999f              
+//                ), Vector3f.UNIT_Y);
         
 //OTO
-//        character.lookAt(new Vector3f(
-//                -99999999,
-//                character.getLocalTranslation().y,
-//                0              
-//                ), Vector3f.UNIT_Y);
+        character.lookAt(new Vector3f(
+                -99999999,
+                character.getLocalTranslation().y,
+                0              
+                ), Vector3f.UNIT_Y);
     }
     
     
     public void turnCharacterRight(){
-        character.lookAt(new Vector3f(0,
-                character.getLocalTranslation().y,
-                9999999999f              
-                ), Vector3f.UNIT_Y);
+        //CHAR
+//        character.lookAt(new Vector3f(0,
+//                character.getLocalTranslation().y,
+//                9999999999f              
+//                ), Vector3f.UNIT_Y);
         
 //OTO
-//        character.lookAt(new Vector3f(
-//                99999999,
-//                character.getLocalTranslation().y,
-//                0              
-//                ), Vector3f.UNIT_Y);
+        character.lookAt(new Vector3f(
+                99999999,
+                character.getLocalTranslation().y,
+                0              
+                ), Vector3f.UNIT_Y);
     }
     
     
