@@ -24,6 +24,7 @@ import pt.edj.cp.physics.WorldPhysicsManager;
 import pt.edj.cp.timing.GameThemeController;
 import pt.edj.cp.timing.ChordController;
 import pt.edj.cp.timing.Metronome;
+import pt.edj.cp.util.WhiteNoiseFilter;
 import pt.edj.cp.world.PlatformLifecycleManager;
 import pt.edj.cp.world.background.BackgroundNode;
 import pt.edj.cp.world.platforms.Platform;
@@ -57,6 +58,14 @@ public class IngameState extends AbstractAppState {
     private ChordController chordCtrl;
     private BackgroundSoundsPlayer bgSound;
     
+    private WhiteNoiseFilter whiteNoiseFilter;
+    
+    
+    public IngameState(WhiteNoiseFilter noiseFilter) {
+        super();
+        whiteNoiseFilter = noiseFilter;
+    }
+    
     
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -85,8 +94,10 @@ public class IngameState extends AbstractAppState {
         //load and apply physics
         physicsMgr = new WorldPhysicsManager(app, sceneNode, characterNode);
         physicsMgr.addChildrenToPhysicsScene(sceneNode);
-        characterControl = (PlatformerCharacterControl) physicsMgr.getCharacterControl();
         physicsMgr.getPhysicsSpace().addCollisionListener(new PlatformCollisionListener());
+        
+        characterControl = (PlatformerCharacterControl) physicsMgr.getCharacterControl();
+        characterControl.addMovementListener(whiteNoiseFilter);
         
         //(temp) add bg and light
         addLightTEMP();
@@ -122,6 +133,8 @@ public class IngameState extends AbstractAppState {
             plat.update(tpf, beat);
         
         GameThemeController.instance().frame(tpf);
+        
+        whiteNoiseFilter.update(tpf);
     }
     
     

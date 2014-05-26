@@ -1,0 +1,20 @@
+MaterialDef White Noise {
+
+    MaterialParameters {
+        Int NumSamples
+        Texture2D Texture
+        Float NoiseFactor;
+    }
+
+    Technique {
+        VertexShader GLSL100:   Common/MatDefs/Post/Post.vert
+        FragmentShader GLSL100: Materials/Post/WhiteNoise.frag
+
+        WorldParameters {
+            Time
+            WorldViewProjectionMatrix
+            Resolution
+            Aspect
+        }
+    }
+}
