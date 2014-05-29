@@ -39,6 +39,7 @@ public class Platform implements IEventListener, Savable {
         topNode = new Node();
         topNode.setLocalTranslation(position);
         topNode.attachChild(platformSpatial);
+        topNode.setCullHint(Spatial.CullHint.Never);
         
         allPlatformItems.add(platformSpatial);
         
@@ -95,7 +96,7 @@ public class Platform implements IEventListener, Savable {
     }
     
     
-    public Spatial getPlatformSpatial() {
+    public PlatformItem getPlatformSpatial() {
         return platformSpatial;
     }
 

@@ -1,0 +1,20 @@
+MaterialDef GlowGFX {
+
+    // Uniforms
+    MaterialParameters {
+        Vector3 Color;
+        Vector2 Extents;
+        Float Highlight;
+        Float ZValue;
+    }
+
+    Technique {
+        WorldParameters {
+            Time
+            WorldViewProjectionMatrix
+        }
+
+        VertexShader GLSL100:   Materials/Platforms/GlowGFX.vert
+        FragmentShader GLSL100: Materials/Platforms/GlowGFX.frag
+    }
+}

@@ -1,6 +1,7 @@
 package pt.edj.cp.world.platforms;
 
 import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
 /**
@@ -42,6 +43,10 @@ public abstract class PlatformItem extends Node {
     
     public CollisionShape getCollisionShape() {
         return null;
+    }
+    
+    public Vector3f getExtents() {
+        return new Vector3f();
     }
     
 }
