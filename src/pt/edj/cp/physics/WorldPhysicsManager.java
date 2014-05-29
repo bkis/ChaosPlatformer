@@ -4,11 +4,13 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import pt.edj.cp.world.platforms.PlatformItem;
 
 
 public class WorldPhysicsManager {
@@ -97,7 +99,17 @@ public class WorldPhysicsManager {
     
     
     public void addToPhysicsScene(Spatial spatial){
-        RigidBodyControl platformPhysics = new RigidBodyControl(0);
+        RigidBodyControl platformPhysics = null;
+        
+        if (spatial instanceof PlatformItem) {
+            CollisionShape cs = ((PlatformItem) spatial).getCollisionShape();
+            if (cs != null)
+                platformPhysics = new RigidBodyControl(cs, 0);
+        }
+        
+        if (platformPhysics == null)
+            platformPhysics = new RigidBodyControl(0);
+        
         spatial.addControl(platformPhysics);
         platformPhysics.setKinematic(true);
         platformPhysics.setKinematicSpatial(true);

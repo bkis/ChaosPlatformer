@@ -1,0 +1,16 @@
+MaterialDef TriangleSpikesPlatform {
+
+    // Uniforms
+    MaterialParameters {
+    }
+
+    Technique {
+        WorldParameters {
+            Time
+            WorldViewProjectionMatrix
+        }
+
+        VertexShader GLSL100:   Materials/Platforms/TriangleSpikes.vert
+        FragmentShader GLSL100: Materials/Platforms/TriangleSpikes.frag
+    }
+}

@@ -1,5 +1,6 @@
 package pt.edj.cp.world.platforms;
 
+import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.scene.Node;
 
 /**
@@ -37,6 +38,10 @@ public abstract class PlatformItem extends Node {
     
     public void setParentPlatform(Platform pf){
         this.parentPlatform = pf;
+    }
+    
+    public CollisionShape getCollisionShape() {
+        return null;
     }
     
 }

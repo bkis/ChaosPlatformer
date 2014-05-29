@@ -6,6 +6,7 @@ import pt.edj.cp.app.IngameState;
 import pt.edj.cp.util.SoundPathManager;
 import pt.edj.cp.world.platforms.gfx.SimpleParticleGFX;
 import pt.edj.cp.world.platforms.sfx.SoundObject;
+import pt.edj.cp.world.platforms.shapes.TriangleSpikesPlatform;
 
 
 public class PlatformFactory {
@@ -32,7 +33,7 @@ public class PlatformFactory {
         
         Platform plat = new Platform(
                 pos,
-                new BoxPlatform(app),
+                new TriangleSpikesPlatform(app),
                 soundObject);
         
         plat.addGFX(new SimpleParticleGFX(app));
