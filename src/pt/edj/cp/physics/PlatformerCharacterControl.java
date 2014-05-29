@@ -11,9 +11,13 @@ import pt.edj.cp.input.IMovementListener;
 
 public class PlatformerCharacterControl extends BetterCharacterControl implements PhysicsCollisionListener{
     
+    private static final Vector3f CANCEL_JUMP_GRAVITIY = new Vector3f(0,-60,0);
+    
+    
     // for movement listeners:
     private Set<IMovementListener> movementListeners;
     private Vector3f lastPosition = null;
+    private boolean falling;
     
     
     public PlatformerCharacterControl(float radius, float height, float mass){
@@ -46,6 +50,12 @@ public class PlatformerCharacterControl extends BetterCharacterControl implement
                     listener.movement(newPos, delta);
             } 
         }
+        
+        if (falling &&
+                (isOnGround() || getVelocity().y < -8)){
+            setGravity(new Vector3f(0, -9.81f, 0));
+            falling = false;
+        }
     }
     
     
@@ -54,6 +64,14 @@ public class PlatformerCharacterControl extends BetterCharacterControl implement
         return super.isOnGround(); //TEMP
         
         //braucht bessere implementierung für gefälle / kugeln
+    }
+    
+    
+    public void cancelJump(){
+        if (!isOnGround()){
+            setGravity(CANCEL_JUMP_GRAVITIY);
+            falling = true;
+        }
     }
     
     

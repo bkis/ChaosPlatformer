@@ -125,6 +125,7 @@ public class IngameInputsState extends AbstractAppState{
                     jump = true;
                 } else {
                     jump = false;
+                    playerControl.cancelJump();
                 }
             }
             
