@@ -12,7 +12,7 @@ import com.jme3.scene.Node;
  */
 public class CharacterAnimator {
     
-    //animation IDs for model: "Oto"  (samples)
+    //animation IDs for character model by Marta
 //    private static final String ANI_IDLE = "IdleStanding";
 //    private static final String ANI_WALK = "Walk";
 //    private static final String ANI_JUMP = "Jump";

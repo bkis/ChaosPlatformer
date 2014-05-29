@@ -7,6 +7,7 @@ import java.util.Random;
 public class SoundPathManager {
     
     //base paths
+    //private static final String DIR_ASSETS     = ""; //for build! Kopie von "Sound" ins Anwendungsverzeichnis!
     private static final String DIR_ASSETS     = "assets/";
     private static final String DIR_SND        = "Sounds/";
     private static final String DIR_AMB        = DIR_SND   + "Ambient/";
