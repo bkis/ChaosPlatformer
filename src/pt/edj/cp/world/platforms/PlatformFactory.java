@@ -4,6 +4,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.math.Vector3f;
 import pt.edj.cp.app.IngameState;
 import pt.edj.cp.util.SoundPathManager;
+import pt.edj.cp.world.platforms.gfx.GlowGFX;
 import pt.edj.cp.world.platforms.gfx.SimpleParticleGFX;
 import pt.edj.cp.world.platforms.sfx.SoundObject;
 import pt.edj.cp.world.platforms.shapes.TriangleSpikesPlatform;
@@ -36,7 +37,8 @@ public class PlatformFactory {
                 new TriangleSpikesPlatform(app),
                 soundObject);
         
-        plat.addGFX(new SimpleParticleGFX(app));
+        //plat.addGFX(new SimpleParticleGFX(app));
+        plat.addGFX(new GlowGFX(app, plat.getPlatformSpatial().getExtents()));
         
         return plat;
     }

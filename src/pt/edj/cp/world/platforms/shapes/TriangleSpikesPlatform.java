@@ -61,10 +61,11 @@ public class TriangleSpikesPlatform extends PlatformItem {
             float xm = x1 + (x2-x1) * rdm(0.3f, 0.7f);
             float topX = 0.5f * height;
             float bottomX = (-0.4f - 0.2f * random.nextFloat()) * height;
+            float d = rdm(0.01f, 0.02f);
             
-            verts[3*i + 0] = new Vector3f(x1, topX, 0.0f);
-            verts[3*i + 1] = new Vector3f(xm, bottomX, 0.0f);
-            verts[3*i + 2] = new Vector3f(x2, topX, 0.0f);
+            verts[3*i + 0] = new Vector3f(x1, topX, d);
+            verts[3*i + 1] = new Vector3f(xm, bottomX, d);
+            verts[3*i + 2] = new Vector3f(x2, topX, d);
             
             float hue = 360.f * random.nextFloat();
             float sat = 0.4f + 0.2f * random.nextFloat();
@@ -123,7 +124,10 @@ public class TriangleSpikesPlatform extends PlatformItem {
     
     @Override
     public CollisionShape getCollisionShape() {
-        return new BoxCollisionShape(new Vector3f(width / 2, height / 2, depth / 2));
+        return new BoxCollisionShape(getExtents().mult(0.5f));
     }
     
+    public Vector3f getExtents() {
+        return new Vector3f(width, height, depth);
+    }
 }
