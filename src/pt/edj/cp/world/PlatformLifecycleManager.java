@@ -20,7 +20,7 @@ public class PlatformLifecycleManager implements IMovementListener {
     private Vector2f activeAreaSize;
     private Vector2f halfArea;
     
-    private float platformSpawnThreshold = 0.5f;
+    private float platformSpawnThreshold = 0.3f;
     private IPlatformSpawner platformSpawner;
     
     /**
