@@ -28,7 +28,7 @@ public class PlatformerCharacterControl extends BetterCharacterControl implement
     
     @Override
     public void jump(){
-        super.jump(); //kann erstmal so bleiben
+        super.jump();
     }
     
     
@@ -61,9 +61,7 @@ public class PlatformerCharacterControl extends BetterCharacterControl implement
     
     @Override
     public boolean isOnGround(){
-        return super.isOnGround(); //TEMP
-        
-        //braucht bessere implementierung für gefälle / kugeln
+        return super.isOnGround();
     }
     
     
