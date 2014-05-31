@@ -4,6 +4,18 @@ import com.jme3.math.Vector4f;
 
 
 public class ColorHelper {
+    
+    private static final float PI2 = 3.141592f * 2.0f;
+    
+    public static Vector4f computeFromTemperature(float temp, float hue, float sat, float val, float a) {
+        // convert X from normal space into distorted space
+        float newHue = hue - (temp / PI2) * (float) Math.sin(hue * PI2);
+        
+        float h = newHue * 360.0f;
+        
+        return fromHsv(newHue * 360.0f, sat, val, a);
+    }
+    
 
     public static Vector4f fromHsv(float h, float s, float b, float a) {
         float rgba[] = new float[4];

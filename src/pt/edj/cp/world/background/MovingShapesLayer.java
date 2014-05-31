@@ -24,8 +24,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
+import pt.edj.cp.timing.GameThemeController;
 import pt.edj.cp.timing.events.IEvent;
+import pt.edj.cp.timing.events.ThemeParameterUpdate;
 import pt.edj.cp.util.AngleF;
+import pt.edj.cp.util.ColorHelper;
 
 
 public class MovingShapesLayer extends AbstractBackgroundLayer {
@@ -111,6 +114,7 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
     private class Shape extends Geometry {
         private Vector2f speed;
         private float maxRadius;
+        private float baseHue;
         
         public Shape(int corners, float minD, float maxD, Vector2f start, Vector2f direction) {
             super();
@@ -121,12 +125,10 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
             
             // create material
             Material mat = new Material(app.getAssetManager(), "Materials/MovShapes/Shape.j3md");
-            float r = random.nextFloat() * 0.2f;
-            float g = random.nextFloat() * 0.2f;
-            float b = random.nextFloat() * 0.2f;
-            mat.setVector4("Color", new Vector4f(r, g, b, 0.2f));
+            baseHue = random.nextFloat();
             mat.setFloat("Scale", 1.0f);
             this.setMaterial(mat);
+            updateColor();
             
             // Enable blending
             RenderState rstate = mat.getAdditionalRenderState();
@@ -179,6 +181,12 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
             return (Math.abs(pos.x) > layerSize.x*0.8 + maxRadius
                     || Math.abs(pos.y) > layerSize.y*0.8 + maxRadius);
         }
+        
+        public void updateColor() {
+            float t = GameThemeController.instance().getParameter("Temperature");
+            Vector4f col = ColorHelper.computeFromTemperature(t, baseHue, 0.5f, 0.3f, 0.2f);
+            getMaterial().setVector4("Color", col);
+        }
     }
     
 
@@ -188,6 +196,13 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
     }
 
     public void receiveEvent(IEvent e) {
+        if (e instanceof ThemeParameterUpdate) {
+            ThemeParameterUpdate tpu = (ThemeParameterUpdate) e;
+            movingSpeed = 0.6f + 0.4f * tpu.getSpeed().getValue();
+            
+            for (Shape s : shapes)
+                s.updateColor();
+        }
     }
 
     

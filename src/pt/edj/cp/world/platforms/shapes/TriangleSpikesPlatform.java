@@ -13,6 +13,7 @@ import com.jme3.scene.VertexBuffer;
 import com.jme3.util.BufferUtils;
 import java.nio.FloatBuffer;
 import java.util.Random;
+import pt.edj.cp.timing.GameThemeController;
 import pt.edj.cp.util.ColorHelper;
 import pt.edj.cp.world.platforms.PlatformItem;
 
@@ -46,6 +47,8 @@ public class TriangleSpikesPlatform extends PlatformItem {
         Vector4f lineColors[] = new Vector4f[3 * tris];
         int lineIndices[] = new int[6 * tris];
         
+        float temperature = GameThemeController.instance().getParameter("Temperature");
+        
         // fill vertex arrays
         for (int i = 0; i < tris; i++) {
             float startX = (float) i / (1 + tris);
@@ -67,11 +70,14 @@ public class TriangleSpikesPlatform extends PlatformItem {
             verts[3*i + 1] = new Vector3f(xm, bottomX, d);
             verts[3*i + 2] = new Vector3f(x2, topX, d);
             
-            float hue = 360.f * random.nextFloat();
+            float hue = random.nextFloat();
             float sat = 0.4f + 0.2f * random.nextFloat();
             float alpha = 0.4f + 0.2f * random.nextFloat();
-            Vector4f color = ColorHelper.fromHsv(hue, sat, 0.5f, alpha);
-            Vector4f lineColor = ColorHelper.fromHsv(hue, sat, 0.8f, alpha);
+            
+            Vector4f color = ColorHelper.computeFromTemperature(
+                    temperature, hue, sat, 0.5f, alpha);
+            Vector4f lineColor = ColorHelper.computeFromTemperature(
+                    temperature, hue, sat, 0.8f, alpha);
             
             for (int k = 0; k < 3; k++) {
                 colors[3*i + k] = color;

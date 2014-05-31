@@ -3,6 +3,7 @@ package pt.edj.cp.world.background;
 import com.jme3.app.Application;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import com.jme3.math.Vector4f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
@@ -13,8 +14,10 @@ import com.jme3.terrain.noise.basis.ImprovedNoise;
 import java.nio.FloatBuffer;
 import java.util.LinkedList;
 import java.util.Random;
+import pt.edj.cp.timing.GameThemeController;
 import pt.edj.cp.timing.events.IEvent;
 import pt.edj.cp.timing.events.ThemeParameterUpdate;
+import pt.edj.cp.util.ColorHelper;
 
 /**
  *
@@ -76,20 +79,23 @@ public class LinesLayer extends AbstractBackgroundLayer {
             
             paramSpeed = tpu.getSpeed().getValue();
             paramHectic = tpu.getExcitement().getValue();
+            
+            for (Line line : lines)
+                line.updateColor(0.f);
         }
     }
     
     
     private float getSharpness() {
-        return 0.15f + 0.3f * paramHectic;
+        return 0.3f + 0.15f * paramHectic;
     }
     
     private float getAlternating() {
-        return 0.01f + 0.4f * paramHectic;
+        return 0.21f + 0.2f * paramHectic;
     }
     
     private float getSegmentsPerSecond() {
-        return 5.0f + 20.0f * (paramSpeed + 0.5f * paramHectic);
+        return 20.0f + 10.0f * (paramSpeed + 0.5f * paramHectic);
     }
 
 
@@ -110,7 +116,9 @@ public class LinesLayer extends AbstractBackgroundLayer {
         private ImprovedNoise noise;
         private float noiseY;
         private float noiseZ;
-
+        
+        private float baseHue;
+        private float huePeriodTime;
 
         public Line(int segs, Random rnd) {
             super();
@@ -122,6 +130,8 @@ public class LinesLayer extends AbstractBackgroundLayer {
             noise.init();
             noiseY = rnd.nextFloat() * 10;
             noiseZ = rnd.nextFloat() * 10;
+            baseHue = rnd.nextFloat();
+            huePeriodTime = 30.f + 20.f * rnd.nextFloat();
 
             currLength = 0;
             currAngle = rnd.nextFloat() * 2.0f * (float) Math.PI;
@@ -134,12 +144,12 @@ public class LinesLayer extends AbstractBackgroundLayer {
 
             // create material
             Material mat = new Material(app.getAssetManager(), "Materials/LineMat.j3md");
-            mat.setVector3("Color", new Vector3f(0.f, 0.4f, 0.8f));
             mat.setFloat("SegmentCount", (float) segs);
             mat.setFloat("TotalLength", currLength);
             mat.setFloat("CurrentSegment", currSegment);
             mat.setVector3("Offset", new Vector3f(0.0f, 0.0f, 0.0f));
             this.setMaterial(mat);
+            updateColor(0.f);
         }
 
 
@@ -252,6 +262,15 @@ public class LinesLayer extends AbstractBackgroundLayer {
             getMaterial().setVector3("Offset", ofs);
         }
 
+        public void updateColor(float tpf) {
+            baseHue += tpf / huePeriodTime;
+            while (baseHue > 1.0f)
+                baseHue -= 1.0f;
+            
+            float temp = GameThemeController.instance().getParameter("Temperature");
+            Vector4f col = ColorHelper.computeFromTemperature(temp, baseHue, 0.8f, 0.8f, 1.0f);
+            getMaterial().setVector3("Color", new Vector3f(col.x, col.y, col.z));
+        }
     }
 
 
@@ -265,7 +284,9 @@ public class LinesLayer extends AbstractBackgroundLayer {
                 if (line.segmentsLeft() < minimumSegmentsAvailable) {
                     line.createControlPoints(minimumSegmentsAvailable);
                 }
+                
                 line.updateCurrSegment();
+                line.updateColor(tpf);
             }
         }
 

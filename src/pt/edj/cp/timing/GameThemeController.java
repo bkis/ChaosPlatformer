@@ -105,15 +105,13 @@ public class GameThemeController extends AbstractEventSender {
     
     Random random = new Random();
     
-    public boolean changeParameter(String name, float delta) {
+    public void changeParameter(String name, float delta) {
         ThemeParameter p = parameters.get(name);
-        
-        if (p == null)
-            return false;
-        
         float aim = Math.min(Math.max(p.getValue() + delta, -1), 1);
         p.setTarget(aim, 2.0f);
-        
-        return true;
+    }
+    
+    public float getParameter(String name) {
+        return parameters.get(name).getValue();
     }
 }
