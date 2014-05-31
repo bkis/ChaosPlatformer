@@ -31,6 +31,12 @@ public class Main extends SimpleApplication {
         //attach ingame state
         IngameState ingameState = new IngameState(whiteNoise);
         stateManager.attach(ingameState);
+        
+        //disable stats display
+        setDisplayStatView(false);
+        
+        //disable fps display
+        //setDisplayFps(false);
     }
 
     
@@ -59,7 +65,6 @@ public class Main extends SimpleApplication {
         set.setMinResolution(800, 600);
         set.setResolution(800, 600);
         set.setTitle("Chaos Platformer (working title)");
-        //set.setFrameRate(2); //debug
         return set;
     }
 }
