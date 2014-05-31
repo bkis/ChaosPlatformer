@@ -133,10 +133,6 @@ public class IngameInputsState extends AbstractAppState{
                 //QUIT GAME (temporary)
                 app.stop();
             }
-            
-            if (name.equals(MAPPING_DEBUG) && !isPressed) {
-                GameThemeController.instance().changeSomething();
-            }
         }
     };
     

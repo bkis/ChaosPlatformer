@@ -3,12 +3,13 @@ package pt.edj.cp.world.platforms;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import pt.edj.cp.physics.ICollisionShapeProvider;
 
 /**
  *
  * @author rechtslang
  */
-public abstract class PlatformItem extends Node {
+public abstract class PlatformItem extends Node implements ICollisionShapeProvider {
     
     protected boolean active = false;
     protected Platform parentPlatform;

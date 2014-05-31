@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import pt.edj.cp.app.IngameState;
 import pt.edj.cp.input.IMovementListener;
+import pt.edj.cp.world.items.Collectable;
 import pt.edj.cp.world.platforms.Platform;
 
 
@@ -17,11 +18,10 @@ public class PlatformLifecycleManager implements IMovementListener {
     private Random random = new Random();
         
     private float zoneSize;
-    private Vector2f activeAreaSize;
     private Vector2f halfArea;
     
-    private float platformSpawnThreshold = 0.5f;
-    private IPlatformSpawner platformSpawner;
+    private ISpawner platformSpawner;
+    private ISpawner itemSpawner;
     
     /**
      * Used for zone management
@@ -92,20 +92,27 @@ public class PlatformLifecycleManager implements IMovementListener {
      */
     private class Zone extends Position {
         public Platform platform;
+        public Collectable collectable;
         
         public Zone(Position p) {
             super(p.x, p.y);
             
             if (platformSpawner.shouldPlacePlatform(p)) {
                 platform = ingameState.addPlatform(generatePlatformPosition(p));
+                collectable = null;
             } else {
                 platform = null;
+                collectable = (itemSpawner.shouldPlacePlatform(p))
+                        ? ingameState.addCollectable(generatePlatformPosition(p))
+                        : null;
             }
         }
         
         public void delete() {
             if (platform != null)
                 ingameState.removePlatform(platform);
+            if (collectable != null)
+                ingameState.removeCollectable(collectable);
         }
     }
 
@@ -129,15 +136,14 @@ public class PlatformLifecycleManager implements IMovementListener {
     
     public PlatformLifecycleManager(IngameState ingame, float zoneSize, Vector2f activeArea) {
         this.zoneSize = zoneSize;
-        this.activeAreaSize = activeArea.clone();
         this.halfArea = activeArea.mult(0.5f);
         
         this.ingameState = ingame;
         
 //        this.platformSpawner = new NoisePlatformSpawner(0.8525342f);
 //        this.platformSpawner = new HorizontalPlatformSpawner();
-        this.platformSpawner = new RandomPlatformSpawner();
-        this.platformSpawnThreshold = 0.4f;
+        this.platformSpawner = new RandomSpawner(0.5f);
+        this.itemSpawner = new RandomSpawner(0.5f);
         
         // add initial zones around player
         activeZones = getActiveZonesForPosition(new Vector2f(0.0f, 0.0f));
@@ -177,39 +183,47 @@ public class PlatformLifecycleManager implements IMovementListener {
     /**
      * Decide whether or not to place a new platform at the given spot
      */
-    private interface IPlatformSpawner {
+    private interface ISpawner {
         public boolean shouldPlacePlatform(Position zonePosition);
     }
     
     /**
      * Use random choice to make choice for each zone
      */
-    private class RandomPlatformSpawner implements IPlatformSpawner {
+    private class RandomSpawner implements ISpawner {
+        private float threshold;
+        
+        public RandomSpawner(float th) {
+            threshold = th;
+        }
+        
         public boolean shouldPlacePlatform(Position zonePosition) {
-            return random.nextFloat() < platformSpawnThreshold;
+            return random.nextFloat() < threshold;
         }
     }
     
     /**
      * Use noise to create more cluster-like platform density
      */
-    private class NoisePlatformSpawner implements IPlatformSpawner {
+    private class NoiseSpawner implements ISpawner {
         float stretch;
+        private float threshold;
         
-        public NoisePlatformSpawner(float stretch) {
+        public NoiseSpawner(float stretch, float th) {
             this.stretch = stretch;
+            this.threshold = th;
         }
         
         public boolean shouldPlacePlatform(Position zonePosition) {
             float v = ImprovedNoise.noise(zonePosition.x / stretch, zonePosition.y / stretch, 0.0f);
-            return (v + 0.5f) < platformSpawnThreshold;
+            return (v + 0.5f) < threshold;
         }
     }
     
     /**
      * Generate horizontal platform lines
      */
-    private class HorizontalPlatformSpawner implements IPlatformSpawner {
+    private class HorizontalSpawner implements ISpawner {
         public boolean shouldPlacePlatform(Position zonePosition) {
             // get y-dependent spacing
             Random yRand = new Random(zonePosition.y);

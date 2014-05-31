@@ -1,6 +1,5 @@
 package pt.edj.cp.timing;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -17,9 +16,9 @@ public class GameThemeController extends AbstractEventSender {
         
         parameters = new TreeMap<String, ThemeParameter>();
         
-        speed = addParameter("speed", 0.5f);
-        temperature = addParameter("temperature", 0.5f);
-        excitement = addParameter("excitement", 0.5f);
+        speed = addParameter("Speed", 0.0f);
+        temperature = addParameter("Temperature", 0.0f);
+        excitement = addParameter("Excitement", 0.0f);
     }
     
     private ThemeParameter addParameter(String name, float v) {
@@ -106,13 +105,15 @@ public class GameThemeController extends AbstractEventSender {
     
     Random random = new Random();
     
-    public void changeSomething() {
-        ThemeParameter p = new ArrayList<ThemeParameter>(parameters.values()).get(random.nextInt(3));
+    public boolean changeParameter(String name, float delta) {
+        ThemeParameter p = parameters.get(name);
         
-        // modify random theme parameter
-        float v = random.nextFloat();
-        float t = 2.0f + random.nextFloat() * 2.0f;
-        System.out.printf("Change '%s' to %g over %g secs\n", p.getName(), v, t);
-        p.setTarget(v, t);
+        if (p == null)
+            return false;
+        
+        float aim = Math.min(Math.max(p.getValue() + delta, -1), 1);
+        p.setTarget(aim, 2.0f);
+        
+        return true;
     }
 }

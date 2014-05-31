@@ -1,0 +1,19 @@
+MaterialDef FunnyPill {
+
+    // Uniforms
+    MaterialParameters {
+        Vector3 Color;
+        Vector2 NoiseOffset;
+        Float NoiseFactor;
+    }
+
+    Technique {
+        WorldParameters {
+            Time
+            WorldViewProjectionMatrix
+        }
+
+        VertexShader GLSL100:   Materials/Items/Item.vert
+        FragmentShader GLSL100: Materials/Items/FunnyPill.frag
+    }
+}

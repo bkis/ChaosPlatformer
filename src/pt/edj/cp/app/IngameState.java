@@ -4,8 +4,6 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.asset.AssetInfo;
-import com.jme3.asset.AssetManager;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
@@ -29,6 +27,8 @@ import pt.edj.cp.timing.Metronome;
 import pt.edj.cp.util.WhiteNoiseFilter;
 import pt.edj.cp.world.PlatformLifecycleManager;
 import pt.edj.cp.world.background.BackgroundNode;
+import pt.edj.cp.world.items.TemperatureChangePill;
+import pt.edj.cp.world.items.Collectable;
 import pt.edj.cp.world.platforms.Platform;
 import pt.edj.cp.world.platforms.PlatformCollisionListener;
 import pt.edj.cp.world.platforms.PlatformFactory;
@@ -225,13 +225,6 @@ public class IngameState extends AbstractAppState {
         
         allPlatforms.add(p);
         
-        
-        /*
-        System.out.printf("ADD: scene: %d objects, physics: %d objects\n", 
-                sceneNode.getChildren().size(), 
-                physicsMgr.getPhysicsSpace().getRigidBodyList().size());
-        */
-        
         return p;
     }
     
@@ -242,11 +235,31 @@ public class IngameState extends AbstractAppState {
         physicsMgr.removeFromPhysicsScene(platform.getPlatformSpatial());
         
         allPlatforms.remove(platform);
-        /*
-        System.out.printf("DEL: scene: %d objects, physics: %d objects\n", 
-                sceneNode.getChildren().size(), 
-                physicsMgr.getPhysicsSpace().getRigidBodyList().size());
-        */
+    }
+    
+    
+    private Collectable createNewCollectable() {
+        return new TemperatureChangePill(app, (Math.random() > 0.5));
+    }
+    
+    
+    public Collectable addCollectable(Vector3f position) {
+        Collectable collectable = createNewCollectable();
+        collectable.setLocalTranslation(position);
+        
+        // register with everything
+        metronome.register(collectable);
+        sceneNode.attachChild(collectable);
+        physicsMgr.addGhost(collectable);
+        
+        return collectable;
+    }
+    
+    
+    public void removeCollectable(Collectable c) {
+        metronome.unregister(c);
+        sceneNode.detachChild(c);
+        physicsMgr.removeFromPhysicsScene(c);
     }
     
     

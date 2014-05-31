@@ -6,11 +6,12 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.BetterCharacterControl;
+import com.jme3.bullet.control.GhostControl;
+import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import pt.edj.cp.world.platforms.PlatformItem;
 
 
 public class WorldPhysicsManager {
@@ -98,19 +99,20 @@ public class WorldPhysicsManager {
     }
     
     
-    public void addToPhysicsScene(Spatial spatial){
-        RigidBodyControl platformPhysics = null;
-        
-        if (spatial instanceof PlatformItem) {
-            CollisionShape cs = ((PlatformItem) spatial).getCollisionShape();
+    private RigidBodyControl createRigidBodyControl(Spatial spatial) {
+        if (spatial instanceof ICollisionShapeProvider) {
+            CollisionShape cs = ((ICollisionShapeProvider) spatial).getCollisionShape();
             if (cs != null)
-                platformPhysics = new RigidBodyControl(cs, 0);
+                return new RigidBodyControl(cs, 0);
         }
         
-        if (platformPhysics == null)
-            platformPhysics = new RigidBodyControl(0);
-        
+        return new RigidBodyControl(0);
+    }
+    
+    public void addToPhysicsScene(Spatial spatial){
+        RigidBodyControl platformPhysics = createRigidBodyControl(spatial);
         spatial.addControl(platformPhysics);
+
         platformPhysics.setKinematic(true);
         platformPhysics.setKinematicSpatial(true);
         platformPhysics.setFriction(1f);
@@ -119,10 +121,30 @@ public class WorldPhysicsManager {
     }
     
     
+    public void addGhost(Spatial spatial) {
+        CollisionShape cs = null;
+        if (spatial instanceof ICollisionShapeProvider) {
+            cs = ((ICollisionShapeProvider) spatial).getCollisionShape();
+        }
+        
+        GhostControl gc = (cs != null) ? new GhostControl(cs) : new GhostControl();
+        spatial.addControl(gc);
+        
+        getPhysicsSpace().add(gc);
+    }
+    
+    
     public void removeFromPhysicsScene(Spatial spatial) {
-        if (spatial == null
-                || spatial.getControl(RigidBodyControl.class) == null) return;
-        getPhysicsSpace().remove(spatial.getControl(RigidBodyControl.class));
-        spatial.removeControl(spatial.getControl(RigidBodyControl.class));
+        if (spatial == null)
+            return;
+        
+        RigidBodyControl rbc = spatial.getControl(RigidBodyControl.class);
+        GhostControl gc = spatial.getControl(GhostControl.class);
+        PhysicsControl pc = (rbc != null) ? rbc : gc;
+        
+        if (pc != null) {
+            getPhysicsSpace().remove(pc);
+            spatial.removeControl(pc);
+        }
     }
 }
