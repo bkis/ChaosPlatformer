@@ -16,7 +16,7 @@ public class PlatformCollisionListener implements PhysicsCollisionListener{
             int lt = event.getLifeTime();
             int t = event.getType();
             
-            System.out.printf("[%6d] Collision T=%d lt=%d ai=%g\n", System.currentTimeMillis()-sTime, t, lt, ai);
+            //System.out.printf("[%6d] Collision T=%d lt=%d ai=%g\n", System.currentTimeMillis()-sTime, t, lt, ai);
         }
     }
     
