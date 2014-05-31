@@ -26,6 +26,10 @@ public class Platform implements IEventListener, Savable {
     private SoundObject sfx;
     private boolean active;
     
+    private float timeSinceLastContact;
+    
+    private static final float TOGGLE_THRESHOLD = 0.25f;     // 250 ms
+    
     
     public Platform(Vector3f position,
                     PlatformItem spatial,
@@ -44,20 +48,24 @@ public class Platform implements IEventListener, Savable {
         allPlatformItems.add(platformSpatial);
         
         platformSpatial.setUserData("platform", this);
+        
+        timeSinceLastContact = 0.f;
     }
     
     
-    public void activate() {
-        if (!active) {
-            //System.out.println("activate!");
+    public void playerContact() {
+        if (timeSinceLastContact > TOGGLE_THRESHOLD) {
+            active = !active;
             sfx.playBaseSound();
-            for (PlatformItem pi : gfxNodes) pi.someEffectHappens();
-            platformSpatial.someEffectHappens();
-            active = true;
             
-            for (PlatformItem item : allPlatformItems)
-                item.setActive(true);
+            for (PlatformItem item : allPlatformItems) {
+                item.setActive(active);
+                if (active)
+                    item.someEffectHappens();
+            }
         }
+        
+        timeSinceLastContact = 0.0f;
     }
     
     
@@ -88,6 +96,8 @@ public class Platform implements IEventListener, Savable {
         // TODO
         for (PlatformItem item : allPlatformItems)
             item.update(tpf, globalBeat, 0.0f);
+        
+        timeSinceLastContact += tpf;
     }
     
     

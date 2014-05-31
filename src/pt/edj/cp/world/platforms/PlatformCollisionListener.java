@@ -6,13 +6,21 @@ import com.jme3.scene.Spatial;
 
 
 public class PlatformCollisionListener implements PhysicsCollisionListener{
+    
+    static private long sTime = System.currentTimeMillis();
 
     public void collision(PhysicsCollisionEvent event) {
-        checkForCollision(event.getNodeA(), event.getNodeB());
-        checkForCollision(event.getNodeB(), event.getNodeA());
+        if (checkForCollision(event.getNodeA(), event.getNodeB(), event)
+                || checkForCollision(event.getNodeB(), event.getNodeA(), event)) {
+            float ai = event.getAppliedImpulse();
+            int lt = event.getLifeTime();
+            int t = event.getType();
+            
+            System.out.printf("[%6d] Collision T=%d lt=%d ai=%g\n", System.currentTimeMillis()-sTime, t, lt, ai);
+        }
     }
     
-    private boolean checkForCollision(Spatial character, Spatial platform) {
+    private boolean checkForCollision(Spatial character, Spatial platform, PhysicsCollisionEvent event) {
         if (character.getName() == null
                 || !character.getName().startsWith("character"))
             return false;
@@ -21,7 +29,7 @@ public class PlatformCollisionListener implements PhysicsCollisionListener{
         if (plat == null)
             return false;
         
-        plat.activate();
+        plat.playerContact();
         
         return true;
     }
