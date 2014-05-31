@@ -34,6 +34,9 @@ public class Main extends SimpleApplication {
         
         //disable stats display
         setDisplayStatView(false);
+        
+        //disable fps display
+        //setDisplayFps(false);
     }
 
     
