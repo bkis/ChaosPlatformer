@@ -56,7 +56,7 @@ public class Platform implements IEventListener, Savable {
     public void playerContact() {
         if (timeSinceLastContact > TOGGLE_THRESHOLD) {
             active = !active;
-            sfx.playBaseSound();
+            //sfx.playBaseSound(); //vllt. besser ohne, stört die Musik
             
             for (PlatformItem item : allPlatformItems) {
                 item.setActive(active);
