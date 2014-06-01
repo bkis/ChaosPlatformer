@@ -9,10 +9,13 @@ public class ColorHelper {
     
     public static Vector4f computeFromTemperature(float temp, float hue, float sat, float val, float a) {
         // convert X from normal space into distorted space
-        float newHue = hue - (temp / PI2) * (float) Math.sin(hue * PI2);
+        float newHue = hue;
         
-        float h = newHue * 360.0f;
-        
+        if (temp > 0.0f)
+            newHue -= (temp / PI2) * (float) Math.sin(hue * PI2);
+        else
+            newHue -= (temp / PI2) * (float) Math.sin((hue - 0.12f) * PI2);
+            
         return fromHsv(newHue * 360.0f, sat, val, a);
     }
     
