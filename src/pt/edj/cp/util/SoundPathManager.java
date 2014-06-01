@@ -50,7 +50,6 @@ public class SoundPathManager implements IEventListener{
     public String getRndInstrumentPath(String instrumentTypeKey){
         File dir = new File(DIR_ASSETS + DIR_INSTR
                 + currSoundSet + "/" + instrumentTypeKey);
-        System.out.println(dir.getPath());
         return DIR_INSTR + currSoundSet + "/"
                 + instrumentTypeKey + dir.list()[rnd.nextInt(dir.list().length)];
     }
