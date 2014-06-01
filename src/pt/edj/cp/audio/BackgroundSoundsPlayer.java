@@ -108,7 +108,7 @@ public class BackgroundSoundsPlayer implements IEventListener{
     
     private void initPadNode(){
         pad = new AudioNode(app.getAssetManager(),
-                sam.getRndSoundPath(SoundPathManager.INSTR_BG));
+                sam.getRndInstrumentPath(SoundPathManager.INSTR_BG));
         pad.setPositional(false);
         pad.setLooping(false);
         pad.setVolume(PAD_VOLUME);

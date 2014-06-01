@@ -24,6 +24,7 @@ import pt.edj.cp.physics.WorldPhysicsManager;
 import pt.edj.cp.timing.GameThemeController;
 import pt.edj.cp.timing.ChordController;
 import pt.edj.cp.timing.Metronome;
+import pt.edj.cp.util.SoundPathManager;
 import pt.edj.cp.util.WhiteNoiseFilter;
 import pt.edj.cp.world.PlatformLifecycleManager;
 import pt.edj.cp.world.background.BackgroundNode;
@@ -119,7 +120,9 @@ public class IngameState extends AbstractAppState {
         
         // Connect platform creation engine with character movement
         allPlatforms = new HashSet<Platform>();
-        platformFactory = new PlatformFactory(this.app);
+        SoundPathManager spm = new SoundPathManager();
+        metronome.register(spm);
+        platformFactory = new PlatformFactory(this.app, spm);
         lifecycleManager = new PlatformLifecycleManager(this, 6.0f, new Vector2f(25, 20));
         characterControl.addMovementListener(lifecycleManager);
     }

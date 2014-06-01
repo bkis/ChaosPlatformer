@@ -17,16 +17,16 @@ public class PlatformFactory {
     private SimpleApplication app;
     private SoundPathManager sam;
     
-    public PlatformFactory(SimpleApplication app){
+    public PlatformFactory(SimpleApplication app, SoundPathManager spm){
         this.app = app;
-        this.sam = new SoundPathManager();
+        this.sam = spm;
     }
     
     
     public Platform createPlatform(Vector3f pos) {
         SoundObject soundObject = new SoundObject(
                 app,
-                sam.getRndSoundPath((Math.random() <= MELODIC_QUOTE ? 
+                sam.getRndInstrumentPath((Math.random() <= MELODIC_QUOTE ? 
                     SoundPathManager.INSTR_MELODIC :
                     SoundPathManager.INSTR_PERCUSSIVE)),
                 app.getStateManager().getState(IngameState.class)
