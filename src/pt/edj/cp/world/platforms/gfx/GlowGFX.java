@@ -60,7 +60,7 @@ public class GlowGFX extends PlatformItem {
         mat.setVector3("Color", new Vector3f(0, 0.6f, 1.0f));
         mat.setVector2("Extents", new Vector2f(extents.x, extents.y * 1.4f));
         mat.setFloat("Highlight", 0.0f);
-        mat.setFloat("ZValue", 0.05f);
+        mat.setFloat("ZValue", 0.01f + 0.04f * (float) Math.random());
         mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         
         // create geometry

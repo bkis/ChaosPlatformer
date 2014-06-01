@@ -120,7 +120,7 @@ public class IngameState extends AbstractAppState {
         // Connect platform creation engine with character movement
         allPlatforms = new HashSet<Platform>();
         platformFactory = new PlatformFactory(this.app);
-        lifecycleManager = new PlatformLifecycleManager(this, 6.0f, new Vector2f(25, 20));
+        lifecycleManager = new PlatformLifecycleManager(this, 5.0f, new Vector2f(25, 20));
         characterControl.addMovementListener(lifecycleManager);
     }
     
