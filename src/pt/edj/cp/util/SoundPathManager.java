@@ -53,7 +53,8 @@ public class SoundPathManager implements IEventListener{
         return DIR_INSTR + currSoundSet + "/"
                 + instrumentTypeKey + dir.list()[rnd.nextInt(dir.list().length)];
     }
-
+    
+    
     public void receiveEvent(IEvent e) {
         if (e instanceof NewBarEvent){
             barCount++;

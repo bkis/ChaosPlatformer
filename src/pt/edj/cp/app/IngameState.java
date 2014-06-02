@@ -79,7 +79,7 @@ public class IngameState extends AbstractAppState {
         chordCtrl = new ChordController();
         metronome.register(chordCtrl);
         
-        bgSound = new BackgroundSoundsPlayer(app);
+        bgSound = new BackgroundSoundsPlayer(app, whiteNoiseFilter);
         metronome.register(bgSound);
         chordCtrl.register(bgSound);
         bgSound.start();
