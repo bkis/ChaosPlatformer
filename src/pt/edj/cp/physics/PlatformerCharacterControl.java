@@ -2,9 +2,12 @@ package pt.edj.cp.physics;
 
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.bullet.collision.PhysicsRayTestResult;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.math.Vector3f;
+import com.jme3.util.TempVars;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import pt.edj.cp.input.IMovementListener;
 
@@ -28,7 +31,7 @@ public class PlatformerCharacterControl extends BetterCharacterControl implement
     
     @Override
     public void jump(){
-        super.jump();
+        if (this.isOnGround()) jump = true;
     }
     
     
@@ -61,7 +64,31 @@ public class PlatformerCharacterControl extends BetterCharacterControl implement
     
     @Override
     public boolean isOnGround(){
-        return super.isOnGround();
+        //modified WIP
+        TempVars vars = TempVars.get();
+        Vector3f location1 = vars.vect1.add(radius, 0, 0);
+        Vector3f location2 = vars.vect1.add(-radius, 0, 0);
+        Vector3f rayVector1 = vars.vect2;
+        Vector3f rayVector2 = vars.vect2;
+        float height = getFinalHeight();
+        location1.set(localUp).multLocal(height).addLocal(this.location);
+        location2.set(localUp).multLocal(height).addLocal(this.location);
+        rayVector1.set(localUp).multLocal(-height - 0.15f).addLocal(location1);
+        rayVector2.set(localUp).multLocal(-height - 0.15f).addLocal(location2);
+        List<PhysicsRayTestResult> results1 = space.rayTest(location1, rayVector1);
+        List<PhysicsRayTestResult> results2 = space.rayTest(location2, rayVector2);
+        vars.release();
+        for (PhysicsRayTestResult physicsRayTestResult : results1) {
+            if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
+                return true;
+            }
+        }
+        for (PhysicsRayTestResult physicsRayTestResult : results2) {
+            if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     
