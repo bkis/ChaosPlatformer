@@ -20,8 +20,8 @@ public class BackgroundSoundsPlayer implements IEventListener{
     private static final int CHANGE_PAD_EVERY_X_BARS = 6;
     private static final int PLAY_PAD_EVERY_X_BARS = 1;
     
-    private static final float AMBIENT_VOLUME = 0.4f;
-    private static final float PAD_VOLUME     = 0.4f;
+    private static final float AMBIENT_VOLUME = 0.3f;
+    private static final float PAD_VOLUME     = 0.3f;
 
     
     private SoundPathManager sam;
