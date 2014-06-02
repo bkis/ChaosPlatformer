@@ -21,7 +21,7 @@ public class BackgroundSoundsPlayer implements IEventListener{
     private static final int PLAY_PAD_EVERY_X_BARS = 1;
     
     private static final float AMBIENT_VOLUME = 0.3f;
-    private static final float PAD_VOLUME     = 0.3f;
+    private static final float PAD_VOLUME     = 0.4f;
 
     
     private SoundPathManager sam;
@@ -68,12 +68,13 @@ public class BackgroundSoundsPlayer implements IEventListener{
             }
         } else if (e instanceof ChordChangeEvent){
             pitches = ((ChordChangeEvent)e).getChordPitches();
-            updatePadPitch();
+            app.enqueue(setPadPitch);
         }
     }
     
     
     private void playPad(){
+        app.enqueue(stopPad);
         app.enqueue(playPad);
     }
     
@@ -112,14 +113,9 @@ public class BackgroundSoundsPlayer implements IEventListener{
         pad.setPositional(false);
         pad.setLooping(false);
         pad.setVolume(PAD_VOLUME);
-        updatePadPitch();
+        app.enqueue(setPadPitch);
     }
-    
-    
-    private void updatePadPitch(){
-        pad.setPitch(pitches[Randoms.rndInt(0, pitches.length)]);
-    }
-    
+
     
     private Callable<Boolean> playAmbient = new Callable<Boolean>() {
         public Boolean call(){
@@ -139,7 +135,23 @@ public class BackgroundSoundsPlayer implements IEventListener{
     
     private Callable<Boolean> playPad = new Callable<Boolean>() {
         public Boolean call(){
-            pad.playInstance();
+            pad.play();
+            return true;
+        }
+    };
+    
+    
+    private Callable<Boolean> stopPad = new Callable<Boolean>() {
+        public Boolean call(){
+            pad.stop();
+            return true;
+        }
+    };
+    
+    
+    private Callable<Boolean> setPadPitch = new Callable<Boolean>() {
+        public Boolean call(){
+            pad.setPitch(pitches[Randoms.rndInt(0, pitches.length)]);
             return true;
         }
     };
