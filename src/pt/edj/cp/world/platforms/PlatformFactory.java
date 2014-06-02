@@ -29,7 +29,7 @@ public class PlatformFactory {
                     SoundPathManager.INSTR_MELODIC :
                     SoundPathManager.INSTR_PERCUSSIVE)),
                 app.getStateManager().getState(IngameState.class)
-                .getCordController().getCurrentChord());
+                .getChordController().getCurrentChord());
         
         Platform plat = new Platform(
                 pos,

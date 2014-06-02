@@ -270,7 +270,7 @@ public class IngameState extends AbstractAppState {
     }
     
     
-    public ChordController getCordController(){
+    public ChordController getChordController(){
         return chordCtrl;
     }
     
