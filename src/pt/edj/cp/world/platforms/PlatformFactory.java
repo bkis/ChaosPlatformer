@@ -11,7 +11,7 @@ import pt.edj.cp.world.platforms.shapes.TriangleSpikesPlatform;
 
 public class PlatformFactory {
     
-    private static final float MELODIC_QUOTE = 0.4f;
+    private static final float MELODIC_QUOTE = 0.35f;
     
     private SimpleApplication app;
     private SoundPathManager sam;
