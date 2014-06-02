@@ -12,7 +12,7 @@ import pt.edj.cp.world.platforms.shapes.TriangleSpikesPlatform;
 
 public class PlatformFactory {
     
-    private static final float MELODIC_QUOTE = 0.3f;
+    private static final float MELODIC_QUOTE = 0.35f;
     
     private SimpleApplication app;
     private SoundPathManager sam;
@@ -30,7 +30,7 @@ public class PlatformFactory {
                     SoundPathManager.INSTR_MELODIC :
                     SoundPathManager.INSTR_PERCUSSIVE)),
                 app.getStateManager().getState(IngameState.class)
-                .getCordController().getCurrentChord());
+                .getChordController().getCurrentChord());
         
         Platform plat = new Platform(
                 pos,

@@ -54,4 +54,8 @@ public class WhiteNoiseFilter extends Filter implements IMovementListener {
         factor -= delta.length() / 20.0f;
         updateNoiseFactor();
     }
+    
+    public float getIntensity(){
+        return factor/2;
+    }
 }
