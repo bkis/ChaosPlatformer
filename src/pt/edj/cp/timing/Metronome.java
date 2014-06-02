@@ -10,8 +10,7 @@ import pt.edj.cp.timing.events.NewBarEvent;
 public class Metronome extends AbstractEventSender {
     
     private static final float INIT_BPM        = 100;
-    private static final float BPM_CHANGE_STEP = 5;
-    private static final float BEATS_PER_BAR   = 16;
+    private static final float BPM_CHANGE_STEP = 20;
     
     private float bpm;
     private int msPerBeat;
@@ -22,7 +21,7 @@ public class Metronome extends AbstractEventSender {
     private long lastBeatNr;
     
     
-    private static Metronome instance = new Metronome(INIT_BPM); // * 4 (weil 16 beats pro takt)
+    private static Metronome instance = new Metronome(INIT_BPM*4); // * 4 (weil 16 beats pro takt)
     
     
     private Metronome(float bpm) {
@@ -40,21 +39,22 @@ public class Metronome extends AbstractEventSender {
     
     
     public synchronized final void setBpm(float bpm){
-        this.bpm = bpm * (BEATS_PER_BAR / 4);
+        this.bpm = bpm;
         this.msPerBeat = Math.round((60 / bpm) * 1000);
     }
     
     
     public synchronized void changeBpm(boolean faster){
-        float newBpm = bpm / (BEATS_PER_BAR / 4);
-        if (faster && newBpm < 160){
+        float newBpm = bpm;
+        if (faster && newBpm < 640){
             newBpm += BPM_CHANGE_STEP;
             setBpm(newBpm);
         }
-        if (!faster && newBpm > 80){
+        if (!faster && newBpm > 300){
             newBpm -= BPM_CHANGE_STEP;
             setBpm(newBpm);
         }
+        System.out.println("NEW BPM: " + (newBpm / 4));
     } 
     
     
@@ -62,7 +62,10 @@ public class Metronome extends AbstractEventSender {
         lastBeatNr++;
         lastBeatTimestamp = System.currentTimeMillis();
         
-        if (lastBeatNr % 16 == 0) broadcast(new NewBarEvent());
+        if (lastBeatNr % 16 == 0){
+            broadcast(new NewBarEvent());
+            changeBpm(true);
+        }
     }
     
     
