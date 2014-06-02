@@ -54,6 +54,7 @@ public class Metronome extends AbstractEventSender {
             newBpm -= BPM_CHANGE_STEP;
             setBpm(newBpm);
         }
+        System.out.println("NEW BPM: " + (newBpm / 4));
     } 
     
     
@@ -63,6 +64,7 @@ public class Metronome extends AbstractEventSender {
         
         if (lastBeatNr % 16 == 0){
             broadcast(new NewBarEvent());
+            changeBpm(true);
         }
     }
     

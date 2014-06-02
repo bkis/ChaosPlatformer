@@ -1,0 +1,22 @@
+MaterialDef CircleEmitterGFX {
+
+    // Uniforms
+    MaterialParameters {
+        Vector4 Color;
+        Float RelTime;
+        Float StartRadius;
+        Float MidRadius1;
+        Float MidRadius2;
+        Float EndRadius;
+    }
+
+    Technique {
+        WorldParameters {
+            Time
+            WorldViewProjectionMatrix
+        }
+
+        VertexShader GLSL100:   Materials/Platforms/CircleEmitterGFX.vert
+        FragmentShader GLSL100: Materials/Platforms/CircleEmitterGFX.frag
+    }
+}

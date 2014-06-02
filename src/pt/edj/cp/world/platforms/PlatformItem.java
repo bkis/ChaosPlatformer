@@ -15,6 +15,12 @@ public abstract class PlatformItem extends Node implements ICollisionShapeProvid
     protected Platform parentPlatform;
     
     
+    
+    protected final float rand(float min, float max) {
+        return min + (max-min) * (float) Math.random();
+    }
+    
+    
     public final boolean isActive() {
         return active;
     }

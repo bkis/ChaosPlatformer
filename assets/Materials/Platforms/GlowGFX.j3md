@@ -2,7 +2,7 @@ MaterialDef GlowGFX {
 
     // Uniforms
     MaterialParameters {
-        Vector3 Color;
+        Vector4 Color;
         Vector2 Extents;
         Float Highlight;
         Float ZValue;

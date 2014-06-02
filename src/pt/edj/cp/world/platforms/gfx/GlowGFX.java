@@ -10,6 +10,8 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.VertexBuffer;
 import com.jme3.util.BufferUtils;
+import pt.edj.cp.timing.GameThemeController;
+import pt.edj.cp.util.ColorHelper;
 import pt.edj.cp.world.platforms.PlatformItem;
 
 
@@ -18,6 +20,7 @@ public class GlowGFX extends PlatformItem {
     private SimpleApplication app;
     private Material mat;
     private Geometry geom;
+    private float baseHue;
     
     private float highlightDuration = 0.2f;
     private float highlightTimeLeft = 0.0f;
@@ -55,13 +58,15 @@ public class GlowGFX extends PlatformItem {
     public GlowGFX(SimpleApplication app, Vector3f extents) {
         super();
         
+        baseHue = rand(0, 1);
+        
         // create material
         mat = new Material(app.getAssetManager(), "Materials/Platforms/GlowGFX.j3md");
-        mat.setVector3("Color", new Vector3f(0, 0.6f, 1.0f));
         mat.setVector2("Extents", new Vector2f(extents.x, extents.y * 1.4f));
         mat.setFloat("Highlight", 0.0f);
         mat.setFloat("ZValue", 0.01f + 0.04f * (float) Math.random());
         mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.AlphaAdditive);
+        updateColor();
         
         // create geometry
         geom = new Geometry();
@@ -69,6 +74,12 @@ public class GlowGFX extends PlatformItem {
         geom.setMaterial(mat);
         geom.setCullHint(CullHint.Never);
         geom.setQueueBucket(RenderQueue.Bucket.Translucent);
+    }
+    
+    
+    private void updateColor() {
+        float temp = GameThemeController.instance().getParameter("Temperature");
+        mat.setVector4("Color", ColorHelper.computeFromTemperature(temp, baseHue, 1, 1, 1));
     }
 
     
@@ -86,6 +97,8 @@ public class GlowGFX extends PlatformItem {
             float highlight = highlightTimeLeft / highlightDuration;
             mat.setFloat("Highlight", highlight);
         }
+        
+        updateColor();
     }
     
     @Override
