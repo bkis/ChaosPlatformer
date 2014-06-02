@@ -63,6 +63,7 @@ public class Metronome extends AbstractEventSender {
         
         if (lastBeatNr % 16 == 0){
             broadcast(new NewBarEvent());
+            changeBpm(true);
         }
     }
     
