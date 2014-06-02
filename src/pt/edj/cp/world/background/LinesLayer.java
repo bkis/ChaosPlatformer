@@ -2,6 +2,7 @@ package pt.edj.cp.world.background;
 
 import com.jme3.app.Application;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.Vector3f;
 import com.jme3.math.Vector4f;
 import com.jme3.renderer.RenderManager;
@@ -148,6 +149,7 @@ public class LinesLayer extends AbstractBackgroundLayer {
             mat.setFloat("TotalLength", currLength);
             mat.setFloat("CurrentSegment", currSegment);
             mat.setVector3("Offset", new Vector3f(0.0f, 0.0f, 0.0f));
+            mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
             this.setMaterial(mat);
             updateColor(0.f);
         }

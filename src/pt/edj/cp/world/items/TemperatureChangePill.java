@@ -1,6 +1,7 @@
 package pt.edj.cp.world.items;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.material.RenderState;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import pt.edj.cp.timing.GameThemeController;
@@ -22,6 +23,7 @@ public class TemperatureChangePill extends AlphaRectCollectable {
         rectMaterial.setFloat("NoiseFactor", 1.f + 0.5f * (float) Math.random());
         rectMaterial.setVector3("Color", 
                 increase ? new Vector3f(1.0f, 0.2f, 0) : new Vector3f(0, 0.3f, 1));
+        rectMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.AlphaAdditive);
     }
     
 

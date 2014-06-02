@@ -41,8 +41,7 @@ public class IngameState extends AbstractAppState {
     private static final String CHAR_MODEL = "Models/Oto/Oto.mesh.j3o";
     private static final float CAM_Y_OFFSET = 1f;
     private static final float CAM_Z_OFFSET = 25f; //18
-    private static final float BG_SIZE_X = 24;
-    private static final float BG_SIZE_Y = 20;
+    private static final float BG_SIZE_Y = 28;
     
     private SimpleApplication app;
     private PlatformLifecycleManager lifecycleManager;
@@ -179,7 +178,8 @@ public class IngameState extends AbstractAppState {
     
     
     private void addBackgroundNode() {
-        backgroundNode = new BackgroundNode(app, BG_SIZE_X, BG_SIZE_Y);
+        float aspect = app.getCamera().getWidth() / app.getCamera().getHeight();
+        backgroundNode = new BackgroundNode(app, BG_SIZE_Y * aspect, BG_SIZE_Y);
         backgroundNode.setLocalTranslation(0, 0, -5f);
         app.getRootNode().attachChild(backgroundNode);
         

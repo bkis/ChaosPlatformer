@@ -244,8 +244,8 @@ public class PlatformLifecycleManager implements IMovementListener {
     
     Vector3f generatePlatformPosition(Position zonePosition) {
         float maxDiff = 0.15f;
-        float x = (zonePosition.x + 0.5f - maxDiff + maxDiff * 2 * random.nextFloat()) * zoneSize;
-        float y = (zonePosition.y + 0.5f - maxDiff + maxDiff * 2 * random.nextFloat()) * zoneSize;
+        float x = (zonePosition.x + maxDiff * (2 * random.nextFloat() - 1)) * zoneSize;
+        float y = (zonePosition.y + maxDiff * (2 * random.nextFloat() - 1)) * zoneSize;
         return new Vector3f(x, y, 0.0f);
     }
 }

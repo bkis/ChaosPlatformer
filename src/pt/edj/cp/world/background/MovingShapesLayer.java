@@ -53,7 +53,7 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
         // Create offscreen renderer nodes
         rttScene = new Node();
         rttScene.setName("RTTScene");
-        Texture rttTex = createOffscreenRenderer(rttScene, 800, 600);
+        Texture rttTex = createOffscreenRenderer(rttScene, app.getCamera().getWidth(), app.getCamera().getHeight());
         this.addControl(new UpdateRTTControl());
         
         // add actual quad
