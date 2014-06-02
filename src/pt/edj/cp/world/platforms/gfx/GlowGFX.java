@@ -73,7 +73,7 @@ public class GlowGFX extends PlatformItem {
         geom.setMesh(getCircleMesh());
         geom.setMaterial(mat);
         geom.setCullHint(CullHint.Never);
-        geom.setQueueBucket(RenderQueue.Bucket.Translucent);
+        geom.setQueueBucket(RenderQueue.Bucket.Transparent);
     }
     
     

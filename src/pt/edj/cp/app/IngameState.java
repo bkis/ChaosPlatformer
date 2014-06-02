@@ -178,7 +178,7 @@ public class IngameState extends AbstractAppState {
     
     
     private void addBackgroundNode() {
-        float aspect = app.getCamera().getWidth() / app.getCamera().getHeight();
+        float aspect = (float) app.getCamera().getWidth() / (float) app.getCamera().getHeight();
         backgroundNode = new BackgroundNode(app, BG_SIZE_Y * aspect, BG_SIZE_Y);
         backgroundNode.setLocalTranslation(0, 0, -5f);
         app.getRootNode().attachChild(backgroundNode);

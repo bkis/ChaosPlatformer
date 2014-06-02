@@ -102,7 +102,7 @@ public class CircleEmitterGFX extends PlatformItem {
         
         numActiveCircles = minorPoppings;
         
-        this.setQueueBucket(RenderQueue.Bucket.Translucent);
+        this.setQueueBucket(RenderQueue.Bucket.Transparent);
         this.setCullHint(CullHint.Never);
     }
 
