@@ -31,7 +31,8 @@ public class PlatformerCharacterControl extends BetterCharacterControl implement
     
     @Override
     public void jump(){
-        if (this.isOnGround()) jump = true;
+        if (this.isOnGround())
+            jump = true;
     }
     
     
@@ -64,17 +65,17 @@ public class PlatformerCharacterControl extends BetterCharacterControl implement
     
     @Override
     public boolean isOnGround(){
-        //modified WIP
+        //modified
         TempVars vars = TempVars.get();
-        Vector3f location1 = vars.vect1.add(radius, 0, 0);
-        Vector3f location2 = vars.vect1.add(-radius, 0, 0);
-        Vector3f rayVector1 = vars.vect2;
-        Vector3f rayVector2 = vars.vect2;
+        Vector3f location1 = vars.vect1;
+        Vector3f location2 = vars.vect2;
+        Vector3f rayVector1 = vars.vect3;
+        Vector3f rayVector2 = vars.vect4;
         float height = getFinalHeight();
-        location1.set(localUp).multLocal(height).addLocal(this.location);
-        location2.set(localUp).multLocal(height).addLocal(this.location);
-        rayVector1.set(localUp).multLocal(-height - 0.15f).addLocal(location1);
-        rayVector2.set(localUp).multLocal(-height - 0.15f).addLocal(location2);
+        location1.set(localUp.add( radius/1.5f, 0, 0)).multLocal(height).addLocal(this.location);
+        location2.set(localUp.add(-radius/1.5f, 0, 0)).multLocal(height).addLocal(this.location);
+        rayVector1.set(localUp).multLocal(-height - 0.1f).addLocal(location1);
+        rayVector2.set(localUp).multLocal(-height - 0.1f).addLocal(location2);
         List<PhysicsRayTestResult> results1 = space.rayTest(location1, rayVector1);
         List<PhysicsRayTestResult> results2 = space.rayTest(location2, rayVector2);
         vars.release();
