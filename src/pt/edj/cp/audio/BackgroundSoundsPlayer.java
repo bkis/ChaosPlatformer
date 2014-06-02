@@ -5,6 +5,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
 import com.jme3.audio.AudioSource.Status;
 import java.util.concurrent.Callable;
+import pt.edj.cp.app.IngameState;
 import pt.edj.cp.timing.events.ChordChangeEvent;
 import pt.edj.cp.timing.events.IEvent;
 import pt.edj.cp.timing.events.IEventListener;
