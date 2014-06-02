@@ -54,7 +54,6 @@ public class Metronome extends AbstractEventSender {
             newBpm -= BPM_CHANGE_STEP;
             setBpm(newBpm);
         }
-        System.out.println("NEW BPM: " + (newBpm / 4));
     } 
     
     
