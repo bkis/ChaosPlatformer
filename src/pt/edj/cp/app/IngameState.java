@@ -196,6 +196,10 @@ public class IngameState extends AbstractAppState {
         Node character = (Node) app.getAssetManager().loadModel(CHAR_MODEL);
         character.setName("character");
         character.scale(0.1f);
+        Material charMat = new Material(app.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+        charMat.setBoolean("UseMaterialColors", true);
+        charMat.setColor("Diffuse", ColorRGBA.White);
+        character.setMaterial(charMat);
         characterNode.attachChild(character);
         characterNode.setLocalTranslation(0, 4, 0);
         character.setLocalTranslation(0, character.getLocalScale().y+0.40f, 0);
