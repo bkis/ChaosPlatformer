@@ -17,6 +17,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import java.util.HashSet;
 import pt.edj.cp.audio.BackgroundSoundsPlayer;
+import pt.edj.cp.audio.SoundController;
 import pt.edj.cp.character.CharacterAnimator;
 import pt.edj.cp.input.IngameInputsState;
 import pt.edj.cp.physics.PlatformerCharacterControl;
@@ -62,6 +63,7 @@ public class IngameState extends AbstractAppState {
     
     private WhiteNoiseFilter whiteNoiseFilter;
     
+    private SoundController soundController;
     
     public IngameState(WhiteNoiseFilter noiseFilter) {
         super();
@@ -75,6 +77,8 @@ public class IngameState extends AbstractAppState {
         
         this.app = (SimpleApplication) app;
         this.metronome = Metronome.getInstance();
+        
+        this.soundController = new SoundController();
         
         chordCtrl = new ChordController();
         metronome.register(chordCtrl);
@@ -220,6 +224,11 @@ public class IngameState extends AbstractAppState {
     }
     
     
+    public SoundController getSoundController(){
+        return soundController;
+    }
+    
+    
     public Platform addPlatform(Vector3f pos) {
         // create new platform
         Platform p = platformFactory.createPlatform(pos);
@@ -236,6 +245,7 @@ public class IngameState extends AbstractAppState {
     }
     
     public void removePlatform(Platform platform) {
+        platform.killSoundLink();
         metronome.unregister(platform);
         chordCtrl.unregister(platform);
         sceneNode.detachChild(platform.getTopNode());

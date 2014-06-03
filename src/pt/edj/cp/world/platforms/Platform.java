@@ -69,6 +69,11 @@ public class Platform implements IEventListener, Savable {
     }
     
     
+    public void killSoundLink(){
+        sfx.kill();
+    }
+    
+    
     public void addGFX(PlatformItem node) {
         topNode.attachChild(node);
         gfxNodes.add(node);
