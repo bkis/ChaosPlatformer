@@ -32,22 +32,4 @@ public class SoundController {
                 nodes.get(key).setVolume(factor);
     }
     
-    /**
-     * 0 <= factor <= 1
-     * @param factor 
-     */
-    public void changePitch(float factor){
-        if (factor >= 0 && factor <= 1){
-            factor -= 0.5f;
-            factor /= 5;
-            for (String key : nodes.keySet()){
-                if (nodes.get(key).getPitch() < 1.9f
-                && nodes.get(key).getPitch() > 0.2f){
-                    nodes.get(key).setPitch(
-                            nodes.get(key).getPitch() + factor);
-                }
-            }
-        }              
-    }
-    
 }
