@@ -9,6 +9,7 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
+import pt.edj.cp.app.IngameState;
 import pt.edj.cp.character.CharacterAnimator;
 import pt.edj.cp.physics.PlatformerCharacterControl;
 import pt.edj.cp.physics.WorldPhysicsManager;

@@ -78,7 +78,7 @@ public class IngameState extends AbstractAppState {
         this.app = (SimpleApplication) app;
         this.metronome = Metronome.getInstance();
         
-        this.soundController = new SoundController();
+        this.soundController = new SoundController(app);
         
         chordCtrl = new ChordController();
         metronome.register(chordCtrl);
