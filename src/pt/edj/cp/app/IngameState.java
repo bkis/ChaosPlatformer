@@ -146,6 +146,11 @@ public class IngameState extends AbstractAppState {
     }
     
     
+    public Metronome getMetronome(){
+        return metronome;
+    }
+    
+    
     @Override
     public void cleanup() {
         super.cleanup();
@@ -188,11 +193,6 @@ public class IngameState extends AbstractAppState {
         app.getRootNode().attachChild(backgroundNode);
         
         characterControl.addMovementListener(backgroundNode);
-    }
-    
-    
-    public Metronome getMetronome(){
-        return metronome;
     }
     
     
