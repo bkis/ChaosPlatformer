@@ -26,6 +26,7 @@ public class PlatformerCharacterControl extends BetterCharacterControl implement
     public PlatformerCharacterControl(float radius, float height, float mass){
         super(radius, height, mass);
         movementListeners = new HashSet<IMovementListener>();
+        this.rigidBody.setCcdMotionThreshold(0.1f);
     }
     
     

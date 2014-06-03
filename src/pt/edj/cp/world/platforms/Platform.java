@@ -28,7 +28,7 @@ public class Platform implements IEventListener, Savable {
     
     private float timeSinceLastContact;
     
-    private static final float TOGGLE_THRESHOLD = 0.25f;     // 250 ms
+    private static final float TOGGLE_THRESHOLD = 0.3f;     // 250 ms
     
     
     public Platform(Vector3f position,
