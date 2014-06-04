@@ -1,0 +1,18 @@
+MaterialDef SpeedPill {
+
+    // Uniforms
+    MaterialParameters {
+        Float SpeedFactor;
+        Float Trail;
+    }
+
+    Technique {
+        WorldParameters {
+            Time
+            WorldViewProjectionMatrix
+        }
+
+        VertexShader GLSL100:   Materials/Items/Item.vert
+        FragmentShader GLSL100: Materials/Items/SpeedPill.frag
+    }
+}

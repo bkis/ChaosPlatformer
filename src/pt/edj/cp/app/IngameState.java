@@ -16,6 +16,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import java.util.HashSet;
+import java.util.Random;
 import pt.edj.cp.audio.BackgroundSoundsPlayer;
 import pt.edj.cp.audio.SoundController;
 import pt.edj.cp.bonus.Bonus;
@@ -30,8 +31,9 @@ import pt.edj.cp.util.SoundPathManager;
 import pt.edj.cp.util.WhiteNoiseFilter;
 import pt.edj.cp.world.PlatformLifecycleManager;
 import pt.edj.cp.world.background.BackgroundNode;
-import pt.edj.cp.world.items.TemperatureChangePill;
 import pt.edj.cp.world.items.Collectable;
+import pt.edj.cp.world.items.SpeedChangePill;
+import pt.edj.cp.world.items.TemperatureChangePill;
 import pt.edj.cp.world.platforms.Platform;
 import pt.edj.cp.world.platforms.PlatformCollisionListener;
 import pt.edj.cp.world.platforms.PlatformFactory;
@@ -64,6 +66,8 @@ public class IngameState extends AbstractAppState {
     
     private WhiteNoiseFilter whiteNoiseFilter;
     
+    private Random random = new Random();
+    
     private SoundController soundController;
     private Bonus bonus;
     
@@ -81,6 +85,7 @@ public class IngameState extends AbstractAppState {
         this.metronome = Metronome.getInstance();
         
         this.soundController = new SoundController(app);
+        GameThemeController.instance().register(soundController);
         this.bonus = new Bonus(app);
         metronome.register(bonus);
         
@@ -130,7 +135,7 @@ public class IngameState extends AbstractAppState {
         SoundPathManager spm = new SoundPathManager();
         metronome.register(spm);
         platformFactory = new PlatformFactory(this.app, spm);
-        lifecycleManager = new PlatformLifecycleManager(this, 6.0f, new Vector2f(25, 20));
+        lifecycleManager = new PlatformLifecycleManager(this, new Vector2f(4, 3), new Vector2f(22, 15), new Vector2f(40, 30));
         characterControl.addMovementListener(lifecycleManager);
     }
     
@@ -272,7 +277,11 @@ public class IngameState extends AbstractAppState {
     
     
     private Collectable createNewCollectable() {
-        return new TemperatureChangePill(app, (Math.random() > 0.5));
+        switch (random.nextInt(2)) {
+            case 0: return new TemperatureChangePill(app, (Math.random() > 0.5));
+            case 1: return new SpeedChangePill(app, (Math.random() > 0.5));
+            default: return null;
+        }
     }
     
     

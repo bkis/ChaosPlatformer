@@ -25,7 +25,7 @@ public class Main extends SimpleApplication {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         viewPort.addProcessor(fpp);
         
-        WhiteNoiseFilter whiteNoise = new WhiteNoiseFilter();
+        WhiteNoiseFilter whiteNoise = new WhiteNoiseFilter(this);
         fpp.addFilter(whiteNoise);
         
         //attach ingame state

@@ -116,7 +116,7 @@ public class WorldPhysicsManager {
         platformPhysics.setKinematic(true);
         platformPhysics.setKinematicSpatial(true);
         platformPhysics.setFriction(1f);
-        platformPhysics.setCcdMotionThreshold(CCD_MOTION_THRESH);
+        //platformPhysics.setCcdMotionThreshold(CCD_MOTION_THRESH);
         getPhysicsSpace().add(platformPhysics);
     }
     

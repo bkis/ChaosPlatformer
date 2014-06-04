@@ -15,10 +15,13 @@ import pt.edj.cp.world.platforms.Platform;
 
 public class PlatformLifecycleManager implements IMovementListener {
     
+    private static final float ITEM_CHANCE_PER_PLATFORM = 0.2f;
+    
     private Random random = new Random();
         
-    private float zoneSize;
-    private Vector2f halfArea;
+    private Vector2f zoneSize;
+    private Vector2f halfActiveArea;
+    private Vector2f halfTotalArea;
     
     private ISpawner platformSpawner;
     private ISpawner itemSpawner;
@@ -98,13 +101,14 @@ public class PlatformLifecycleManager implements IMovementListener {
             super(p.x, p.y);
             
             if (platformSpawner.shouldPlacePlatform(p)) {
-                platform = ingameState.addPlatform(generatePlatformPosition(p));
-                collectable = null;
+                platform = ingameState.addPlatform(generatePlatformPosition(p, false));
+                
+                collectable = (random.nextFloat() < ITEM_CHANCE_PER_PLATFORM)
+                            ? ingameState.addCollectable(generatePlatformPosition(p, true))
+                            : null;
             } else {
                 platform = null;
-                collectable = (itemSpawner.shouldPlacePlatform(p))
-                        ? ingameState.addCollectable(generatePlatformPosition(p))
-                        : null;
+                collectable = null;
             }
         }
         
@@ -117,37 +121,43 @@ public class PlatformLifecycleManager implements IMovementListener {
     }
 
     
-    private IntRect getActiveZonesForPosition(Vector2f playerPos) {
-        Vector2f p1 = playerPos.subtract(halfArea).divide(zoneSize);
-        Vector2f p2 = playerPos.add(halfArea).divide(zoneSize);
+    private IntRect getActiveZonesForPosition(Vector2f playerPos, Vector2f area) {
+        Vector2f p1 = playerPos.subtract(area);
+        Vector2f p2 = playerPos.add(area);
+        
+        float sx = zoneSize.x;
+        float sy = zoneSize.y;
         
         IntRect result = new IntRect();
-        result.p1 = new Position((int) Math.floor(p1.x), (int) Math.floor(p1.y));
-        result.p2 = new Position((int) Math.ceil(p2.x), (int) Math.ceil(p2.y));
+        result.p1 = new Position((int) Math.floor(p1.x / sx), (int) Math.floor(p1.y / sy));
+        result.p2 = new Position((int) Math.ceil(p2.x / sx), (int) Math.ceil(p2.y / sy));
         return result;
     } 
     
     
     private TreeMap<Position,Zone> zones = new TreeMap<Position,Zone>();
+    
+    private IntRect totalZones;
     private IntRect activeZones;
     
     IngameState ingameState; 
     
     
-    public PlatformLifecycleManager(IngameState ingame, float zoneSize, Vector2f activeArea) {
+    public PlatformLifecycleManager(IngameState ingame, Vector2f zoneSize, Vector2f activeArea, Vector2f totalArea) {
         this.zoneSize = zoneSize;
-        this.halfArea = activeArea.mult(0.5f);
+        this.halfActiveArea = activeArea.mult(0.5f);
+        this.halfTotalArea = totalArea.mult(0.5f);
         
         this.ingameState = ingame;
         
-//        this.platformSpawner = new NoisePlatformSpawner(0.8525342f);
-//        this.platformSpawner = new HorizontalPlatformSpawner();
-        this.platformSpawner = new RandomSpawner(0.5f);
-        this.itemSpawner = new RandomSpawner(0.5f);
+        this.platformSpawner = new RegionSpawner();
+        this.itemSpawner = new RandomSpawner(0.15f, platformSpawner);
         
         // add initial zones around player
-        activeZones = getActiveZonesForPosition(new Vector2f(0.0f, 0.0f));
-        for (Position pos : activeZones.allPositions()) {
+        activeZones = getActiveZonesForPosition(new Vector2f(0.0f, 0.0f), halfActiveArea);
+        totalZones = getActiveZonesForPosition(new Vector2f(0.0f, 0.0f), halfTotalArea);
+        
+        for (Position pos : totalZones.allPositions()) {
             zones.put(pos, new Zone(pos));
         }
     }
@@ -155,28 +165,41 @@ public class PlatformLifecycleManager implements IMovementListener {
     
     public void movement(Vector3f newPosition, Vector3f delta) {
         Vector2f playerPos = new Vector2f(newPosition.x, newPosition.y);
-        IntRect newActiveZones = getActiveZonesForPosition(playerPos);
+        IntRect newTotalZones = getActiveZonesForPosition(playerPos, halfTotalArea);
         
-        if (activeZones.compareTo(newActiveZones) != 0) {
-            /*
-            System.out.printf("Move to: (%3.2f %3.2f) new area: (%d:%d to %d:%d)", 
-                    playerPos.x, playerPos.y, 
-                    newActiveZones.p1.x, newActiveZones.p1.y,
-                    newActiveZones.p2.x, newActiveZones.p2.y);
-            */
-
+        if (totalZones.compareTo(newTotalZones) != 0) {
             // see if we have to delete old zones
-            for (Position pos : activeZones.diff(newActiveZones)) {
+            for (Position pos : totalZones.diff(newTotalZones)) {
                 zones.remove(pos).delete();
             }
 
             // add new zones?
-            for (Position pos : newActiveZones.diff(activeZones)) {
+            for (Position pos : newTotalZones.diff(totalZones)) {
                 zones.put(pos, new Zone(pos));
             }
 
+            totalZones = newTotalZones;
+        }
+        
+        
+        IntRect newActiveZones = getActiveZonesForPosition(playerPos, halfActiveArea);
+        if (activeZones.compareTo(newActiveZones) != 0) {
+            for (Position pos : activeZones.diff(newActiveZones)) {
+                Zone zone = zones.get(pos);
+                if (zone != null && zone.platform != null)
+                    zone.platform.setActive(false);
+            }
             activeZones = newActiveZones;
         }
+    }
+    
+    Vector3f generatePlatformPosition(Position zonePosition, boolean powerup) {
+        float maxDiff = 0.15f;
+        float x = (zonePosition.x + maxDiff * (2 * random.nextFloat() - 1)) * zoneSize.x;
+        float y = (zonePosition.y + maxDiff * (2 * random.nextFloat() - 1)) * zoneSize.y;
+        if (powerup)
+            y += 1.5f + random.nextFloat();
+        return new Vector3f(x, y, 0.0f);
     }
     
     
@@ -192,13 +215,20 @@ public class PlatformLifecycleManager implements IMovementListener {
      */
     private class RandomSpawner implements ISpawner {
         private float threshold;
+        private ISpawner other;
         
         public RandomSpawner(float th) {
+            this(th, null);
+        }
+        
+        public RandomSpawner(float th, ISpawner o) {
             threshold = th;
+            other = o;
         }
         
         public boolean shouldPlacePlatform(Position zonePosition) {
-            return random.nextFloat() < threshold;
+            boolean should = (other != null) ? other.shouldPlacePlatform(zonePosition) : true;
+            return should && (random.nextFloat() < threshold);
         }
     }
     
@@ -242,10 +272,107 @@ public class PlatformLifecycleManager implements IMovementListener {
     }
     
     
-    Vector3f generatePlatformPosition(Position zonePosition) {
-        float maxDiff = 0.15f;
-        float x = (zonePosition.x + maxDiff * (2 * random.nextFloat() - 1)) * zoneSize;
-        float y = (zonePosition.y + maxDiff * (2 * random.nextFloat() - 1)) * zoneSize;
-        return new Vector3f(x, y, 0.0f);
+    private static class RegionSpawner implements ISpawner {
+        private static final int regionSizeX = 4;
+        private static final int regionSizeY = 3;
+            
+        static int posMod(int a, int b) {
+            return ((a % b) + b) % b;
+        }
+
+        public RegionSpawner() {
+        }
+        
+        private class Region {
+            int x;
+            int y;
+            int within;
+            int segmentLen;
+            boolean exists;
+            boolean connectionUp;
+            
+            public Region(Position pos) {
+                this((int) Math.floor((float) pos.x / regionSizeX),
+                        (int) Math.floor((float) pos.y / regionSizeY));
+            }
+            
+            public Region(int xx, int yy) {
+                x = xx;
+                y = yy;
+                
+                // get y-dependent spacing
+                Random yRand = new Random(6243327 * y);
+                float period = 4.5f + 2.f * yRand.nextFloat();
+                int offset = yRand.nextInt((int) period);
+
+                // get x-dependent length
+                int number = (int) Math.floor((x - offset) / period);
+                Random xRand = new Random(6243327 * y + 14327 * number);
+                segmentLen = 2 + xRand.nextInt((int)period - 2);
+                
+                // within slice:
+                within = (int) (x - offset - number * period);
+                exists = (within < segmentLen);
+                connectionUp = xRand.nextBoolean();
+            }
+            
+            Region neighbor(int dx, int dy) {
+                return new Region(x + dx, y + dy);
+            }
+            
+            boolean hasLeft() {
+                return within > 0;
+            }
+            
+            boolean hasRight() {
+                return within < (segmentLen-1);
+            }
+            
+            boolean hasVerticalConnection() {
+                if (!exists)
+                    return false;
+                
+                Region other = connectionUp ? new Region(x, y+1) : new Region(x, y-1);
+                if (!other.exists || other.connectionUp == connectionUp)
+                    return false;
+                
+                return true;
+            }
+        }
+
+        public boolean shouldPlacePlatform(Position zonePosition) {
+            Region thisRegion = new Region(zonePosition);
+            
+            if (!thisRegion.exists)
+                return false;
+            
+            int relX = posMod(zonePosition.x, regionSizeX);
+            int relY = posMod(zonePosition.y, regionSizeY);
+            
+            // is this coordinate on the slide of this (existing) region?
+            if (relY == 1) {
+                if (thisRegion.hasLeft() && relX < 3
+                        || thisRegion.hasRight() && relX > 0
+                        || relX > 0 && relX < 3)
+                    return true;
+                return true;
+            }
+            
+            // is there a connection to another plaform?
+            if (thisRegion.hasVerticalConnection()) {
+                boolean goesUp = thisRegion.connectionUp;
+                boolean goesLeft = thisRegion.y % 2 == 0;
+                        
+                // generate ladder position
+                int y = goesUp ? 2 : 0;
+                int x = goesLeft ? 1 : 2;
+                if (relX == x && relY == y)
+                    return true;
+            }
+            
+            
+            return false;
+        }
+        
     }
 }

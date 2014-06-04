@@ -9,53 +9,35 @@ import pt.edj.cp.timing.events.NewBarEvent;
 
 public class Metronome extends AbstractEventSender {
     
-    private static final float INIT_BPM        = 100;
-    private static final float BPM_CHANGE_STEP = 20;
-    
-    private float bpm;
-    private int msPerBeat;
+    private static final float MIN_BPM         = 60;
+    private static final float MAX_BPM         = 160;
     
     private Timer timer;
     
     private long lastBeatTimestamp;
     private long lastBeatNr;
+
+    
+    private static Metronome instance = new Metronome(); // * 4 (weil 16 beats pro takt)
     
     
-    private static Metronome instance = new Metronome(INIT_BPM*4); // * 4 (weil 16 beats pro takt)
-    
-    
-    private Metronome(float bpm) {
+    private Metronome() {
         super();
-        setBpm(bpm);
         
         this.timer = new Timer();
-        timer.schedule(new MetronomeTask(), msPerBeat);
+        timer.schedule(new MetronomeTask(), getMsPerBeat());
     }
     
     
     public static Metronome getInstance() {
         return instance;
     }
+
     
-    
-    public synchronized final void setBpm(float bpm){
-        this.bpm = bpm;
-        this.msPerBeat = Math.round((60 / bpm) * 1000);
+    private synchronized int getMsPerBeat() {
+        float bpm = 4 * getBpm();
+        return Math.round((60.f / bpm) * 1000.f);
     }
-    
-    
-    public synchronized void changeBpm(boolean faster){
-        float newBpm = bpm;
-        if (faster && newBpm < 640){
-            newBpm += BPM_CHANGE_STEP;
-            setBpm(newBpm);
-        }
-        if (!faster && newBpm > 300){
-            newBpm -= BPM_CHANGE_STEP;
-            setBpm(newBpm);
-        }
-        System.out.println("NEW BPM: " + (newBpm / 4));
-    } 
     
     
     private synchronized void doBeat() {
@@ -72,13 +54,15 @@ public class Metronome extends AbstractEventSender {
         long currTime = System.currentTimeMillis();
         int elapsed = (int) (currTime - lastBeatTimestamp);
         
-        float relElapsed = Math.min(elapsed / msPerBeat, 1.0f);
+        float relElapsed = Math.min(elapsed / getMsPerBeat(), 1.0f);
         return lastBeatNr + relElapsed;
     }
     
     
     public float getBpm(){
-        return bpm;
+        float speedParam = GameThemeController.instance().getParameter("Speed");
+        float mid = (MIN_BPM + MAX_BPM) * 0.5f;
+        return mid + (MAX_BPM - MIN_BPM) * speedParam * 0.5f;
     }
     
     
@@ -87,16 +71,13 @@ public class Metronome extends AbstractEventSender {
     }
     
     
-    
-    
-    
     private class MetronomeTask extends TimerTask {
         @Override
         public void run() {
             doBeat();
             broadcast(new MetronomeBeatEvent());
             //System.out.println("Beat nr " + lastBeatNr);
-            timer.schedule(new MetronomeTask(), msPerBeat);
+            timer.schedule(new MetronomeTask(), getMsPerBeat());
         }
     }
 

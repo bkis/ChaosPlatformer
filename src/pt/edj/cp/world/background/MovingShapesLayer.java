@@ -34,8 +34,6 @@ import pt.edj.cp.util.ColorHelper;
 public class MovingShapesLayer extends AbstractBackgroundLayer {
     
     private Vector2f layerSize;
-    private float movingSpeed;
-    private float shiftingSpeed;
     private HashSet<Shape> shapes = new HashSet<Shape>();
     
     private Random random = new Random();
@@ -46,9 +44,6 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
     public MovingShapesLayer(Application app, float z, float sizeX, float sizeY) {
         super(app, z, 0.06f);
         layerSize = new Vector2f(sizeX, sizeY);
-        
-        movingSpeed = 0.6f;
-        shiftingSpeed = 1.0f;
         
         // Create offscreen renderer nodes
         rttScene = new Node();
@@ -67,13 +62,17 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
         
         // Create shapes
         for (int i = 0; i < 20; i++)
-            addRandomShape();
+            addRandomShape().doMove(10.0f * getMovingSpeed());
     }
     
     
-    private void addRandomShape() {
+    protected float getMovingSpeed() {
+        return 0.7f + 0.5f * GameThemeController.instance().getParameter("Speed");
+    }
+    
+    
+    private Shape addRandomShape() {
         float layerDimension = (float) Math.sqrt(layerSize.x * layerSize.y);
-        float maxLayerSize = (float) Math.max(layerSize.x, layerSize.y);
         float avgShapeSize = layerDimension / 20.0f;
         float size = (0.3f + 1.7f * random.nextFloat()) * avgShapeSize;
         
@@ -97,14 +96,13 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
         rttScene.attachChild(shape);
         shapes.add(shape);
         
-//        System.out.println("NEW: " + shape.getLocalTranslation() + "(spawn: " + spawnDir);
+        return shape;
     }
     
     
     private void removeShape(Shape s) {
         rttScene.detachChild(s);
         shapes.remove(s);
-//        System.out.println("DEL: " + s.getLocalTranslation());
     }
     
     
@@ -115,6 +113,7 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
         private Vector2f speed;
         private float maxRadius;
         private float baseHue;
+        private float spin;
         
         public Shape(int corners, float minD, float maxD, Vector2f start, Vector2f direction) {
             super();
@@ -122,6 +121,7 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
             this.maxRadius = maxD;
             this.setMesh(createMesh(corners, 0.1f, 1.5f, 2.5f));
             this.setCullHint(CullHint.Never);
+            this.spin = -0.5f + random.nextFloat();
             
             // create material
             Material mat = new Material(app.getAssetManager(), "Materials/MovShapes/Shape.j3md");
@@ -173,6 +173,7 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
         
         public void doMove(float factor) {
             this.move(speed.x * factor, speed.y * factor, 0f);
+            this.rotate(0, 0, spin * factor);
         }
         
         public boolean isOutsideLayer() {
@@ -198,7 +199,6 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
     public void receiveEvent(IEvent e) {
         if (e instanceof ThemeParameterUpdate) {
             ThemeParameterUpdate tpu = (ThemeParameterUpdate) e;
-            movingSpeed = 0.6f + 0.4f * tpu.getSpeed().getValue();
             
             for (Shape s : shapes)
                 s.updateColor();
@@ -247,8 +247,10 @@ public class MovingShapesLayer extends AbstractBackgroundLayer {
         protected void controlUpdate(float tpf) {
             LinkedList<Shape> toDelete = new LinkedList<Shape>();
             
+            float speed = tpf * getMovingSpeed();
+            
             for (Shape s : shapes) {
-                s.doMove(tpf * movingSpeed);
+                s.doMove(speed);
                 if (s.isOutsideLayer()) {
                     toDelete.add(s);
                 }

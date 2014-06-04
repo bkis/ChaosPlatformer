@@ -28,7 +28,7 @@ public class Platform implements IEventListener, Savable {
     
     private float timeSinceLastContact;
     
-    private static final float TOGGLE_THRESHOLD = 0.25f;     // 250 ms
+    private static final float TOGGLE_THRESHOLD = 0.3f;     // 250 ms
     
     
     public Platform(Vector3f position,
@@ -55,17 +55,21 @@ public class Platform implements IEventListener, Savable {
     
     public void playerContact() {
         if (timeSinceLastContact > TOGGLE_THRESHOLD) {
-            active = !active;
-            //sfx.playBaseSound(); //vllt. besser ohne, stört die Musik
-            
-            for (PlatformItem item : allPlatformItems) {
-                item.setActive(active);
-                if (active)
-                    item.someEffectHappens();
-            }
+            setActive(!active);
         }
         
         timeSinceLastContact = 0.0f;
+    }
+    
+    
+    public void setActive(boolean active) {
+        this.active = active;
+
+        for (PlatformItem item : allPlatformItems) {
+            item.setActive(active);
+            if (active)
+                item.someEffectHappens();
+        }
     }
     
     
