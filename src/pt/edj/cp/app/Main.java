@@ -64,7 +64,7 @@ public class Main extends SimpleApplication {
         set.setFullscreen(false);
         set.setMinResolution(800, 600);
         set.setResolution(800, 600);
-        set.setTitle("Chaos Platformer (working title)");
+        set.setTitle("a different game.");
         return set;
     }
 }
