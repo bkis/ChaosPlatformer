@@ -55,17 +55,21 @@ public class Platform implements IEventListener, Savable {
     
     public void playerContact() {
         if (timeSinceLastContact > TOGGLE_THRESHOLD) {
-            active = !active;
-            //sfx.playBaseSound(); //vllt. besser ohne, stört die Musik
-            
-            for (PlatformItem item : allPlatformItems) {
-                item.setActive(active);
-                if (active)
-                    item.someEffectHappens();
-            }
+            setActive(!active);
         }
         
         timeSinceLastContact = 0.0f;
+    }
+    
+    
+    public void setActive(boolean active) {
+        this.active = active;
+
+        for (PlatformItem item : allPlatformItems) {
+            item.setActive(active);
+            if (active)
+                item.someEffectHappens();
+        }
     }
     
     

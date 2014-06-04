@@ -3,13 +3,14 @@ package pt.edj.cp.audio;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
-import com.jme3.audio.LowPassFilter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
+import pt.edj.cp.timing.events.IEvent;
+import pt.edj.cp.timing.events.IEventListener;
+import pt.edj.cp.timing.events.ThemeParameterUpdate;
 
 
-public class SoundController {
+public class SoundController implements IEventListener {
     
     private Map<String, AudioNode> nodes;
     private float pitchOffset;
@@ -43,12 +44,8 @@ public class SoundController {
     }
     
     
-    public void changePitch(boolean higher){
-        if (higher && pitchOffset <= 1.9f){
-            pitchOffset += 0.1f;
-        } else if (!higher && pitchOffset >= 0.6f){
-            pitchOffset -= 0.1f;
-        }
+    public void changePitch(float factor){
+        pitchOffset = (float) Math.pow(1.5, factor);
         applyPitchOffset();
     }
         
@@ -63,6 +60,15 @@ public class SoundController {
     
     public float getPitchOffset(){
         return pitchOffset;
+    }
+
+    public void receiveEvent(IEvent e) {
+        if (e instanceof ThemeParameterUpdate) {
+            ThemeParameterUpdate tpu = (ThemeParameterUpdate) e;
+            
+            float paramTemp = tpu.getTemperature().getValue();
+            changePitch(0.5f + 0.5f * paramTemp);
+        }
     }
     
 }

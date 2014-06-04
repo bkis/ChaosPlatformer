@@ -85,6 +85,7 @@ public class IngameState extends AbstractAppState {
         this.metronome = Metronome.getInstance();
         
         this.soundController = new SoundController(app);
+        GameThemeController.instance().register(soundController);
         this.bonus = new Bonus(app);
         metronome.register(bonus);
         
@@ -134,7 +135,7 @@ public class IngameState extends AbstractAppState {
         SoundPathManager spm = new SoundPathManager();
         metronome.register(spm);
         platformFactory = new PlatformFactory(this.app, spm);
-        lifecycleManager = new PlatformLifecycleManager(this, new Vector2f(4, 3), new Vector2f(25, 20));
+        lifecycleManager = new PlatformLifecycleManager(this, new Vector2f(4, 3), new Vector2f(22, 15), new Vector2f(40, 30));
         characterControl.addMovementListener(lifecycleManager);
     }
     

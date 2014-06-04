@@ -52,7 +52,6 @@ public class Bonus implements IEventListener{
         else
             return;
         
-        System.out.println("BONUS");
         Vector3f pos = app.getStateManager().getState(IngameState.class).getCharacterNodeLocation();
         emitter.setLocalTranslation(pos.add(0, 15, 12));
         emitter.setParticlesPerSec(20);
@@ -62,7 +61,7 @@ public class Bonus implements IEventListener{
     
     
     private Texture getRndGimmick(){
-        int rnd = Randoms.rndInt(0, 9);
+        int rnd = Randoms.rndInt(1, 9);
         return app.getAssetManager().loadTexture("Textures/Bonus/" + rnd + ".png");
     }
 

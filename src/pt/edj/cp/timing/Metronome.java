@@ -61,7 +61,8 @@ public class Metronome extends AbstractEventSender {
     
     public float getBpm(){
         float speedParam = GameThemeController.instance().getParameter("Speed");
-        return MIN_BPM + (MAX_BPM - MIN_BPM) * speedParam;
+        float mid = (MIN_BPM + MAX_BPM) * 0.5f;
+        return mid + (MAX_BPM - MIN_BPM) * speedParam * 0.5f;
     }
     
     

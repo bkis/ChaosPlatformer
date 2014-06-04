@@ -15,10 +15,13 @@ import pt.edj.cp.world.platforms.Platform;
 
 public class PlatformLifecycleManager implements IMovementListener {
     
+    private static final float ITEM_CHANCE_PER_PLATFORM = 0.2f;
+    
     private Random random = new Random();
         
     private Vector2f zoneSize;
-    private Vector2f halfArea;
+    private Vector2f halfActiveArea;
+    private Vector2f halfTotalArea;
     
     private ISpawner platformSpawner;
     private ISpawner itemSpawner;
@@ -98,13 +101,14 @@ public class PlatformLifecycleManager implements IMovementListener {
             super(p.x, p.y);
             
             if (platformSpawner.shouldPlacePlatform(p)) {
-                platform = ingameState.addPlatform(generatePlatformPosition(p));
-                collectable = null;
+                platform = ingameState.addPlatform(generatePlatformPosition(p, false));
+                
+                collectable = (random.nextFloat() < ITEM_CHANCE_PER_PLATFORM)
+                            ? ingameState.addCollectable(generatePlatformPosition(p, true))
+                            : null;
             } else {
                 platform = null;
-                collectable = (itemSpawner.shouldPlacePlatform(p))
-                        ? ingameState.addCollectable(generatePlatformPosition(p))
-                        : null;
+                collectable = null;
             }
         }
         
@@ -117,9 +121,9 @@ public class PlatformLifecycleManager implements IMovementListener {
     }
 
     
-    private IntRect getActiveZonesForPosition(Vector2f playerPos) {
-        Vector2f p1 = playerPos.subtract(halfArea);
-        Vector2f p2 = playerPos.add(halfArea);
+    private IntRect getActiveZonesForPosition(Vector2f playerPos, Vector2f area) {
+        Vector2f p1 = playerPos.subtract(area);
+        Vector2f p2 = playerPos.add(area);
         
         float sx = zoneSize.x;
         float sy = zoneSize.y;
@@ -132,25 +136,28 @@ public class PlatformLifecycleManager implements IMovementListener {
     
     
     private TreeMap<Position,Zone> zones = new TreeMap<Position,Zone>();
+    
+    private IntRect totalZones;
     private IntRect activeZones;
     
     IngameState ingameState; 
     
     
-    public PlatformLifecycleManager(IngameState ingame, Vector2f zoneSize, Vector2f activeArea) {
+    public PlatformLifecycleManager(IngameState ingame, Vector2f zoneSize, Vector2f activeArea, Vector2f totalArea) {
         this.zoneSize = zoneSize;
-        this.halfArea = activeArea.mult(0.5f);
+        this.halfActiveArea = activeArea.mult(0.5f);
+        this.halfTotalArea = totalArea.mult(0.5f);
         
         this.ingameState = ingame;
         
-//        this.platformSpawner = new NoisePlatformSpawner(0.8525342f);
-//        this.platformSpawner = new HorizontalPlatformSpawner();
         this.platformSpawner = new RegionSpawner();
-        this.itemSpawner = new RandomSpawner(0.7f);
+        this.itemSpawner = new RandomSpawner(0.15f, platformSpawner);
         
         // add initial zones around player
-        activeZones = getActiveZonesForPosition(new Vector2f(0.0f, 0.0f));
-        for (Position pos : activeZones.allPositions()) {
+        activeZones = getActiveZonesForPosition(new Vector2f(0.0f, 0.0f), halfActiveArea);
+        totalZones = getActiveZonesForPosition(new Vector2f(0.0f, 0.0f), halfTotalArea);
+        
+        for (Position pos : totalZones.allPositions()) {
             zones.put(pos, new Zone(pos));
         }
     }
@@ -158,21 +165,41 @@ public class PlatformLifecycleManager implements IMovementListener {
     
     public void movement(Vector3f newPosition, Vector3f delta) {
         Vector2f playerPos = new Vector2f(newPosition.x, newPosition.y);
-        IntRect newActiveZones = getActiveZonesForPosition(playerPos);
+        IntRect newTotalZones = getActiveZonesForPosition(playerPos, halfTotalArea);
         
-        if (activeZones.compareTo(newActiveZones) != 0) {
+        if (totalZones.compareTo(newTotalZones) != 0) {
             // see if we have to delete old zones
-            for (Position pos : activeZones.diff(newActiveZones)) {
+            for (Position pos : totalZones.diff(newTotalZones)) {
                 zones.remove(pos).delete();
             }
 
             // add new zones?
-            for (Position pos : newActiveZones.diff(activeZones)) {
+            for (Position pos : newTotalZones.diff(totalZones)) {
                 zones.put(pos, new Zone(pos));
             }
 
+            totalZones = newTotalZones;
+        }
+        
+        
+        IntRect newActiveZones = getActiveZonesForPosition(playerPos, halfActiveArea);
+        if (activeZones.compareTo(newActiveZones) != 0) {
+            for (Position pos : activeZones.diff(newActiveZones)) {
+                Zone zone = zones.get(pos);
+                if (zone != null && zone.platform != null)
+                    zone.platform.setActive(false);
+            }
             activeZones = newActiveZones;
         }
+    }
+    
+    Vector3f generatePlatformPosition(Position zonePosition, boolean powerup) {
+        float maxDiff = 0.15f;
+        float x = (zonePosition.x + maxDiff * (2 * random.nextFloat() - 1)) * zoneSize.x;
+        float y = (zonePosition.y + maxDiff * (2 * random.nextFloat() - 1)) * zoneSize.y;
+        if (powerup)
+            y += 1.5f + random.nextFloat();
+        return new Vector3f(x, y, 0.0f);
     }
     
     
@@ -188,13 +215,20 @@ public class PlatformLifecycleManager implements IMovementListener {
      */
     private class RandomSpawner implements ISpawner {
         private float threshold;
+        private ISpawner other;
         
         public RandomSpawner(float th) {
+            this(th, null);
+        }
+        
+        public RandomSpawner(float th, ISpawner o) {
             threshold = th;
+            other = o;
         }
         
         public boolean shouldPlacePlatform(Position zonePosition) {
-            return random.nextFloat() < threshold;
+            boolean should = (other != null) ? other.shouldPlacePlatform(zonePosition) : true;
+            return should && (random.nextFloat() < threshold);
         }
     }
     
@@ -340,14 +374,5 @@ public class PlatformLifecycleManager implements IMovementListener {
             return false;
         }
         
-    }
-    
-    
-    
-    Vector3f generatePlatformPosition(Position zonePosition) {
-        float maxDiff = 0.15f;
-        float x = (zonePosition.x + maxDiff * (2 * random.nextFloat() - 1)) * zoneSize.x;
-        float y = (zonePosition.y + maxDiff * (2 * random.nextFloat() - 1)) * zoneSize.y;
-        return new Vector3f(x, y, 0.0f);
     }
 }
