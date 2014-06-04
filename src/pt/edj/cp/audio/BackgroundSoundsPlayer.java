@@ -5,6 +5,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
 import com.jme3.audio.AudioSource.Status;
 import java.util.concurrent.Callable;
+import pt.edj.cp.app.IngameState;
 import pt.edj.cp.timing.events.ChordChangeEvent;
 import pt.edj.cp.timing.events.IEvent;
 import pt.edj.cp.timing.events.IEventListener;
@@ -88,6 +89,10 @@ public class BackgroundSoundsPlayer implements IEventListener{
             if (noise.getStatus() != Status.Playing){
                 app.enqueue(playNoise);
             }
+            
+            //lower pf volume
+            app.getStateManager().getState(IngameState.class)
+                .getSoundController().changeVolume(1 - (intensity + 0.5f));
         } else {
             if (noise.getStatus() == Status.Playing){
                 app.enqueue(stopNoise);

@@ -18,6 +18,8 @@ import com.jme3.texture.Texture;
 import java.util.HashSet;
 import java.util.Random;
 import pt.edj.cp.audio.BackgroundSoundsPlayer;
+import pt.edj.cp.audio.SoundController;
+import pt.edj.cp.bonus.Bonus;
 import pt.edj.cp.character.CharacterAnimator;
 import pt.edj.cp.input.IngameInputsState;
 import pt.edj.cp.physics.PlatformerCharacterControl;
@@ -66,6 +68,8 @@ public class IngameState extends AbstractAppState {
     
     private Random random = new Random();
     
+    private SoundController soundController;
+    private Bonus bonus;
     
     public IngameState(WhiteNoiseFilter noiseFilter) {
         super();
@@ -79,6 +83,10 @@ public class IngameState extends AbstractAppState {
         
         this.app = (SimpleApplication) app;
         this.metronome = Metronome.getInstance();
+        
+        this.soundController = new SoundController(app);
+        this.bonus = new Bonus(app);
+        metronome.register(bonus);
         
         chordCtrl = new ChordController();
         metronome.register(chordCtrl);
@@ -143,6 +151,23 @@ public class IngameState extends AbstractAppState {
         GameThemeController.instance().frame(tpf);
         
         whiteNoiseFilter.update(tpf);
+        
+        if (whiteNoiseFilter.getIntensity() == -0.5f) bonus.trigger();
+    }
+    
+    
+    public Metronome getMetronome(){
+        return metronome;
+    }
+    
+    
+    public Bonus getBonus(){
+        return bonus;
+    }
+    
+    
+    public Vector3f getCharacterNodeLocation(){
+        return characterNode.getLocalTranslation();
     }
     
     
@@ -191,11 +216,6 @@ public class IngameState extends AbstractAppState {
     }
     
     
-    public Metronome getMetronome(){
-        return metronome;
-    }
-    
-    
     private void loadCharacterModel(){
         Node character = (Node) app.getAssetManager().loadModel(CHAR_MODEL);
         character.setName("character");
@@ -224,6 +244,11 @@ public class IngameState extends AbstractAppState {
     }
     
     
+    public SoundController getSoundController(){
+        return soundController;
+    }
+    
+    
     public Platform addPlatform(Vector3f pos) {
         // create new platform
         Platform p = platformFactory.createPlatform(pos);
@@ -240,6 +265,7 @@ public class IngameState extends AbstractAppState {
     }
     
     public void removePlatform(Platform platform) {
+        platform.killSoundLink();
         metronome.unregister(platform);
         chordCtrl.unregister(platform);
         sceneNode.detachChild(platform.getTopNode());

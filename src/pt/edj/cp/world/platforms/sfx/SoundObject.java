@@ -3,9 +3,11 @@ package pt.edj.cp.world.platforms.sfx;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
+import com.jme3.audio.LowPassFilter;
 import java.util.Random;
 import java.util.concurrent.Callable;
-import pt.edj.cp.util.SoundPathManager;
+import pt.edj.cp.app.IngameState;
+import pt.edj.cp.audio.SoundController;
 
 
 /*
@@ -53,9 +55,9 @@ public class SoundObject{
     }
     
     
-    public void playBaseSound(){
-        app.enqueue(playSound);
-    }
+//    public void playBaseSound(){
+//        app.enqueue(playSound);
+//    }
     
     
     public boolean getCurrentEvent(){
@@ -76,9 +78,19 @@ public class SoundObject{
     };
     
     
+    public void kill(){
+        app.getStateManager().getState(IngameState.class)
+                .getSoundController().unregister(sound);
+    }
+    
+    
     private AudioNode createAudioNode(String samplePath){
         AudioNode an = new AudioNode(app.getAssetManager(), samplePath);
         an.setPositional(false);
+        an.setVolume(1);
+        an.setName((melodic?"melodic":"") + an.toString() + an.hashCode());
+        app.getStateManager().getState(IngameState.class)
+                .getSoundController().register(an);
         return an;
     }
 

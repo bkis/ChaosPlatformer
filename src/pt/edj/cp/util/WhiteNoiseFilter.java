@@ -31,7 +31,7 @@ public class WhiteNoiseFilter extends Filter implements IMovementListener {
             ViewPort vp, int w, int h) {
         material = new Material(assets, "Materials/Post/WhiteNoise.j3md");
         
-        factor = -1.0f;
+        factor = -0.9f;
         updateNoiseFactor();
     }
     
