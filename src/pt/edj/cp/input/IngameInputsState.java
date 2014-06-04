@@ -128,6 +128,7 @@ public class IngameInputsState extends AbstractAppState{
                     jump = false;
                     playerControl.cancelJump();
                 }
+               app.getStateManager().getState(IngameState.class).getBonus().trigger();
             }
             
             if (name.equals(MAPPING_QUIT)) {
