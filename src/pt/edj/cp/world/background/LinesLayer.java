@@ -15,7 +15,6 @@ import com.jme3.terrain.noise.basis.ImprovedNoise;
 import java.nio.FloatBuffer;
 import java.util.LinkedList;
 import java.util.Random;
-import pt.edj.cp.timing.GameThemeController;
 import pt.edj.cp.timing.events.IEvent;
 import pt.edj.cp.timing.events.ThemeParameterUpdate;
 import pt.edj.cp.util.ColorHelper;
@@ -37,7 +36,7 @@ public class LinesLayer extends AbstractBackgroundLayer {
     private float currSegment;
 
     private float paramSpeed;
-    private float paramHectic;
+    private float paramTemp;
     
     
     public LinesLayer(Application app, float z, int numLines, float sx, float sy) {
@@ -48,8 +47,7 @@ public class LinesLayer extends AbstractBackgroundLayer {
         currOffset = new Vector3f(0.f, 0.f, 0.f);
         
         currSegment = 0.f;
-        paramSpeed = 0.5f;
-        paramHectic = 0.5f;
+        paramSpeed = 0.0f;
 
         this.numLines = numLines;
         this.lines = new LinkedList<Line>();
@@ -79,7 +77,7 @@ public class LinesLayer extends AbstractBackgroundLayer {
             ThemeParameterUpdate tpu = (ThemeParameterUpdate) e;
             
             paramSpeed = tpu.getSpeed().getValue();
-            paramHectic = tpu.getExcitement().getValue();
+            paramTemp = tpu.getTemperature().getValue();
             
             for (Line line : lines)
                 line.updateColor(0.f);
@@ -88,15 +86,15 @@ public class LinesLayer extends AbstractBackgroundLayer {
     
     
     private float getSharpness() {
-        return 0.3f + 0.15f * paramHectic;
+        return 0.3f - 0.1f * paramSpeed;
     }
     
     private float getAlternating() {
-        return 0.21f + 0.2f * paramHectic;
+        return 0.2f - 0.05f * paramSpeed;
     }
     
     private float getSegmentsPerSecond() {
-        return 20.0f + 10.0f * (paramSpeed + 0.5f * paramHectic);
+        return 20.0f + 15.0f * paramSpeed;
     }
 
 
@@ -269,8 +267,7 @@ public class LinesLayer extends AbstractBackgroundLayer {
             while (baseHue > 1.0f)
                 baseHue -= 1.0f;
             
-            float temp = GameThemeController.instance().getParameter("Temperature");
-            Vector4f col = ColorHelper.computeFromTemperature(temp, baseHue, 0.8f, 0.8f, 1.0f);
+            Vector4f col = ColorHelper.computeFromTemperature(paramTemp, baseHue, 0.8f, 0.8f, 1.0f);
             getMaterial().setVector3("Color", new Vector3f(col.x, col.y, col.z));
         }
     }
