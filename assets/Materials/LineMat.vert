@@ -1,5 +1,3 @@
-#version 330
-
 uniform mat4 g_WorldViewProjectionMatrix;
 
 uniform vec3 m_Offset;

@@ -20,11 +20,11 @@ void main() {
         float dAngle = fract(g_Time * m_SpeedFactor + angle);
 
         if (dAngle < 0.5) {
-            val += 1.0 - smoothstep(0, m_Trail, dAngle * dist);
+            val += 1.0 - smoothstep(0.0, m_Trail, dAngle * dist);
         }
     }
     
-    gl_FragColor = vec4(1, 1, 1, clamp(val, 0, 1))
+    gl_FragColor = vec4(1.0, 1.0, 1.0, clamp(val, 0.0, 1.0))
 ;
 }
 

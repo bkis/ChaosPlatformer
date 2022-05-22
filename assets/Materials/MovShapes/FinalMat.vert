@@ -1,5 +1,3 @@
-#version 330
-
 uniform mat4 g_WorldViewProjectionMatrix;
 attribute vec3 inPosition;
 attribute vec2 inTexCoord;

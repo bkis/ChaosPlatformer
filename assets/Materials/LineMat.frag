@@ -1,5 +1,3 @@
-#version 330
-
 uniform vec3 m_Color;
 uniform float m_SegmentCount;
 uniform float m_TotalLength;

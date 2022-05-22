@@ -104,7 +104,7 @@ void main() {
     
     float intensity = 0.7 + 0.3 * snoise(vec3(p * m_NoiseFactor + m_NoiseOffset, g_Time));
     intensity -= smoothstep(0.5, 1.0, length(p));
-    intensity = clamp(intensity, 0, 1);
+    intensity = clamp(intensity, 0.0, 1.0);
 
     vec3 baseColor = mix(m_Color, vec3(1,1,1), 0.5 * intensity);
     vec4 color = vec4(baseColor, intensity);

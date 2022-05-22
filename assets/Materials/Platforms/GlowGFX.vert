@@ -1,11 +1,8 @@
-#version 330
-
 attribute vec3 inPosition;
 
 uniform mat4 g_WorldViewProjectionMatrix;
 uniform float g_Time;
 
-uniform vec3 m_Color;
 uniform vec2 m_Extents;
 uniform float m_ZValue;
 

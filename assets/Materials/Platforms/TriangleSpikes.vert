@@ -1,5 +1,3 @@
-#version 330
-
 attribute vec3 inPosition;
 attribute vec4 inColor;
 
