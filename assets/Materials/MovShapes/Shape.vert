@@ -1,5 +1,3 @@
-#version 330
-
 attribute vec3 inPosition;
 
 uniform mat4 g_WorldViewProjectionMatrix;

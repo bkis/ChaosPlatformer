@@ -126,11 +126,11 @@ public class WorldPhysicsManager {
         if (spatial instanceof ICollisionShapeProvider) {
             cs = ((ICollisionShapeProvider) spatial).getCollisionShape();
         }
-        
-        GhostControl gc = (cs != null) ? new GhostControl(cs) : new GhostControl();
-        spatial.addControl(gc);
-        
-        getPhysicsSpace().add(gc);
+        if (cs != null) {
+            GhostControl gc = new GhostControl(cs);
+            spatial.addControl(gc);
+            getPhysicsSpace().add(gc);
+        }
     }
     
     

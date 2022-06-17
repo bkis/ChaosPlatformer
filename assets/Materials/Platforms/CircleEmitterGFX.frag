@@ -20,7 +20,7 @@ void main() {
     float strength = smoothstep(m_StartRadius, m_MidRadius1, dist)
                     - smoothstep(m_MidRadius2, m_EndRadius, dist);
 
-    float alpha = pow(1-m_RelTime, 2.f);
+    float alpha = pow(1.0-m_RelTime, 2.0);
     
     gl_FragColor = vec4(m_Color.rgb, alpha * strength);
 }
